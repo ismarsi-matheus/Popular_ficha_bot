@@ -1,0 +1,828 @@
+﻿aba;secao;contexto;rotulo;tipo;nome;valor;ok
+CABEÇALHO / GERAL;-1;Visualização Ordem;person Visualização Ordem;select;selectTipoOrdem;1;sim
+CABEÇALHO / GERAL;-1;Visualização Ordem;Nº da Ordem*;text;txtNumeroOrdem;3871;sim
+CABEÇALHO / GERAL;-1;Nº da Ordem*;Data Prevista Entrega*;text;txtDataPrevistaEntrega;11/09/2026;sim
+CABEÇALHO / GERAL;-1;Data Prevista Entrega*;Urgente;checkbox;checkConjuntoEquipamentos;False;NAO
+CABEÇALHO / GERAL;-1;Data Prevista Entrega*;person Visualização Ordem;select;selectCliente;d076424b-45e0-4cbe-bba7-45778ed21cdc;sim
+CABEÇALHO / GERAL;-1;Data Prevista Entrega*;Referência do Cliente;text;txtReferenciaCliente;1210;sim
+CABEÇALHO / GERAL;-1;Referência do Cliente;Solicitante;text;txtSolicitante;Cromo com descascamento localizado.;sim
+CABEÇALHO / GERAL;-1;Solicitante;Data de Abertura;text;txtDataEntrada;08/10/2026;sim
+CABEÇALHO / GERAL;-1;Data de Abertura;N° da Nota*;text;txtNumeroNota;7945;sim
+CABEÇALHO / GERAL;-1;N° da Nota*;N° de Série*;text;txtNumeroSerie;00M609693;sim
+CABEÇALHO / GERAL;-1;N° de Série*;Fabricante;text;txtFabricante;Sew eurodrive ;sim
+CABEÇALHO / GERAL;-1;Fabricante;Equipamento;text;txtTipoEquipamento;Motor;sim
+CABEÇALHO / GERAL;-1;Equipamento;Modelo;text;txtModelo;R77DT90S\TF - IP 55W;sim
+CABEÇALHO / GERAL;-1;Nº Série Máquina;Defeito Alegado;text;txtDefeito;MOTOR VIBRA RONCANDO E NÃO GIRA. GERANDO ALARME;sim
+CABEÇALHO / GERAL;-1;Defeito Alegado;Análise Preliminar;text;txtAnalisePreliminar;Marcas de batida próximas à extremidade.;sim
+CABEÇALHO / GERAL;-1;Análise Preliminar;Observações Expedição;text;txtObservacoes;Equipamento recebido para inspeção, avaliação elétrica e mecânica, testes de isolamento, resistência dos enrolamentos e funcionamento do servo motor.;sim
+CABEÇALHO / GERAL;-1;Manutenção:;Corretiva;checkbox;checkManutencaoCorretiva;False;NAO
+CABEÇALHO / GERAL;-1;Manutenção:;Preventiva;checkbox;checkManutencaoPreventiva;False;NAO
+CABEÇALHO / GERAL;-1;Manutenção:;Empréstimo;checkbox;checkManutencaoEmprestimo;False;NAO
+CABEÇALHO / GERAL;-1;Manutenção:;Venda;checkbox;checkManutencaoVenda;False;NAO
+CABEÇALHO / GERAL;-1;DADOS INICIAIS;O.S ANTERIOR;text;txt10598;Peça em bom estado geral.;sim
+CABEÇALHO / GERAL;-1;O.S ANTERIOR;ITEM;text;txt10599;Cromo com descascamento localizado.;sim
+CABEÇALHO / GERAL;-1;ITEM;DATA DE FABRICAÇÃO;text;txt10600;01/09/2026;sim
+CABEÇALHO / GERAL;-1;DATA DE FABRICAÇÃO;FORMA CONSTRUTIVA;text;txt10601;Peça em bom estado geral.;sim
+CABEÇALHO / GERAL;-1;FORMA CONSTRUTIVA;COR DO EQUIPAMENTO;text;txt10602;Leve risco na região central, dentro da tolerância.;sim
+CABEÇALHO / GERAL;-1;COR DO EQUIPAMENTO;ISOLAÇÃO;text;txt10603;141.8;sim
+CABEÇALHO / GERAL;-1;ISOLAÇÃO;IP;text;txt10604;Peça em bom estado geral.;sim
+CABEÇALHO / GERAL;-1;MOTOR POSSUI;POLIA;checkbox;check10607;False;NAO
+CABEÇALHO / GERAL;-1;MOTOR POSSUI;ACOPLAMENTO;checkbox;check10608;True;sim
+CABEÇALHO / GERAL;-1;MOTOR POSSUI;ENGRENAGEM;checkbox;check10609;True;sim
+CABEÇALHO / GERAL;-1;MOTOR POSSUI;BOMBA;checkbox;check10610;True;sim
+CABEÇALHO / GERAL;-1;MOTOR POSSUI;REDUTOR;checkbox;check10611;True;sim
+CABEÇALHO / GERAL;-1;MOTOR POSSUI;CHAVETA;checkbox;check10612;False;NAO
+CABEÇALHO / GERAL;-1;MOTOR POSSUI;Acoplamento está totalmente inserido, face a face com a ponta do eixo?;checkbox;check10616;True;sim
+CABEÇALHO / GERAL;-1;MOTOR POSSUI;Acoplamento está inserido, parcialmente no eixo?;checkbox;check10617;False;NAO
+CABEÇALHO / GERAL;-1;MOTOR POSSUI;Acoplamento está totalmente inserido, e com a ponta do eixo para fora?;checkbox;check10618;False;NAO
+CABEÇALHO / GERAL;-1;MOTOR POSSUI;Qual a distância? [ mm ];text;txt10620;Motor elétrico sem anormalidades.;sim
+CABEÇALHO / GERAL;-1;MOTOR POSSUI;Qual a distância? [ mm ];text;txt10621;Aquecimento e ruído nos rolamentos do motor.;sim
+CABEÇALHO / GERAL;-1;FURO DA CAIXA DE LIGAÇÃO;P/ CIMA;checkbox;check10624;False;NAO
+CABEÇALHO / GERAL;-1;FURO DA CAIXA DE LIGAÇÃO;P/ BAIXO;checkbox;check10625;False;NAO
+CABEÇALHO / GERAL;-1;FURO DA CAIXA DE LIGAÇÃO;P/ FRENTE;checkbox;check10626;True;sim
+CABEÇALHO / GERAL;-1;FURO DA CAIXA DE LIGAÇÃO;P/ TRÁS;checkbox;check10627;False;NAO
+CABEÇALHO / GERAL;-1;CONEXÃO NA CAIXA DE LIGAÇÃO;NIPLE;checkbox;check10629;False;NAO
+CABEÇALHO / GERAL;-1;CONEXÃO NA CAIXA DE LIGAÇÃO;PRENSA CABO;checkbox;check10630;False;NAO
+CABEÇALHO / GERAL;-1;CONEXÃO NA CAIXA DE LIGAÇÃO;CONECTOR GIRATÓRIO;checkbox;check10631;True;sim
+CABEÇALHO / GERAL;-1;CONEXÃO NA CAIXA DE LIGAÇÃO;OUTROS;checkbox;check10632;False;NAO
+CABEÇALHO / GERAL;-1;Entrada do Equipamento;select12893;select;select12893;12;sim
+CABEÇALHO / GERAL;-1;Entrada do Equipamento;Potência;text;txt12894;1;sim
+CABEÇALHO / GERAL;-1;Potência;select12895;select;select12895;1;sim
+CABEÇALHO / GERAL;-1;Potência;RPM;text;txt12896;3500;sim
+CABEÇALHO / GERAL;-1;RPM;Tensão;text;txt12897;380;sim
+CABEÇALHO / GERAL;-1;Tensão;Tensão Utilizida no Equipamento;text;txt12898;220;sim
+CABEÇALHO / GERAL;-1;Tensão Utilizida no Equipamento;Corrente;text;txt12899;77.4;sim
+CABEÇALHO / GERAL;-1;Corrente;N° da Caixa;text;txt12900;Pressão 146 bar, vazão 30 L/min, temperatura 53 °C, corrente 9.9 A. Valores fora do especificado.;sim
+CABEÇALHO / GERAL;-1;N° da Caixa;Pállet;text;txt12901;Desgaste uniforme, sem ovalização aparente.;sim
+CABEÇALHO / GERAL;-1;Pállet;txt9677;textarea;txt9677;Peça em bom estado geral.;sim
+CABEÇALHO / GERAL;-1;Pállet;txt9679;textarea;txt9679;Leve risco na região central, dentro da tolerância.;sim
+INSPEÇÃO VISUAL;-1;Peritagem Visual - Motores CA;Acoplamento;text;txt5199;Aquecimento e ruído nos rolamentos do motor.;sim
+INSPEÇÃO VISUAL;-1;Acoplamento;Sim;checkbox;check5205;False;NAO
+INSPEÇÃO VISUAL;-1;Acoplamento;Não;checkbox;check5206;True;sim
+INSPEÇÃO VISUAL;-1;Acoplamento;Observação;text;txt5207;Acoplamento: anomalia identificada, necessário reparo.;sim
+INSPEÇÃO VISUAL;-1;Acoplamento;Caixa de Ligação;text;txt5208;Acoplamento: verificado, sem anomalias.;sim
+INSPEÇÃO VISUAL;-1;Caixa de Ligação;Sim;checkbox;check5209;True;sim
+INSPEÇÃO VISUAL;-1;Caixa de Ligação;Não;checkbox;check5210;False;NAO
+INSPEÇÃO VISUAL;-1;Caixa de Ligação;Observação;text;txt5211;Caixa de Ligação: verificado, sem anomalias.;sim
+INSPEÇÃO VISUAL;-1;Caixa de Ligação;Quadro de Ligação;text;txt5212;Caixa de Ligação: verificado, sem anomalias.;sim
+INSPEÇÃO VISUAL;-1;Quadro de Ligação;Sim;checkbox;check5213;True;sim
+INSPEÇÃO VISUAL;-1;Quadro de Ligação;Não;checkbox;check5214;False;NAO
+INSPEÇÃO VISUAL;-1;Quadro de Ligação;Observação;text;txt5215;Quadro de Ligação: verificado, sem anomalias.;sim
+INSPEÇÃO VISUAL;-1;Quadro de Ligação;Cabos de Saída;text;txt5216;Quadro de Ligação: verificado, sem anomalias.;sim
+INSPEÇÃO VISUAL;-1;Cabos de Saída;Sim;checkbox;check5217;True;sim
+INSPEÇÃO VISUAL;-1;Cabos de Saída;Não;checkbox;check5218;False;NAO
+INSPEÇÃO VISUAL;-1;Cabos de Saída;Observação;text;txt5219;Cabos de Saída: verificado, sem anomalias.;sim
+INSPEÇÃO VISUAL;-1;Cabos de Saída;Taco;text;txt5220;Cabos de Saída: verificado, sem anomalias.;sim
+INSPEÇÃO VISUAL;-1;Taco;Sim;checkbox;check5221;True;sim
+INSPEÇÃO VISUAL;-1;Taco;Não;checkbox;check5222;False;NAO
+INSPEÇÃO VISUAL;-1;Taco;Observação;text;txt5223;Taco: verificado, sem anomalias.;sim
+INSPEÇÃO VISUAL;-1;Taco;Encoder;text;txt5224;Taco: verificado, sem anomalias.;sim
+INSPEÇÃO VISUAL;-1;Encoder;Sim;checkbox;check5225;True;sim
+INSPEÇÃO VISUAL;-1;Encoder;Não;checkbox;check5226;False;NAO
+INSPEÇÃO VISUAL;-1;Encoder;Observação;text;txt5227;Encoder: verificado, sem anomalias.;sim
+INSPEÇÃO VISUAL;-1;Encoder;Ventilador;text;txt5228;Encoder: verificado, sem anomalias.;sim
+INSPEÇÃO VISUAL;-1;Ventilador;Sim;checkbox;check5229;True;sim
+INSPEÇÃO VISUAL;-1;Ventilador;Não;checkbox;check5230;False;NAO
+INSPEÇÃO VISUAL;-1;Ventilador;Observação;text;txt5231;Ventilador: verificado, sem anomalias.;sim
+INSPEÇÃO VISUAL;-1;Ventilador;Olhal;text;txt5232;Ventilador: verificado, sem anomalias.;sim
+INSPEÇÃO VISUAL;-1;Olhal;Sim;checkbox;check5233;True;sim
+INSPEÇÃO VISUAL;-1;Olhal;Não;checkbox;check5234;False;NAO
+INSPEÇÃO VISUAL;-1;Olhal;Observaçao;text;txt5235;Olhal: verificado, sem anomalias.;sim
+INSPEÇÃO VISUAL;-1;Olhal;Ventilação Forçada;text;txt5236;Olhal: anomalia identificada, necessário reparo.;sim
+INSPEÇÃO VISUAL;-1;Ventilação Forçada;Sim;checkbox;check5237;False;NAO
+INSPEÇÃO VISUAL;-1;Ventilação Forçada;Não;checkbox;check5238;True;sim
+INSPEÇÃO VISUAL;-1;Ventilação Forçada;Observação;text;txt5239;Ventilação Forçada: anomalia identificada, necessário reparo.;sim
+INSPEÇÃO VISUAL;-1;Ventilação Forçada;Flange;text;txt5240;Ventilação Forçada: anomalia identificada, necessário reparo.;sim
+INSPEÇÃO VISUAL;-1;Flange;Sim;checkbox;check5241;False;NAO
+INSPEÇÃO VISUAL;-1;Flange;Não;checkbox;check5242;True;sim
+INSPEÇÃO VISUAL;-1;Flange;Observação;text;txt5243;Flange: anomalia identificada, necessário reparo.;sim
+INSPEÇÃO VISUAL;-1;Flange;Rolamento LA;text;txt5244;Flange: anomalia identificada, necessário reparo.;sim
+INSPEÇÃO VISUAL;-1;Rolamento LA;Sim;checkbox;check5245;False;NAO
+INSPEÇÃO VISUAL;-1;Rolamento LA;Não;checkbox;check5246;True;sim
+INSPEÇÃO VISUAL;-1;Rolamento LA;Observação;text;txt5247;Aquecimento e ruído nos rolamentos do motor.;sim
+INSPEÇÃO VISUAL;-1;Rolamento LA;Rolamento LOA;text;txt5248;Motor elétrico sem anormalidades.;sim
+INSPEÇÃO VISUAL;-1;Rolamento LOA;Sim;checkbox;check5249;True;sim
+INSPEÇÃO VISUAL;-1;Rolamento LOA;Não;checkbox;check5250;False;NAO
+INSPEÇÃO VISUAL;-1;Rolamento LOA;Observação;text;txt5251;Motor elétrico sem anormalidades.;sim
+INSPEÇÃO VISUAL;-1;Rolamento LOA;Resistência;text;txt5252;214.6;sim
+INSPEÇÃO VISUAL;-1;Resistência;Sim;checkbox;check5253;False;NAO
+INSPEÇÃO VISUAL;-1;Resistência;Não;checkbox;check5254;True;sim
+INSPEÇÃO VISUAL;-1;Resistência;Observação;text;txt5255;Resistência: anomalia identificada, necessário reparo.;sim
+INSPEÇÃO VISUAL;-1;Resistência;Base;text;txt5256;Resistência: anomalia identificada, necessário reparo.;sim
+INSPEÇÃO VISUAL;-1;Base;Sim;checkbox;check5257;False;NAO
+INSPEÇÃO VISUAL;-1;Base;Não;checkbox;check5258;True;sim
+INSPEÇÃO VISUAL;-1;Base;Observação;text;txt5259;Base: anomalia identificada, necessário reparo.;sim
+INSPEÇÃO VISUAL;-1;Base;Trincas;text;txt5260;Base: anomalia identificada, necessário reparo.;sim
+INSPEÇÃO VISUAL;-1;Trincas;Sim;checkbox;check5261;False;NAO
+INSPEÇÃO VISUAL;-1;Trincas;Não;checkbox;check5262;True;sim
+INSPEÇÃO VISUAL;-1;Trincas;Observação;text;txt5263;Trincas: anomalia identificada, necessário reparo.;sim
+INSPEÇÃO VISUAL;-1;Trincas;Observação;textarea;txt5264;Trincas: anomalia identificada, necessário reparo.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Óleo;Tipo;text;txt10681;Óleo limpo e nível adequado.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10682;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10683;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10684;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10685;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10686;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10687;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Suspiro;Tipo;text;txt10689;Suspiro: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10690;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10691;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10692;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10693;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10694;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10695;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Estator;Tipo;text;txt10697;Estator: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10698;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10699;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10700;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10701;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10702;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10703;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Dreno;Tipo;text;txt10705;Dreno: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10706;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10707;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10708;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10709;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10710;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10711;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Parafusos;Tipo;text;txt10713;Fixações firmes e completas.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10714;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10715;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10716;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10717;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10718;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10719;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tampa de Inspeção;Tipo;text;txt10721;Tampa de Inspeção: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10722;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10723;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10724;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10725;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10726;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10727;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Eixo/Rosca Sem Fim;Tipo;text;txt10730;Eixo/Rosca Sem Fim: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10731;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10732;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10733;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10734;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10735;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10736;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Engrenagem;Tipo;text;txt10738;Engrenagem: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10739;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10740;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10741;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10742;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10743;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10744;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Coroa;Tipo;text;txt10746;Coroa: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10747;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10748;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10749;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10750;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10751;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10752;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tampão;Tipo;text;txt10754;Tampão: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10755;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10756;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10757;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10758;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10759;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10760;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Retentor;Tipo;text;txt10762;Retentor: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10763;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10764;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10765;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10766;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10767;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10768;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Rolamento LA;Tipo;text;txt10770;Motor elétrico sem anormalidades.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10771;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10772;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10773;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10774;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10775;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10776;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Rolamento LNA;Tipo;text;txt10778;Motor elétrico sem anormalidades.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10779;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10780;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10781;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10782;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10783;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10784;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Anel Elástico;Tipo;text;txt10786;Anel Elástico: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10787;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10788;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10789;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10790;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10791;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10792;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Anéis de Ajuste LA;Tipo;text;txt10794;Anéis de Ajuste LA: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10795;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10796;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10797;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10798;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10799;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10800;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Anéis de Ajuste LNA;Tipo;text;txt10802;Anéis de Ajuste LNA: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10803;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10804;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10805;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10806;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10807;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10808;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tampa;Tipo;text;txt10810;Tampa: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10811;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10812;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10813;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10814;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10815;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10816;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Eixo;Tipo;text;txt10819;Eixo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10820;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10821;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10822;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10823;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10824;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10825;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Pinhão;Tipo;text;txt10827;Pinhão: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10828;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10829;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10830;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10831;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10832;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10833;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Coroa;Tipo;text;txt10835;Coroa: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10836;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10837;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10838;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10839;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10840;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10841;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Engrenagem;Tipo;text;txt10843;Engrenagem: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10844;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10845;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10846;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10847;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10848;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10849;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Retentor LA;Tipo;text;txt10851;Retentor LA: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10852;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10853;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10854;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10855;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10856;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10857;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Retentor LNA;Tipo;text;txt10859;Retentor LNA: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10860;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10861;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10862;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10863;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10864;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10865;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tampão;Tipo;text;txt10867;Tampão: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10868;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10869;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10870;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10871;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10872;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10873;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Rolamento LA;Tipo;text;txt10875;Motor elétrico sem anormalidades.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10876;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10877;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10878;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10879;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10880;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10881;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Rolamento LNA;Tipo;text;txt10883;Motor elétrico sem anormalidades.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10884;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10885;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10886;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10887;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10888;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10889;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Anel Elástico;Tipo;text;txt10891;Anel Elástico: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10892;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10893;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10894;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10895;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10896;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10897;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Anéis de Ajuste LA;Tipo;text;txt10899;Anéis de Ajuste LA: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10900;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10901;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10902;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10903;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10904;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10905;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Anéis de Ajuste LNA;Tipo;text;txt10907;Anéis de Ajuste LNA: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10908;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10909;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10910;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10911;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10912;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10913;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Eixo;Tipo;text;txt10916;Eixo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10917;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10918;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10919;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10920;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10921;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10922;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Engrenagem;Tipo;text;txt10924;Engrenagem: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10925;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10926;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10927;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10928;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10929;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10930;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Pinhão;Tipo;text;txt10932;Pinhão: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10933;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10934;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10935;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10936;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10937;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10938;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tampão;Tipo;text;txt10940;Tampão: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10941;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10942;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10943;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10944;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10945;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10946;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Rolamento LA;Tipo;text;txt10948;Motor elétrico sem anormalidades.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10949;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10950;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10951;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10952;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10953;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10954;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Rolamento LNA;Tipo;text;txt10956;Motor elétrico sem anormalidades.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10957;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10958;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10959;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10960;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10961;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10962;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Anel Elástico;Tipo;text;txt10964;Anel Elástico: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10965;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10966;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10967;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10968;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10969;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10970;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Anéis de Ajuste LA;Tipo;text;txt10972;Anéis de Ajuste LA: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10973;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10974;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10975;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10976;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10977;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10978;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Anéis de Ajuste LNA;Tipo;text;txt10980;Anéis de Ajuste LNA: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10981;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10982;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10983;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10984;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10985;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10986;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Eixo;Tipo;text;txt10989;Eixo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10990;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10991;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check10992;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check10993;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check10994;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt10995;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Engrenagem;Tipo;text;txt10997;Engrenagem: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check10998;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check10999;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check11000;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check11001;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check11002;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt11003;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Pinhão;Tipo;text;txt11005;Pinhão: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check11006;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check11007;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check11008;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check11009;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check11010;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt11011;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tampão;Tipo;text;txt11013;Tampão: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check11014;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check11015;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check11016;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check11017;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check11018;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt11019;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Rolamento LA;Tipo;text;txt11021;Motor elétrico sem anormalidades.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check11022;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check11023;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check11024;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check11025;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check11026;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt11027;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Rolamento LNA;Tipo;text;txt11029;Motor elétrico sem anormalidades.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check11030;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check11031;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check11032;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check11033;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check11034;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt11035;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Anel Elástico;Tipo;text;txt11037;Anel Elástico: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check11038;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check11039;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check11040;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check11041;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check11042;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt11043;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Anéis de Ajuste LA;Tipo;text;txt11045;Anéis de Ajuste LA: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check11046;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check11047;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check11048;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check11049;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check11050;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt11051;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Anéis de Ajuste LNA;Tipo;text;txt11053;Anéis de Ajuste LNA: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check11054;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check11055;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check11056;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check11057;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check11058;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt11059;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Mão-de-Obra;Tipo;text;txt11061;Mão-de-Obra: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Subs;checkbox;check11062;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Cons;checkbox;check11063;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Ok;checkbox;check11064;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Jat;checkbox;check11065;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;N/P;checkbox;check11066;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Tipo;Observação;text;txt11067;Tipo: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Flange Entrada;Diametro Encaixe;text;txt11070;27.25;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Diametro Encaixe;Centro Entre Furos;text;txt11071;Diametro Encaixe: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Flange Saída;Diametro Encaixe;text;txt11073;10.91;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Diametro Encaixe;Centro Entre Furos;text;txt11074;Diametro Encaixe: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Centro Entre Furos;Dimensão Eixo De Entrada;text;txt11076;Centro Entre Furos: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Dimensão Eixo De Entrada;Dimensão Eixo De Saída;text;txt11078;Dimensão Eixo De Entrada: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Cliente solicitou cotar redutor novo;SIM;checkbox;check11080;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Placa de Identificação;SIM;checkbox;check11082;True;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Placa de Identificação;NÃO;checkbox;check11083;False;NAO
+INSPEÇÃO MECÂNICA INICIAL;-1;Responsável Técnico;Responsável;text;txt11085;Responsável Técnico: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA INICIAL;-1;Responsável;Observação;text;txt11087;Responsável: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;RASGO DE CHAVETA;Largura;text;txt9681;58.74;sim
+ANÁLISE MECÂNICA INICIAL;-1;Largura;Comprimento;text;txt9682;1372.9;sim
+ANÁLISE MECÂNICA INICIAL;-1;Comprimento;Profundidade;text;txt9683;Comprimento: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;VERIFICADA;PADRÃO;text;txt9696;VERIFICADA: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;VERIFICADA;PADRÃO;text;txt9697;VERIFICADA: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;PADRÃO;VERIFICADA;text;txt11617;PADRÃO: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;LOA;PADRÃO;text;txt11620;LOA: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;LOA;PADRÃO;text;txt9699;LOA: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;LOA;VERIFICADA;text;txt9698;LOA: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;LOA;OBSERVAÇÃO;text;txt9700;LOA: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;VERIFICADA;PADRÃO;text;txt9702;VERIFICADA: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;VERIFICADA;PADRÃO;text;txt11618;VERIFICADA: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;PADRÃO;VERIFICADA;text;txt9703;PADRÃO: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;LOA;PADRÃO;text;txt11621;LOA: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;LOA;PADRÃO;text;txt9704;LOA: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;LOA;VERIFICADA;text;txt9705;LOA: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;LOA;OBSERVAÇÃO;text;txt9706;LOA: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;VERIFICADA;PADRÃO;text;txt9708;VERIFICADA: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;VERIFICADA;PADRÃO;text;txt11619;VERIFICADA: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;PADRÃO;VERIFICADA;text;txt9709;PADRÃO: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;LOA;PADRÃO;text;txt11622;LOA: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;LOA;PADRÃO;text;txt9710;LOA: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;LOA;VERIFICADA;text;txt9711;LOA: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;LOA;OBSERVAÇÃO;text;txt9712;LOA: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;APROVADO;mm;text;txt11370;APROVADO: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;APROVADO;SIM;checkbox;check11371;True;sim
+ANÁLISE MECÂNICA INICIAL;-1;APROVADO;NÃO;checkbox;check11373;False;NAO
+ANÁLISE MECÂNICA INICIAL;-1;DATA;EXECUTANTE;text;txt11374;DATA: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;EXECUTANTE;DATA;text;txt11375;15/09/2026;sim
+ANÁLISE MECÂNICA INICIAL;-1;DATA;Instrumento de Medição;text;txt11376;66.74;sim
+ANÁLISE MECÂNICA INICIAL;-1;Instrumento de Medição;Tag;text;txt11377;Instrumento de Medição: verificado, sem anomalias.;sim
+ANÁLISE MECÂNICA INICIAL;-1;DEFEITO ENCONTRADO MECÂNICO;Digite aqui o defeito encontrado;text;txt10489;DEFEITO ENCONTRADO MECÂNICO: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;DATA;[dd/mm/aa];text;txt10448;18/08/2026;sim
+ANÁLISE ELÉTRICA INICIAL;-1;MEGGER;[V];text;txt10457;MEGGER: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;30 SEG.:;[ MΩ ];text;txt10463;30 SEG.:: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;ABSORÇÃO (IA):;60seg/30seg;text;txt10465;ABSORÇÃO (IA):: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;60seg/30seg;[ Ω ];text;txt10467;60seg/30seg: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;60seg/30seg;[ Ω ];text;txt10469;60seg/30seg: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;60seg/30seg;[ Ω ];text;txt10471;60seg/30seg: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;60 SEG.:;[ MΩ ];text;txt10473;60 SEG.:: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;POLARIZAÇÃO (IP):;600seg/60seg;text;txt10475;POLARIZAÇÃO (IP):: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;600 SEG.:;[ MΩ ];text;txt10480;600 SEG.:: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;[ MΩ ];[ Ω ];text;txt10482;[ MΩ ]: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;[ MΩ ];[ Ω ];text;txt10484;[ MΩ ]: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;[ MΩ ];[ Ω ];text;txt10486;[ MΩ ]: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;FASE V/W;Ω;text;txt10643;FASE V/W: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;FASE V/W;Ω;text;txt10644;FASE V/W: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;FASE V/W;Ω;text;txt10645;FASE V/W: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;FASE V/W;Ω;text;txt10646;FASE V/W: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;FASE V/W;Ω;text;txt10647;FASE V/W: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;FASE V/W;Ω;text;txt10648;FASE V/W: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;TAG;EXECUTANTE:;text;txt10652;TAG: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;TAG;INSTRUMENTO DE MEDIÇÃO;text;txt10653;20.50;sim
+ANÁLISE ELÉTRICA INICIAL;-1;INSTRUMENTO DE MEDIÇÃO;TAG;text;txt10654;INSTRUMENTO DE MEDIÇÃO: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;TENSÃO:;Volts;text;txt10658;760;sim
+ANÁLISE ELÉTRICA INICIAL;-1;ROTAÇÃO;RPM;text;txt10660;870;sim
+ANÁLISE ELÉTRICA INICIAL;-1;FASE U;A;text;txt10662;FASE U: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;FASE V;A;text;txt10664;FASE V: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;FASE W;A;text;txt10666;FASE W: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;FASE W;Aprovado;checkbox;check10667;True;sim
+ANÁLISE ELÉTRICA INICIAL;-1;FASE W;Reprovado;checkbox;check10668;False;NAO
+ANÁLISE ELÉTRICA INICIAL;-1;INSTRUMENTO DE MEDIÇÃO;ROTAÇÃO;text;txt10670;870;sim
+ANÁLISE ELÉTRICA INICIAL;-1;TAGS;txt10672;text;txt10672;TAGS: verificado, sem anomalias.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;TAGS;Não Aplicável;checkbox;check10673;False;NAO
+ANÁLISE ELÉTRICA INICIAL;-1;TAGS;Motor Queimado;checkbox;check10674;True;sim
+ANÁLISE ELÉTRICA INICIAL;-1;SENSORES DE TEMPERATURA;Digite aqui...;textarea;txt10499;Pressão 123 bar, vazão 62 L/min, temperatura 51 °C, corrente 9.2 A. Dentro do especificado.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;DEFEITO ENCONTRADO ELÉTRICO;CURTO DE ESPIRAS;checkbox;check10502;False;NAO
+ANÁLISE ELÉTRICA INICIAL;-1;DEFEITO ENCONTRADO ELÉTRICO;BOBINA CURTO CIRCUITADA;checkbox;check10503;False;NAO
+ANÁLISE ELÉTRICA INICIAL;-1;DEFEITO ENCONTRADO ELÉTRICO;CURTO ENTRE FASES;checkbox;check10504;True;sim
+ANÁLISE ELÉTRICA INICIAL;-1;DEFEITO ENCONTRADO ELÉTRICO;PICO DE TENSÃO;checkbox;check10505;True;sim
+ANÁLISE ELÉTRICA INICIAL;-1;DEFEITO ENCONTRADO ELÉTRICO;CURTO NA CONEXÃO;checkbox;check10506;True;sim
+ANÁLISE ELÉTRICA INICIAL;-1;DEFEITO ENCONTRADO ELÉTRICO;CURTO NA SAÍDA DA RANHURA;checkbox;check10507;True;sim
+ANÁLISE ELÉTRICA INICIAL;-1;DEFEITO ENCONTRADO ELÉTRICO;CURTO INTERIOR DA RANHURA;checkbox;check10508;False;NAO
+ANÁLISE ELÉTRICA INICIAL;-1;DEFEITO ENCONTRADO ELÉTRICO;DESBALANCEAMENTO DE TENSÃO;checkbox;check10509;False;NAO
+ANÁLISE ELÉTRICA INICIAL;-1;DEFEITO ENCONTRADO ELÉTRICO;SOBREAQUECIMENTO;checkbox;check10510;False;NAO
+ANÁLISE ELÉTRICA INICIAL;-1;DEFEITO ENCONTRADO ELÉTRICO;FALTA DE FASE LIGAÇÃO ESTRELA;checkbox;check10511;False;NAO
+ANÁLISE ELÉTRICA INICIAL;-1;DEFEITO ENCONTRADO ELÉTRICO;FALTA DE FASE LIGAÇÃO TRIÂNGULO;checkbox;check10512;False;NAO
+ANÁLISE ELÉTRICA INICIAL;-1;DEFEITO ENCONTRADO ELÉTRICO;ROTOR TRAVADO;checkbox;check10513;True;sim
+ANÁLISE ELÉTRICA INICIAL;-1;DEFEITO ENCONTRADO ELÉTRICO;Outros motivos elétricos digite aqui...;text;txt10514;Motor elétrico sem anormalidades.;sim
+ANÁLISE ELÉTRICA INICIAL;-1;Outros motivos elétricos digite aqui...;Digite aqui...;textarea;txt10488;Motor elétrico sem anormalidades.;sim
+SERVIÇOS A SEREM REALIZADOS;-1;Serviços a Serem Executados;ADAPTAR PLACA DE BORNE;checkbox;check11613;False;NAO
+SERVIÇOS A SEREM REALIZADOS;-1;Serviços a Serem Executados;EMBUCHAR TAMPA L.A;checkbox;check10562;False;NAO
+SERVIÇOS A SEREM REALIZADOS;-1;Serviços a Serem Executados;REFAZER RASGO DE CHAVETA;checkbox;check10538;True;sim
+SERVIÇOS A SEREM REALIZADOS;-1;Serviços a Serem Executados;RECUPERAR PONTA DO EIXO;checkbox;check10537;False;NAO
+SERVIÇOS A SEREM REALIZADOS;-1;Serviços a Serem Executados;ADAPTAR VENTILADOR;checkbox;check11614;True;sim
+SERVIÇOS A SEREM REALIZADOS;-1;Serviços a Serem Executados;EMBUCHAR TAMPA L.O.A;checkbox;check11615;False;NAO
+SERVIÇOS A SEREM REALIZADOS;-1;Serviços a Serem Executados;RECUPERAR BASE DO ROLAMENTO L.A;checkbox;check11595;False;NAO
+SERVIÇOS A SEREM REALIZADOS;-1;Serviços a Serem Executados;REJUVENESCIMENTO;checkbox;check10581;False;NAO
+SERVIÇOS A SEREM REALIZADOS;-1;Serviços a Serem Executados;ANÁLISE ELETROMECÂNICA;checkbox;check10584;False;NAO
+SERVIÇOS A SEREM REALIZADOS;-1;Serviços a Serem Executados;JATEAMENTO;checkbox;check10569;False;NAO
+SERVIÇOS A SEREM REALIZADOS;-1;Serviços a Serem Executados;RECUPERAR BASE DO ROLAMENTO L.O.A;checkbox;check10580;True;sim
+SERVIÇOS A SEREM REALIZADOS;-1;Serviços a Serem Executados;SACAR PARAFUSO;checkbox;check11592;True;sim
+SERVIÇOS A SEREM REALIZADOS;-1;Serviços a Serem Executados;BALANCEAMENTO DINÂMICO;checkbox;check10568;True;sim
+SERVIÇOS A SEREM REALIZADOS;-1;Serviços a Serem Executados;PINTURA;checkbox;check11610;True;sim
+SERVIÇOS A SEREM REALIZADOS;-1;Serviços a Serem Executados;RECUPERAR BASE RETENTOR;checkbox;check10582;True;sim
+SERVIÇOS A SEREM REALIZADOS;-1;Serviços a Serem Executados;SUBSTITUIÇÃO DOS CABOS DE SAÍDA;checkbox;check10583;True;sim
+SERVIÇOS A SEREM REALIZADOS;-1;Serviços a Serem Executados;DESMONTAGEM E MONTAGEM;checkbox;check11611;False;NAO
+SERVIÇOS A SEREM REALIZADOS;-1;Serviços a Serem Executados;REBOBINAMENTO ESTATOR;checkbox;check11596;True;sim
+SERVIÇOS A SEREM REALIZADOS;-1;Serviços a Serem Executados;RECUPERAR BASE VENTILADOR;checkbox;check10545;True;sim
+SERVIÇOS A SEREM REALIZADOS;-1;Serviços a Serem Executados;DEMAIS SERVIÇOS 1;text;txt7273;Marcas de batida próximas à extremidade.;sim
+SERVIÇOS A SEREM REALIZADOS;-1;DEMAIS SERVIÇOS 1;select7326;select;select7326;19;sim
+SERVIÇOS A SEREM REALIZADOS;-1;DEMAIS SERVIÇOS 1;DEMAIS SERVIÇOS 2;text;txt7275;Leve risco na região central, dentro da tolerância.;sim
+SERVIÇOS A SEREM REALIZADOS;-1;DEMAIS SERVIÇOS 2;select7327;select;select7327;20;sim
+SERVIÇOS A SEREM REALIZADOS;-1;DEMAIS SERVIÇOS 2;DEMAIS SERVIÇOS 3;text;txt7276;Desgaste uniforme, sem ovalização aparente.;sim
+SERVIÇOS A SEREM REALIZADOS;-1;DEMAIS SERVIÇOS 3;Balanceamento;select;select7328;32;sim
+SERVIÇOS A SEREM REALIZADOS;-1;DEMAIS SERVIÇOS 3;DEMAIS SERVIÇOS 4;text;txt7277;Peça em bom estado geral.;sim
+SERVIÇOS A SEREM REALIZADOS;-1;DEMAIS SERVIÇOS 4;Pintura;select;select7329;32;sim
+SERVIÇOS A SEREM REALIZADOS;-1;DEMAIS SERVIÇOS 4;DEMAIS SERVIÇOS 5;text;txt7278;Cromo com descascamento localizado.;sim
+SERVIÇOS A SEREM REALIZADOS;-1;DEMAIS SERVIÇOS 5;Qualidade;select;select7330;17;sim
+SERVIÇOS A SEREM REALIZADOS;-1;DEMAIS SERVIÇOS 5;DEMAIS SERVIÇOS 6;text;txt7279;Peça em bom estado geral.;sim
+SERVIÇOS A SEREM REALIZADOS;-1;DEMAIS SERVIÇOS 6;Qualidade;select;select7331;20;sim
+SERVIÇOS A SEREM REALIZADOS;-1;DEMAIS SERVIÇOS 6;DEMAIS SERVIÇOS 7;text;txt7280;Leve risco na região central, dentro da tolerância.;sim
+SERVIÇOS A SEREM REALIZADOS;-1;DEMAIS SERVIÇOS 7;Usinagem;select;select7332;33;sim
+SERVIÇOS A SEREM REALIZADOS;-1;DEMAIS SERVIÇOS 7;DEMAIS SERVIÇOS 8;text;txt7281;Marcas de batida próximas à extremidade.;sim
+SERVIÇOS A SEREM REALIZADOS;-1;DEMAIS SERVIÇOS 8;Pintura;select;select7333;14;sim
+SERVIÇOS A SEREM REALIZADOS;-1;DEMAIS SERVIÇOS 8;DEMAIS SERVIÇOS 9;text;txt7282;Pontos de corrosão superficial, recomenda-se polimento.;sim
+SERVIÇOS A SEREM REALIZADOS;-1;DEMAIS SERVIÇOS 9;Testes Finais;select;select7334;34;sim
+SERVIÇOS A SEREM REALIZADOS;-1;DEMAIS SERVIÇOS 9;Observações;textarea;txt7210;Desgaste uniforme, sem ovalização aparente.;sim
+REBOBINAMENTO;-1;Rebobinamento;Observação do Eletricista;textarea;txt7225;Rebobinamento: anomalia identificada, necessário reparo.;sim
+REBOBINAMENTO;-1;Bobinado Original?;Sim;checkbox;check5730;False;NAO
+REBOBINAMENTO;-1;Bobinado Original?;Não;checkbox;check5731;True;sim
+REBOBINAMENTO;-1;Bobinado Original?;Tensão;text;txt5732;220;sim
+REBOBINAMENTO;-1;Tensão;Ligação;text;txt5734;Tensão: anomalia identificada, necessário reparo.;sim
+REBOBINAMENTO;-1;Ligação;Nº de Polos;text;txt5735;Ligação: anomalia identificada, necessário reparo.;sim
+REBOBINAMENTO;-1;Nº de Polos;Nº de Ranhuras;text;txt5736;Nº de Polos: anomalia identificada, necessário reparo.;sim
+REBOBINAMENTO;-1;Nº de Ranhuras;Comprimento do Estator;text;txt5737;384.0;sim
+REBOBINAMENTO;-1;Comprimento do Estator;Diâmetro Interno do Estator;text;txt5738;145.31;sim
+REBOBINAMENTO;-1;Diâmetro Interno do Estator;Nº de Espiras por Bobina;text;txt5739;Diâmetro Interno do Estator: anomalia identificada, necessário reparo.;sim
+REBOBINAMENTO;-1;Nº de Espiras por Bobina;Nº de Bobinas por Ranhura;text;txt5740;Nº de Espiras por Bobina: anomalia identificada, necessário reparo.;sim
+REBOBINAMENTO;-1;Nº de Bobinas por Ranhura;Passo da Bobina;text;txt5743;Nº de Bobinas por Ranhura: anomalia identificada, necessário reparo.;sim
+REBOBINAMENTO;-1;Passo da Bobina;Cabos de Saída (mm²);text;txt5744;Passo da Bobina: anomalia identificada, necessário reparo.;sim
+REBOBINAMENTO;-1;Cabos de Saída (mm²);Cabos de Saída (Quantidade);text;txt5745;4;sim
+REBOBINAMENTO;-1;Cabos de Saída (Quantidade);Fio AWG / mm;text;txt7307;Cabos de Saída (Quantidade): anomalia identificada, necessário reparo.;sim
+REBOBINAMENTO;-1;Dados Após Rebobinamento;Teste de Isolação ( Tensão / Resistência );text;txt7251;440;sim
+REBOBINAMENTO;-1;Teste de Isolação ( Tensão / Resistência );Teste de Resistência das Bobinas ( Multimetro );text;txt7252;343.7;sim
+REBOBINAMENTO;-1;NÚMERO DE ESPIRAS:;[espiras];text;txt10159;NÚMERO DE ESPIRAS:: anomalia identificada, necessário reparo.;sim
+REBOBINAMENTO;-1;TEMPERATURA (PONTO FRIO):;[°C];text;txt10161;57;sim
+REBOBINAMENTO;-1;TEMPO DO TESTE:;[minutos];text;txt10163;Pressão 110 bar, vazão 44 L/min, temperatura 48 °C, corrente 28.2 A. Valores fora do especificado.;sim
+REBOBINAMENTO;-1;CORRENTE ( I ) / ESPIRA:;[A];text;txt10165;Pressão 147 bar, vazão 72 L/min, temperatura 57 °C, corrente 20.3 A. Valores fora do especificado.;sim
+REBOBINAMENTO;-1;TEMPERATURA (PONTO QUENTE):;[°C];text;txt10167;90;sim
+REBOBINAMENTO;-1;RESULTADO / OBS.:;txt10169;text;txt10169;RESULTADO / OBS.:: anomalia identificada, necessário reparo.;sim
+BALANCEAMENTO;-1;Balanceamento;Rotação Nominal (RPM);text;txt2474;3500;sim
+BALANCEAMENTO;-1;Rotação Nominal (RPM);Classe de Qualidade de Balanceamento G;text;txt2476;Peça em bom estado geral.;sim
+BALANCEAMENTO;-1;Classe de Qualidade de Balanceamento G;Norma Aplicada;text;txt6470;Leve risco na região central, dentro da tolerância.;sim
+BALANCEAMENTO;-1;Norma Aplicada;Precisão de Equipamento;text;txt6471;Marcas de batida próximas à extremidade.;sim
+BALANCEAMENTO;-1;Precisão de Equipamento;Precisão da Leitura (Fundo de Escala );text;txt6472;Peça em bom estado geral.;sim
+BALANCEAMENTO;-1;Gramas;g;text;txt2497;Pontos de corrosão superficial, recomenda-se polimento.;sim
+BALANCEAMENTO;-1;Gramas;°;text;txt2498;Desgaste uniforme, sem ovalização aparente.;sim
+BALANCEAMENTO;-1;Gramas;g;text;txt2499;Cromo com descascamento localizado.;sim
+BALANCEAMENTO;-1;Gramas;°;text;txt2500;Marcas de batida próximas à extremidade.;sim
+BALANCEAMENTO;-1;Gramas;g;text;txt2502;Peça em bom estado geral.;sim
+BALANCEAMENTO;-1;Gramas;°;text;txt2503;Leve risco na região central, dentro da tolerância.;sim
+BALANCEAMENTO;-1;Gramas;g;text;txt2504;Cromo com descascamento localizado.;sim
+BALANCEAMENTO;-1;Gramas;°;text;txt2505;Peça em bom estado geral.;sim
+BALANCEAMENTO;-1;Gramas;g;text;txt2507;Desgaste uniforme, sem ovalização aparente.;sim
+BALANCEAMENTO;-1;Gramas;°;text;txt2508;Necessário recuperar rosca.;sim
+BALANCEAMENTO;-1;Gramas;g;text;txt2509;Peça em bom estado geral.;sim
+BALANCEAMENTO;-1;Gramas;°;text;txt2510;Pontos de corrosão superficial, recomenda-se polimento.;sim
+BALANCEAMENTO;-1;Gramas;Observações;textarea;txt2516;Leve risco na região central, dentro da tolerância.;sim
+BALANCEAMENTO;-1;Gramas;Operador;text;txt2517;Desgaste uniforme, sem ovalização aparente.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;RASGO DE CHAVETA;Largura;text;txt11703;67.18;sim
+INSPEÇÃO MECÂNICA FINAL;-1;Largura;Comprimento;text;txt11704;367.9;sim
+INSPEÇÃO MECÂNICA FINAL;-1;Comprimento;Profundidade;text;txt11705;Comprimento: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;TAMPA;MEDIDA PADRÃO;text;txt11718;149.04;sim
+INSPEÇÃO MECÂNICA FINAL;-1;TAMPA;MEDIDA PADRÃO;text;txt11719;113.88;sim
+INSPEÇÃO MECÂNICA FINAL;-1;TAMPA;MEDIDA VERIFICADA;text;txt11720;71.65;sim
+INSPEÇÃO MECÂNICA FINAL;-1;TAMPA;MEDIDA PADRÃO;text;txt11721;120.28;sim
+INSPEÇÃO MECÂNICA FINAL;-1;TAMPA;MEDIDA PADRÃO;text;txt11722;138.55;sim
+INSPEÇÃO MECÂNICA FINAL;-1;TAMPA;MEDIDA VERIFICADA;text;txt11724;19.80;sim
+INSPEÇÃO MECÂNICA FINAL;-1;TAMPA;OBSERVAÇÕES;text;txt11725;TAMPA: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;COLO;txt11727;text;txt11727;COLO: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;COLO;txt11728;text;txt11728;COLO: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;COLO;txt11729;text;txt11729;COLO: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;COLO;txt11730;text;txt11730;COLO: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;COLO;txt11731;text;txt11731;COLO: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;COLO;txt11732;text;txt11732;COLO: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;COLO;txt11733;text;txt11733;COLO: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;PONTA DE EIXO;txt11735;text;txt11735;PONTA DE EIXO: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;PONTA DE EIXO;txt11736;text;txt11736;PONTA DE EIXO: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;PONTA DE EIXO;txt11737;text;txt11737;PONTA DE EIXO: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;PONTA DE EIXO;txt11738;text;txt11738;PONTA DE EIXO: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;PONTA DE EIXO;txt11739;text;txt11739;PONTA DE EIXO: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;PONTA DE EIXO;txt11740;text;txt11740;PONTA DE EIXO: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;PONTA DE EIXO;txt11741;text;txt11741;PONTA DE EIXO: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;PONTA DE EIXO;Digite aqui...;text;txt11742;PONTA DE EIXO: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;Digite aqui...;txt11743;text;txt11743;Digite aqui...: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;Digite aqui...;txt11744;text;txt11744;Digite aqui...: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;Digite aqui...;txt11745;text;txt11745;Digite aqui...: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;Digite aqui...;txt11746;text;txt11746;Digite aqui...: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;Digite aqui...;txt11747;text;txt11747;Digite aqui...: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;PONTA DE EIXO;Digite aqui...;text;txt11748;PONTA DE EIXO: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;Digite aqui...;txt11749;text;txt11749;Digite aqui...: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;Digite aqui...;txt11750;text;txt11750;Digite aqui...: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;Digite aqui...;txt11751;text;txt11751;Digite aqui...: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;Digite aqui...;txt11752;text;txt11752;Digite aqui...: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;Digite aqui...;txt11753;text;txt11753;Digite aqui...: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;PONTA DE EIXO;Digite aqui...;text;txt11754;PONTA DE EIXO: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;Digite aqui...;txt11755;text;txt11755;Digite aqui...: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;Digite aqui...;txt11756;text;txt11756;Digite aqui...: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;Digite aqui...;txt11757;text;txt11757;Digite aqui...: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;Digite aqui...;txt11758;text;txt11758;Digite aqui...: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;Digite aqui...;txt11759;text;txt11759;Digite aqui...: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;DATA;mm;text;txt11767;DATA: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;DATA;SIM;checkbox;check11768;True;sim
+INSPEÇÃO MECÂNICA FINAL;-1;DATA;NÃO;checkbox;check11769;False;NAO
+INSPEÇÃO MECÂNICA FINAL;-1;DATA;EXECUTANTE;text;txt11770;DATA: verificado, sem anomalias.;sim
+INSPEÇÃO MECÂNICA FINAL;-1;EXECUTANTE;DATA;text;txt11771;04/10/2026;sim
+INSPEÇÃO MECÂNICA FINAL;-1;DATA;Instrumento de Medição;text;txt11772;134.19;sim
+INSPEÇÃO MECÂNICA FINAL;-1;Instrumento de Medição;Tag;text;txt11773;Instrumento de Medição: verificado, sem anomalias.;sim
+ANÁLISE ELETRICA FINAL;-1;DATA;[dd/mm/aa];text;txt11625;11/08/2026;sim
+ANÁLISE ELETRICA FINAL;-1;MEGGER;[V];text;txt11631;MEGGER: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;30 SEG.:;[ MΩ ];text;txt11637;30 SEG.:: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;ABSORÇÃO (IA):;60seg/30seg;text;txt11639;ABSORÇÃO (IA):: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;60seg/30seg;[ Ω ];text;txt11640;60seg/30seg: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;60seg/30seg;[ Ω ];text;txt11641;60seg/30seg: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;60seg/30seg;[ Ω ];text;txt11642;60seg/30seg: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;60 SEG.:;[ MΩ ];text;txt11644;60 SEG.:: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;POLARIZAÇÃO (IP):;600seg/60seg;text;txt11646;POLARIZAÇÃO (IP):: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;600 SEG.:;[ MΩ ];text;txt11651;600 SEG.:: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;[ MΩ ];[ Ω ];text;txt11652;[ MΩ ]: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;[ MΩ ];[ Ω ];text;txt11653;[ MΩ ]: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;[ MΩ ];[ Ω ];text;txt11654;[ MΩ ]: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;FASE V/W;Ω;text;txt11664;FASE V/W: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;FASE V/W;Ω;text;txt11665;FASE V/W: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;FASE V/W;Ω;text;txt11666;FASE V/W: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;FASE V/W;Ω;text;txt11667;FASE V/W: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;FASE V/W;Ω;text;txt11668;FASE V/W: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;FASE V/W;Ω;text;txt11669;FASE V/W: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;TAG;EXECUTANTE:;text;txt11673;TAG: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;TAG;INSTRUMENTO DE MEDIÇÃO;text;txt11674;90.70;sim
+ANÁLISE ELETRICA FINAL;-1;INSTRUMENTO DE MEDIÇÃO;TAG;text;txt11675;INSTRUMENTO DE MEDIÇÃO: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;TENSÃO:;Volts;text;txt11679;440;sim
+ANÁLISE ELETRICA FINAL;-1;ROTAÇÃO;RPM;text;txt11681;1750;sim
+ANÁLISE ELETRICA FINAL;-1;FASE U;A;text;txt11683;FASE U: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;FASE V;A;text;txt11685;FASE V: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;FASE W;A;text;txt11687;FASE W: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;FASE W;Aprovado;checkbox;check11688;False;NAO
+ANÁLISE ELETRICA FINAL;-1;FASE W;Reprovado;checkbox;check11689;True;sim
+ANÁLISE ELETRICA FINAL;-1;INSTRUMENTO DE MEDIÇÃO;txt11691;text;txt11691;INSTRUMENTO DE MEDIÇÃO: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;TAGS;txt11693;text;txt11693;TAGS: anomalia identificada, necessário reparo.;sim
+ANÁLISE ELETRICA FINAL;-1;TAGS;Não Aplicável;checkbox;check11694;True;sim
+ANÁLISE ELETRICA FINAL;-1;TAGS;Motor Queimado;checkbox;check11695;True;sim
+ANÁLISE ELETRICA FINAL;-1;SENSORES DE TEMPERATURA;Digite aqui...;textarea;txt11698;Pressão 134 bar, vazão 38 L/min, temperatura 61 °C, corrente 30.3 A. Valores fora do especificado.;sim
+ANÁLISE ELETRICA FINAL;-1;SENSORES DE TEMPERATURA;Digite aqui...;textarea;txt11700;Pressão 166 bar, vazão 65 L/min, temperatura 51 °C, corrente 38.8 A. Valores fora do especificado.;sim
+CHECKLIST FINAL;-1;"Riscar a OS e identificar por escrito ""DSC"" (Devolução sem conserto);";Não;checkbox;check11099;False;NAO
+CHECKLIST FINAL;-1;"Riscar a OS e identificar por escrito ""DSC"" (Devolução sem conserto);";Ok;checkbox;check11100;True;sim
+CHECKLIST FINAL;-1;"Localizar junto a OS onde estão todas as peças;";Não;checkbox;check11103;True;sim
+CHECKLIST FINAL;-1;"Localizar junto a OS onde estão todas as peças;";Ok;checkbox;check11104;True;sim
+CHECKLIST FINAL;-1;Motor montado ( Cliente pediu )?;Não;checkbox;check11107;True;sim
+CHECKLIST FINAL;-1;Motor montado ( Cliente pediu )?;Ok;checkbox;check11108;True;sim
+CHECKLIST FINAL;-1;Motor desmontado ( Cliente autorizou )?;Não;checkbox;check11111;True;sim
+CHECKLIST FINAL;-1;Motor desmontado ( Cliente autorizou )?;Ok;checkbox;check11112;False;NAO
+CHECKLIST FINAL;-1;"Pegar peças na caixa ou paletes, conforme OS;";Não;checkbox;check11115;False;NAO
+CHECKLIST FINAL;-1;"Pegar peças na caixa ou paletes, conforme OS;";Ok;checkbox;check11116;True;sim
+CHECKLIST FINAL;-1;"Peças de torno;";Não;checkbox;check11119;False;NAO
+CHECKLIST FINAL;-1;"Peças de torno;";Ok;checkbox;check11120;False;NAO
+CHECKLIST FINAL;-1;"Estator;";Não;checkbox;check11123;False;NAO
+CHECKLIST FINAL;-1;"Estator;";Ok;checkbox;check11124;True;sim
+CHECKLIST FINAL;-1;"Peças de Terceiros;";Não;checkbox;check11127;False;NAO
+CHECKLIST FINAL;-1;"Peças de Terceiros;";Ok;checkbox;check11128;True;sim
+CHECKLIST FINAL;-1;"Embalagem, caixa de papelão ou stret;";Não;checkbox;check11131;True;sim
+CHECKLIST FINAL;-1;"Embalagem, caixa de papelão ou stret;";Ok;checkbox;check11132;False;NAO
+CHECKLIST FINAL;-1;"Conferir na foto se esta com todas as peças junto ao motor (ex:polia);";Não;checkbox;check11135;False;NAO
+CHECKLIST FINAL;-1;"Conferir na foto se esta com todas as peças junto ao motor (ex:polia);";Ok;checkbox;check11136;False;NAO
+CHECKLIST FINAL;-1;"Identificação de ""DSD"" com canetão vermelho na embalagem;";Não;checkbox;check11139;False;NAO
+CHECKLIST FINAL;-1;"Identificação de ""DSD"" com canetão vermelho na embalagem;";Ok;checkbox;check11140;True;sim
+CHECKLIST FINAL;-1;"Colocar motor na expedição no local de devolução sem conserto;";Não;checkbox;check11143;False;NAO
+CHECKLIST FINAL;-1;"Colocar motor na expedição no local de devolução sem conserto;";Ok;checkbox;check11144;False;NAO
+CHECKLIST FINAL;-1;"Colocar motor na expedição no local de devolução sem conserto;";Observação:;textarea;txt11145;Motor elétrico sem anormalidades.;sim
+CHECKLIST FINAL;-1;"Megar estator;";(Valor encontrado):;text;txt11152;Desgaste uniforme, sem ovalização aparente.;sim
+CHECKLIST FINAL;0;(Valor encontrado):;Não possui;checkbox;check11154;False;NAO
+CHECKLIST FINAL;0;(Valor encontrado):;Ok;checkbox;check11155;True;sim
+CHECKLIST FINAL;1;"Leitura da OS;";Não possui;checkbox;check11158;False;NAO
+CHECKLIST FINAL;1;"Leitura da OS;";Ok;checkbox;check11159;False;NAO
+CHECKLIST FINAL;2;"Conferir na caixa junto com OS, se todos as peças estão corretas;";Não possui;checkbox;check11162;False;NAO
+CHECKLIST FINAL;2;"Conferir na caixa junto com OS, se todos as peças estão corretas;";Ok;checkbox;check11163;False;NAO
+CHECKLIST FINAL;3;"Verificar fotos do equipamento;";Não possui;checkbox;check11166;False;NAO
+CHECKLIST FINAL;3;"Verificar fotos do equipamento;";Ok;checkbox;check11167;True;sim
+CHECKLIST FINAL;4;"Conferir pasta do cliente;";Não possui;checkbox;check11170;False;NAO
+CHECKLIST FINAL;4;"Conferir pasta do cliente;";Ok;checkbox;check11171;False;NAO
+CHECKLIST FINAL;5;"Estator (retirar excesso de verniz);";Não possui;checkbox;check11174;False;NAO
+CHECKLIST FINAL;5;"Estator (retirar excesso de verniz);";Ok;checkbox;check11175;False;NAO
+CHECKLIST FINAL;6;"Verificar lado LA e LNA (Forma construtiva);";Não possui;checkbox;check11178;False;NAO
+CHECKLIST FINAL;6;"Verificar lado LA e LNA (Forma construtiva);";Ok;checkbox;check11179;True;sim
+CHECKLIST FINAL;7;"Pino graxeiro (Limpreza e aperto);";Não possui;checkbox;check11182;False;NAO
+CHECKLIST FINAL;7;"Pino graxeiro (Limpreza e aperto);";Ok;checkbox;check11183;True;sim
+CHECKLIST FINAL;8;"Posicionar arruela ondulada (Conferir medida);";Não possui;checkbox;check11186;False;NAO
+CHECKLIST FINAL;8;"Posicionar arruela ondulada (Conferir medida);";Ok;checkbox;check11187;True;sim
+CHECKLIST FINAL;9;"Verificar aperto dos parafusos dos flanges LA e LNA;";Não possui;checkbox;check11190;False;NAO
+CHECKLIST FINAL;9;"Verificar aperto dos parafusos dos flanges LA e LNA;";Ok;checkbox;check11191;True;sim
+CHECKLIST FINAL;10;"Verificar folga axial;";Não possui;checkbox;check11194;False;NAO
+CHECKLIST FINAL;10;"Verificar folga axial;";Ok;checkbox;check11195;False;NAO
+CHECKLIST FINAL;11;"Anel v'ring LA e LNA (Retentor);";Não possui;checkbox;check11198;False;NAO
+CHECKLIST FINAL;11;"Anel v'ring LA e LNA (Retentor);";Ok;checkbox;check11199;False;NAO
+CHECKLIST FINAL;12;"Posição da caixa de ligação;";Não possui;checkbox;check11202;False;NAO
+CHECKLIST FINAL;12;"Posição da caixa de ligação;";Ok;checkbox;check11203;True;sim
+CHECKLIST FINAL;13;"Número cabos (Retos e limpos);";Não possui;checkbox;check11206;False;NAO
+CHECKLIST FINAL;13;"Número cabos (Retos e limpos);";Ok;checkbox;check11207;True;sim
+CHECKLIST FINAL;14;"Terminais;";Não possui;checkbox;check11210;False;NAO
+CHECKLIST FINAL;14;"Terminais;";Ok;checkbox;check11211;True;sim
+CHECKLIST FINAL;15;"Placa de borner;";Não possui;checkbox;check11214;False;NAO
+CHECKLIST FINAL;15;"Placa de borner;";Ok;checkbox;check11215;False;NAO
+CHECKLIST FINAL;15;Megar Motor após montagem;(Valor encotrado);text;txt11218;Aquecimento e ruído nos rolamentos do motor.;sim
+CHECKLIST FINAL;16;(Valor encotrado);Não possui;checkbox;check11220;False;NAO
+CHECKLIST FINAL;16;(Valor encotrado);Ok;checkbox;check11221;True;sim
+CHECKLIST FINAL;17;Chaveta;Não possui;checkbox;check11224;False;NAO
+CHECKLIST FINAL;17;Chaveta;Ok;checkbox;check11225;False;NAO
+CHECKLIST FINAL;18;"Acoplamento (Conferir lado e distância);";Não possui;checkbox;check11228;False;NAO
+CHECKLIST FINAL;18;"Acoplamento (Conferir lado e distância);";Ok;checkbox;check11229;True;sim
+CHECKLIST FINAL;19;"Placa de identificação (Sempre bem legível);";Não possui;checkbox;check11232;False;NAO
+CHECKLIST FINAL;19;"Placa de identificação (Sempre bem legível);";Ok;checkbox;check11233;True;sim
+CHECKLIST FINAL;20;"Placa com o código do Motor (Veirificar se possui antigo);";Não possui;checkbox;check11236;False;NAO
+CHECKLIST FINAL;20;"Placa com o código do Motor (Veirificar se possui antigo);";Ok;checkbox;check11237;False;NAO
+CHECKLIST FINAL;21;Tampa da caixa de ligação;Não possui;checkbox;check11240;False;NAO
+CHECKLIST FINAL;21;Tampa da caixa de ligação;Ok;checkbox;check11241;True;sim
+CHECKLIST FINAL;22;"Peças extras na caixa para encaminhar junto com motor;";Não possui;checkbox;check11244;False;NAO
+CHECKLIST FINAL;22;"Peças extras na caixa para encaminhar junto com motor;";Ok;checkbox;check11245;True;sim
+CHECKLIST FINAL;22;"Peças extras na caixa para encaminhar junto com motor;";Observção;textarea;txt11246;Motor elétrico sem anormalidades.;sim
+CHECKLIST PINTURA;0;Recebimentos com OS;Não possui;checkbox;check11253;False;NAO
+CHECKLIST PINTURA;0;Recebimentos com OS;Ok;checkbox;check11254;False;NAO
+CHECKLIST PINTURA;1;Verificar pasta do Cliente;Não possui;checkbox;check11257;False;NAO
+CHECKLIST PINTURA;1;Verificar pasta do Cliente;Ok;checkbox;check11258;False;NAO
+CHECKLIST PINTURA;2;Olhal de suspensao (verificar se é da empresa);Não possui;checkbox;check11261;False;NAO
+CHECKLIST PINTURA;2;Olhal de suspensao (verificar se é da empresa);Ok;checkbox;check11262;True;sim
+CHECKLIST PINTURA;3;Conferir placa de identificação - Legivel;Não possui;checkbox;check11265;False;NAO
+CHECKLIST PINTURA;3;Conferir placa de identificação - Legivel;Ok;checkbox;check11266;True;sim
+CHECKLIST PINTURA;4;Conferir código do Motor (cod. antigo);Não possui;checkbox;check11269;False;NAO
+CHECKLIST PINTURA;4;Conferir código do Motor (cod. antigo);Ok;checkbox;check11270;False;NAO
+CHECKLIST PINTURA;5;Verificar forma construtiva conforme descrito na OS;Não possui;checkbox;check11273;False;NAO
+CHECKLIST PINTURA;5;Verificar forma construtiva conforme descrito na OS;Ok;checkbox;check11274;False;NAO
+CHECKLIST PINTURA;6;Defletora frouxa (inspeção manual);Não possui;checkbox;check11277;False;NAO
+CHECKLIST PINTURA;6;Defletora frouxa (inspeção manual);Ok;checkbox;check11278;False;NAO
+CHECKLIST PINTURA;7;Exesso de verniz na base;Não possui;checkbox;check11281;False;NAO
+CHECKLIST PINTURA;7;Exesso de verniz na base;Ok;checkbox;check11282;False;NAO
+CHECKLIST PINTURA;8;"Pino graxero; (conferir se não esta solto)";Não possui;checkbox;check11285;False;NAO
+CHECKLIST PINTURA;8;"Pino graxero; (conferir se não esta solto)";Ok;checkbox;check11286;False;NAO
+CHECKLIST PINTURA;9;Chaveta (conferir com OS);Não possui;checkbox;check11289;False;NAO
+CHECKLIST PINTURA;9;Chaveta (conferir com OS);Ok;checkbox;check11290;False;NAO
+CHECKLIST PINTURA;10;Acomplamento (limpeza e pintura);Não possui;checkbox;check11293;False;NAO
+CHECKLIST PINTURA;10;Acomplamento (limpeza e pintura);Ok;checkbox;check11294;False;NAO
+CHECKLIST PINTURA;11;Prensa cabos (onferir com OS);Não possui;checkbox;check11297;False;NAO
+CHECKLIST PINTURA;11;Prensa cabos (onferir com OS);Ok;checkbox;check11298;False;NAO
+CHECKLIST PINTURA;12;Anel v'ring ou retentores;Não possui;checkbox;check11301;False;NAO
+CHECKLIST PINTURA;12;Anel v'ring ou retentores;Ok;checkbox;check11302;True;sim
+CHECKLIST PINTURA;13;Executar serviços de pintura (conorme OS);Não possui;checkbox;check11305;False;NAO
+CHECKLIST PINTURA;13;Executar serviços de pintura (conorme OS);Ok;checkbox;check11306;False;NAO
+CHECKLIST PINTURA;14;Adesivos da conttec;Não possui;checkbox;check11309;False;NAO
+CHECKLIST PINTURA;14;Adesivos da conttec;Ok;checkbox;check11310;False;NAO
+CHECKLIST PINTURA;15;Adesivos da graxa ou bomba;Não possui;checkbox;check11313;False;NAO
+CHECKLIST PINTURA;15;Adesivos da graxa ou bomba;Ok;checkbox;check11314;False;NAO
+CHECKLIST PINTURA;16;Pintura antioxidante (tinta rouxa nas partes sem tinta);Não possui;checkbox;check11317;False;NAO
+CHECKLIST PINTURA;16;Pintura antioxidante (tinta rouxa nas partes sem tinta);Ok;checkbox;check11318;True;sim
+CHECKLIST PINTURA;17;Verificar junto a montagem peças a serem encaminhar com motor;Não possui;checkbox;check11321;False;NAO
+CHECKLIST PINTURA;17;Verificar junto a montagem peças a serem encaminhar com motor;Ok;checkbox;check11322;False;NAO
+CHECKLIST PINTURA;18;Embalagem (com strech de forma que não solte no vento);Não possui;checkbox;check11325;False;NAO
+CHECKLIST PINTURA;18;Embalagem (com strech de forma que não solte no vento);Ok;checkbox;check11326;True;sim
+CHECKLIST PINTURA;18;Embalagem (com strech de forma que não solte no vento);Colocar identificação (cod. do motor) na embalagem;checkbox;check11328;True;sim
+CHECKLIST PINTURA;19;Embalagem (com strech de forma que não solte no vento);Não possui;checkbox;check11329;False;NAO
+CHECKLIST PINTURA;19;Embalagem (com strech de forma que não solte no vento);Ok;checkbox;check11330;False;NAO
+CHECKLIST PINTURA;20;TAG:;Não possui;checkbox;check11333;False;NAO
+CHECKLIST PINTURA;20;TAG:;Ok;checkbox;check11334;False;NAO
+CHECKLIST PINTURA;20;TAG:;Observação;textarea;txt11335;Leve risco na região central, dentro da tolerância.;sim

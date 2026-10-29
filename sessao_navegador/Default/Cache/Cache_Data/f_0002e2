@@ -1,0 +1,736 @@
+﻿$(document).ready(function () {
+
+    ObterPecasCadastradas();
+
+    var location = window.location.href;
+
+    let classeVisivelPecasOrdem = '';
+
+    if (location.includes('FilaAnalise')) {
+        _displayValor = false;
+        $('.valor-total').hide();
+        classeVisivelPecasOrdem = 'd-none'
+    }
+
+    if (!PaginaAtivaEh('Analise')) {
+        tabelaPecas = $('#tabelaPecas').DataTable({
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+            },
+            "columns": [
+                { "width": "100px", className: "editavel" },
+                { className: "editavel" },
+                { className: "editavel" },
+                { className: "editavel" },
+                { className: "editavel" },
+                { className: "editavel " + classeVisivelPecasOrdem },
+                { className: classeVisivelPecasOrdem },
+                { className: "editavel", },
+                { className: "editavel " + classeVisivelPecasOrdem },
+                { className: "editavel " + classeVisivelPecasOrdem },
+                { "width": "110px" },
+                null,
+                { className: "editavel" },
+                { visible: false },
+                { visible: false },
+            ],
+            responsive: true,
+            infoCallback: function (settings) {
+                ArmazenarUltimaPaginaSelecionadaTabela(tabelaPecas);
+            },
+            paging: false,
+        });
+    }
+    else {
+        tabelaPecas = $('#tabelaPecas').DataTable({
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+            },
+            "columns": [
+                { "width": "100px", className: "editavel" },
+                { className: "editavel" },
+                { className: "editavel" },
+                { className: "editavel" },
+                { className: "editavel" },
+                { className: "editavel " + classeVisivelPecasOrdem },
+                { className:  classeVisivelPecasOrdem },
+                { className:  classeVisivelPecasOrdem },
+                { className: "editavel " + classeVisivelPecasOrdem },
+                { className: "editavel " + classeVisivelPecasOrdem },
+                null,
+                { "width": "110px" },
+                { className: "editavel " + classeVisivelPecasOrdem },
+                { visible: false },
+                { visible: false },
+            ],
+            responsive: true,
+            infoCallback: function (settings) {
+                ArmazenarUltimaPaginaSelecionadaTabela(tabelaPecas);
+            },
+            paging: false,
+        });
+
+        tabelaPecas.column(_indexColunaValorVenda).visible(false);
+
+        $('#divValorPecaUnitario').addClass('d-none');
+        $('#divValorPeca').addClass('d-none');
+    }
+
+    if (location.includes('FilaOrcamento')) {
+        tabelaPecas.column(_indexColunaValorVenda).visible(true);
+    }
+    else {
+        ValidarPermissaoOrcamentosLizy(() => {
+            _displayValor = false;
+            $('.valor-total').hide();
+            tabelaPecas.column(_indexColunaValorVenda).visible(false);
+
+            $('#divValorPecaUnitario').addClass('d-none');
+            $('#divValorPeca').addClass('d-none');
+        }, () => { _displayValor = true; });
+    }
+
+    tabelaPecas.column(_indexColunaIDPeca).visible(false);
+    tabelaPecas.column(INDEX_COLUNA_ID_LINHA).visible(false);
+
+    ObterQuantidadeAtualEstoquePecas();
+});
+
+var _displayValor = true;
+
+var _idPecaEditando = 0;
+
+const _indexColunaQuantidade = 0;
+const _indexColunaDescricaoPeca = 1;
+const INDEX_COLUNA_UNIDADE_MEDIDA = 2;
+const INDEX_COLUNA_REUTILIZAR_PECA = 3;
+const INDEX_COLUNA_CLIENTE_FORNECE = 4;
+const _indexColunaValorUnitario = 5;
+const INDEX_COLUNA_VALOR_CUSTO_TOTAL = 6;
+const INDEX_COLUNA_MARGEM_LUCRO = 7;
+const _indexColunaDescricaoPecaOrcamento = 8;
+const _indexColunaValorVenda = 9;
+const _indexColunaFuncoes = 10;
+const _indexColunaIDPeca = 11;
+const INDEX_COLUNA_ID_LINHA = 12;
+const INDEX_COLUNA_CONFERIDO_POR_TABELA_PECAS_ORDEM = 13;
+const INDEX_COLUNA_DATA_CONFERENCIA_TABELA_PECAS_ORDEM = 14;
+var IndexColunaEditando = 0;
+const PREFIXO_ELEMENTO_CHECKBOX_REUTILIZAR_PECA = 'checkReutilizarPeca-';
+const PREFIXO_ELEMENTO_CHECKBOX_CLIENTE_FORNECE = 'checkClienteFornecePeca-';
+var IDLinhaEditando = -1;
+$('#tabelaPecas tbody').on('click', 'td.editavel', function () {
+    IndexColunaEditando = this.cellIndex;
+
+    IDLinhaEditando = $(this).closest('tr').attr('id');
+
+    var colunaEhCampoDinheiro = this.cellIndex === _indexColunaValorUnitario
+        || this.cellIndex === INDEX_COLUNA_VALOR_CUSTO_TOTAL
+        || this.cellIndex === INDEX_COLUNA_MARGEM_LUCRO
+        || this.cellIndex === _indexColunaQuantidade
+        || this.cellIndex === _indexColunaValorVenda;
+
+    var colunaEhCampoQuantidade = false;
+
+    AddInput(this, colunaEhCampoDinheiro, colunaEhCampoQuantidade);
+});
+
+const NOME_ATRIBUTO_SELECT_PECA_UNIDADE_DE_MEDIDA = 'unidadeMedida';
+
+let valorVendaInicial = null; // Variável para armazenar o valor de venda inicial
+
+$('#selectPecasOrdem').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+    valorVendaInicial = $('#selectPecasOrdem option:selected').attr('valorVenda');
+
+    var valor = CarregarValorSelectDefaultZero('selectPecasOrdem');
+    var unidadeMedidaPecaSelecionada = $('#selectPecasOrdem option:selected').attr(NOME_ATRIBUTO_SELECT_PECA_UNIDADE_DE_MEDIDA);
+    var valorVendaPeca = $('#selectPecasOrdem option:selected').attr('valorVenda');
+
+    PreencherInput('txtQuantidadeAtualEstoquePeca', 'divQuantidadeAtualEstoquePeca', $('#selectPecasOrdem option:selected').attr('quantidadeEstoqueAtual'))
+
+    if (IsNullOrEmpty(valor))
+        valor = valorVendaPeca;
+
+    PreencherInput('txtValorPecaUnitario', 'divValorPecaUnitario', FormatDinheiro(parseFloat(valor)));
+    PreencherInput('txtUnidadeMedida', 'divUnidadeMedida', unidadeMedidaPecaSelecionada);
+    PreencherInput('txtValorVenda', 'divValorVenda', valorVendaPeca);
+
+    CalculaValorPecaTotal();
+    CalculaValorValorVenda(valorVendaInicial);
+});
+
+$('#txtQuantidadePeca').on('input', function () {
+    if (valorVendaInicial === null) {
+        valorVendaInicial = FormatarDinheiroParaDecimal($('#txtValorVenda').val());
+    }
+    CalculaValorValorVenda(valorVendaInicial);
+});
+
+$("#btnAdicionar").click(function () {
+    _idPecaEditando === 0 ? AdicionarCadastroPeca() : AlterarPeca();
+});
+
+function AdicionarPeca() {
+    DesabilitarBotao('btnAdicionarPeca', 'Adicionando . . .');
+
+    if (!ValidarCamposPecaOrdem()) {
+        HabilitarBotao('btnAdicionarPeca', 'Adicionar');
+        return;
+    }
+    _idColunaAtual = Math.floor(Math.random() * 1000);
+    InserirPecaNaTabela();
+
+    CalcularValorTotalCusto();
+}
+
+function ValidarCamposPecaOrdem() {
+    if (IsNullOrEmpty($('#txtQuantidadePeca').val())) return MostrarModalErro('quantidade', 'txtQuantidadePeca');
+    if ($('#txtQuantidadePeca').val() == '0' || $('#txtQuantidadePeca').val() == '0,00' || $('#txtQuantidadePeca').val() == '0,0'|| $('#txtQuantidadePeca').val() == '0.00' || $('#txtQuantidadePeca').val() == '0.0' ) return MostrarModalErro('quantidade', 'txtQuantidadePeca');
+    if (IsNullOrEmpty($('#selectPecasOrdem option:selected').text())) return MostrarModalErroSelect('descrição', 'selectPecasOrdem');
+
+    return true;
+}
+
+function VerificaValorDeVenda(valorVenda, valorUnitario) {
+    if (valorVenda === 0 || valorVenda === null)
+        return valorUnitario;
+    else
+        return valorVenda;
+}
+
+function CalcularMargemLucro(valorVenda, valorUnitarioPeca) {
+
+    if (valorVenda == 0 && valorUnitarioPeca == 0)
+        return 0;
+
+    if (valorVenda === 0)
+        valorVenda = valorUnitarioPeca;
+
+    var margemLucro = valorVenda / valorUnitarioPeca;
+
+    return margemLucro;
+}
+
+function InserirPecaNaTabela() {
+    var valorUnitarioPeca = ObterValorCampoFormatado('txtValorPecaUnitario');
+    var valorPeca = ObterValorCampoFormatado('txtValorPeca');
+    var valorVenda = ObterValorCampoFormatado('txtValorVenda');
+    var descricacaoPeca = $('#selectPecasOrdem option:selected').text();
+    var idPeca = $('#selectPecasOrdem option:selected').attr('id');
+    var unidadeMedida = ObterValorInput('txtUnidadeMedida');
+
+    if ($('#txtQuantidadePeca').val() <= 0) {
+        $('#txtQuantidadePeca').val('1');
+    }
+    var margemLucro = CalcularMargemLucro(+valorVenda, +valorPeca);
+
+    if (IsNullOrEmpty(valorUnitarioPeca))
+        valorUnitarioPeca = 0;
+
+    if (IsNullOrEmpty(valorPeca))
+        valorPeca = 0;
+
+    if (IsNullOrEmpty(valorVenda))
+        valorVenda = valorPeca;
+
+    if (IsNullOrEmpty(unidadeMedida))
+        unidadeMedida = "UN";
+
+    let quantidade = $('#txtQuantidadePeca').val();
+
+    let quantidadeAtualEstoque = $('#selectPecasOrdem option:selected').attr('quantidadeEstoqueAtual');
+
+    let descricaoPecaoOrcamento = descricacaoPeca.split(" ")[0];
+
+    if (descricacaoPeca.split(" ").length >= 3)
+        descricaoPecaoOrcamento = descricacaoPeca.split(" ")[2]
+
+    tabelaPecas.row.add([
+        quantidade,
+        descricacaoPeca + "<br/>Estoque Atual: " + quantidadeAtualEstoque,
+        unidadeMedida,
+        CriarCheckBoxReutilizarPeca(_idColunaAtual),
+        CriarCheckBoxClienteFornecePeca(_idColunaAtual),
+        'R$' + FormatDinheiro(valorUnitarioPeca),
+        'R$' + FormatDinheiro(+valorPeca),
+        FormatDinheiro(+margemLucro),
+        descricaoPecaoOrcamento,
+        'R$' + FormatDinheiro(VerificaValorDeVenda(valorVenda, valorPeca)),
+        CriarFuncoesTabelaPecas(_idColunaAtual),
+        idPeca,
+        _idColunaAtual,
+        '',
+        ''
+    ]).node().id = _idColunaAtual;
+
+    if (quantidade > quantidadeAtualEstoque) {
+        let row = tabelaPecas.row('#' + _idColunaAtual).node();
+
+        $(row).addClass('red-row');
+    }
+
+    RenderizarDatatable(tabelaPecas);
+
+    LimparCamposPeca();
+
+    if (!IsNullOrEmpty(valorPeca)) CalcularValorTotalPecas();
+
+    HabilitarBotao('btnAdicionarPeca', 'Adicionar');
+}
+
+function calcularMarkup(valorCusto, valorVenda) {
+    // Evita divisão por zero e custo = 0
+    if (valorCusto === 0) {
+        return 0;
+    }
+
+    return (valorVenda / valorCusto).toFixed(2);
+}
+
+function CriarFuncoesTabelaPecas() {
+    return '<a href="javascript:void(0);" onclick="ExcluirPeca(' + _idColunaAtual + '); " class="btn btn-link btn-warning btn-just-icon edit">' +
+        '<i class="material-icons">clear</i>' +
+        '</a>';
+}
+
+function CriarCheckBoxReutilizarPeca(idDaLinhaAtual) {
+    return '<div class="form-group">' +
+        '<div class="form-check text-center">' +
+        '<label class="form-check-label">' +
+        '<input class="form-check-input" onchange="CalcularValorTotalPecas()" type="checkbox" id="' + PREFIXO_ELEMENTO_CHECKBOX_REUTILIZAR_PECA + idDaLinhaAtual + '" name="' + PREFIXO_ELEMENTO_CHECKBOX_REUTILIZAR_PECA + idDaLinhaAtual + '"' +
+        '/>' +
+        '<span class="form-check-sign">' +
+        '<span class="check"></span>' +
+        '</span>' +
+        '</label>' +
+        '</div>' +
+        '</div>';
+}
+
+function CriarCheckBoxClienteFornecePeca(idDaLinhaAtual) {
+    return '<div class="form-group">' +
+        '<div class="form-check text-center">' +
+        '<label class="form-check-label">' +
+        '<input class="form-check-input" onchange="CalcularValorTotalPecas()"  type="checkbox" id="' + PREFIXO_ELEMENTO_CHECKBOX_CLIENTE_FORNECE + idDaLinhaAtual + '" name="' + PREFIXO_ELEMENTO_CHECKBOX_CLIENTE_FORNECE + idDaLinhaAtual + '"' +
+        '/>' +
+        '<span class="form-check-sign">' +
+        '<span class="check"></span>' +
+        '</span>' +
+        '</label>' +
+        '</div>' +
+        '</div>';
+}
+
+function ExcluirPeca(idLinha) {
+    let row = tabelaPecas.row('#' + idLinha).data();
+
+    tabelaPecas.row("#" + idLinha).remove();
+
+    RenderizarDatatable(tabelaPecas);
+
+    CalcularValorTotalCusto();
+
+    var valorPeca = FormatarDinheiroParaDecimal(row[_indexColunaValorVenda]);
+
+    if (valorPeca > 0)
+        CalcularValorTotalPecas();
+}
+
+function LimparCamposPeca() {
+    LimparInput('txtQuantidadePeca', 'divQuantidadePeca');
+    ResetSelectPicker('selectPecasOrdem');
+    LimparInput('txtValorPeca', 'divValorPeca');
+    LimparInput('txtValorPecaUnitario', 'divValorPecaUnitario');
+    LimparInput('txtUnidadeMedida', 'divUnidadeMedida');
+    LimparInput('txtQuantidadeAtualEstoquePeca', 'divQuantidadeAtualEstoquePeca');
+    LimparInput('txtValorVenda', 'divValorVenda');
+    $('#checkRecebido').prop('checked', false);
+    _idColunaAtual = 0;
+}
+
+function CarregarObjetoJsonPecasOrdem() {
+    var pecasOrdem = [];
+    var rowsData = tabelaPecas.rows().data();
+
+    for (var i = 0; i < rowsData.length; i++) {
+        var valorVenda = 0;
+        let idPecaOrdem = rowsData[i][INDEX_COLUNA_ID_LINHA];
+
+        valorVenda = FormatarDinheiroParaDecimal(rowsData[i][_indexColunaValorVenda]);
+        pecasOrdem.push({
+            "quantidade": FormatarDinheiroParaDecimal(rowsData[i][_indexColunaQuantidade]),
+            "descricao": getValorAntesDoBR(rowsData[i][_indexColunaDescricaoPeca]),
+            "unidade_de_medida": rowsData[i][INDEX_COLUNA_UNIDADE_MEDIDA],
+            "reutilizar_peca": ObterValorCheckBox(PREFIXO_ELEMENTO_CHECKBOX_REUTILIZAR_PECA + idPecaOrdem),
+            "cliente_fornece": ObterValorCheckBox(PREFIXO_ELEMENTO_CHECKBOX_CLIENTE_FORNECE + idPecaOrdem),
+            "valor": FormatarDinheiroParaDecimal(rowsData[i][INDEX_COLUNA_VALOR_CUSTO_TOTAL]),
+            "margem_lucro": FormatarDinheiroParaDecimal(rowsData[i][INDEX_COLUNA_MARGEM_LUCRO]),
+            "valor_venda": FormatarDinheiroParaDecimal(valorVenda),
+            "descricao_orcamento": rowsData[i][_indexColunaDescricaoPecaOrcamento],
+            "id_peca": 0,
+            "id_peca_lizy": rowsData[i][_indexColunaIDPeca],
+            "alterar_campos_orcamento": MenuOrcamentoAtivo(),
+            "conferido_por": rowsData[i][INDEX_COLUNA_CONFERIDO_POR_TABELA_PECAS_ORDEM],
+            "data_conferencia": FormatarDataParaCSharp(rowsData[i][INDEX_COLUNA_DATA_CONFERENCIA_TABELA_PECAS_ORDEM]),
+        });
+    }
+
+    return pecasOrdem;
+}
+
+function AddInput(elmemento, campoDinheiro, campoQuantidade) {
+    if (elmemento.getElementsByTagName('input').length > 0) return;
+
+    _valorAntesEdicao = elmemento.innerHTML;
+    elmemento.innerHTML = '';
+
+    var input = document.createElement('input');
+    input.setAttribute('type', 'text');
+    input.setAttribute('id', 'inputEditando');
+    input.setAttribute('class', 'editando');
+    input.setAttribute('style', 'width:100%');
+    input.setAttribute('onBlur', 'CloseInput(this,' + campoDinheiro + ')');
+    input.setAttribute('onkeyup', 'enterVerify(event)');
+    elmemento.appendChild(input);
+    input.focus();
+
+    if (campoQuantidade)
+        $('#inputEditando').mask('00000');
+    else if (campoDinheiro)
+        $('#inputEditando').mask('000000000000000,00', { reverse: true });
+    else
+        $('#inputEditando').val('');
+}
+
+function CloseInput(elmemento, campoDinheiro) {
+    var td = elmemento.parentNode;
+    var value = elmemento.value;
+    td.removeChild(elmemento);
+    var cell = tabelaPecas.cell(td);
+    if (_valorAntesEdicao !== value && value !== "") {
+
+        if (!campoDinheiro) {
+            td.innerHTML = value;
+            cell.data(value);
+        }
+        else {
+            var valor = FormatDinheiro(parseFloat(value.replace(',', '.')));
+
+            if (!AlterouValorMargemLucro() && !AlterouQuantidade()) {
+                valor = 'R$' + valor;
+            }
+
+            td.innerHTML = valor;
+            cell.data(valor);
+        }
+
+        CalcularValorTotalPecas();
+    }
+    else td.innerHTML = _valorAntesEdicao;
+
+    _valorAntesEdicao = '';
+}
+
+function CalcularValorTotalPecas() {
+
+    let rowsData = tabelaPecas.rows().data();
+    let indexes = tabelaPecas.rows().indexes();
+    let totalVenda = 0;
+    let totalCusto = 0;
+    for (var i = 0; i < rowsData.length; i++) {
+
+        let idLinha = rowsData[i][INDEX_COLUNA_ID_LINHA];
+        let indexLinha = indexes[i]; // Índice real da linha
+
+        if (idLinha != IDLinhaEditando)
+            continue;
+
+        let quantidade = FormatarDinheiroParaDecimal(rowsData[i][_indexColunaQuantidade]);
+        let valorUnitario = FormatarDinheiroParaDecimal(rowsData[i][_indexColunaValorUnitario])
+        let valorVenda = FormatarDinheiroParaDecimal(rowsData[i][_indexColunaValorVenda]);
+        let margemLucro = FormatarDinheiroParaDecimal(rowsData[i][INDEX_COLUNA_MARGEM_LUCRO]);
+        let valorTotal = FormatarDinheiroParaDecimal(rowsData[i][INDEX_COLUNA_VALOR_CUSTO_TOTAL]);
+        let valorTotalVenda = FormatarDinheiroParaDecimal(rowsData[i][_indexColunaValorVenda]);
+        let valorTotalCalculado = FormatarDinheiroParaDecimal(valorUnitario * quantidade);
+
+        let margemLucroCalculada = FormatarDinheiroParaDecimal(valorTotalCalculado * margemLucro);
+
+
+        if (ObterValorCheckBox(PREFIXO_ELEMENTO_CHECKBOX_CLIENTE_FORNECE + idLinha) || ObterValorCheckBox(PREFIXO_ELEMENTO_CHECKBOX_REUTILIZAR_PECA + idLinha)) {
+            tabelaPecas.cell({ row: indexLinha, column: _indexColunaValorUnitario }).data('R$' + FormatDinheiro(0));
+            tabelaPecas.cell({ row: indexLinha, column: INDEX_COLUNA_VALOR_CUSTO_TOTAL }).data('R$' + FormatDinheiro(0));
+            tabelaPecas.cell({ row: indexLinha, column: _indexColunaValorVenda }).data('R$' + FormatDinheiro(0));
+        }
+
+        if (AlterouValorUnitarioOuQuantidade()) {
+
+            if (quantidade > 0 && valorUnitario > 0) {
+
+                if (valorTotalCalculado !== valorTotal) {
+                    tabelaPecas.cell({ row: indexLinha, column: INDEX_COLUNA_VALOR_CUSTO_TOTAL }).data('R$' + FormatDinheiro(valorTotalCalculado));
+                }
+                if (margemLucroCalculada !== valorVenda) {
+                    tabelaPecas.cell({ row: indexLinha, column: _indexColunaValorVenda }).data('R$' + FormatDinheiro(margemLucroCalculada));
+                }
+
+            }
+        }
+        else if (AlterouValorTotal()) {
+            margemLucroCalculada = FormatarDinheiroParaDecimal(valorTotal * margemLucro);
+
+            if (quantidade > 0 && valorTotal > 0) {
+                let valorUnitarioCalculado = FormatarDinheiroParaDecimal(valorTotal / quantidade);
+
+                if (valorUnitarioCalculado !== valorUnitario) {
+                    tabelaPecas.cell({ row: indexLinha, column: _indexColunaValorUnitario }).data('R$' + FormatDinheiro(valorUnitarioCalculado * margemLucro));
+                }
+            }
+
+            if (margemLucroCalculada !== valorVenda) {
+                tabelaPecas.cell({ row: indexLinha, column: _indexColunaValorVenda }).data('R$' + FormatDinheiro(margemLucroCalculada));
+            }
+        }
+        else if (AlterouValorTotalVenda()) {
+            margemLucroCalculada = CalcularMargemLucro(valorTotalVenda, valorTotalCalculado);
+            tabelaPecas.cell({ row: indexLinha, column: INDEX_COLUNA_MARGEM_LUCRO }).data(FormatDinheiro(margemLucroCalculada));
+        }
+
+        if (margemLucro > 0 && AlterouValorMargemLucro()) {
+            if (margemLucroCalculada !== valorVenda && margemLucroCalculada > 0) {
+                tabelaPecas.cell({ row: indexLinha, column: _indexColunaValorVenda }).data('R$' + FormatDinheiro(margemLucroCalculada));
+            }
+        }
+
+    }
+
+    RenderizarDatatable(tabelaPecas);
+
+    CalcularValorTotalCusto();
+    CalcularValorTotalVenda();
+}
+
+function AlterouQuantidade() {
+    return (IndexColunaEditando === _indexColunaQuantidade)
+}
+
+function AlterouValorUnitarioOuQuantidade() {
+    return (AlterouQuantidade() || IndexColunaEditando === _indexColunaValorUnitario)
+}
+
+function AlterouValorMargemLucro() {
+    return (IndexColunaEditando === INDEX_COLUNA_MARGEM_LUCRO)
+}
+
+function AlterouValorTotal() {
+    return (IndexColunaEditando === INDEX_COLUNA_VALOR_CUSTO_TOTAL)
+}
+
+function AlterouValorTotalVenda() {
+    return (IndexColunaEditando === _indexColunaValorVenda)
+}
+
+function MenuOrcamentoAtivo() {
+    return window.location.href.includes('FilaOrcamento');
+}
+
+function CalculaValorPecaTotal() {
+    if (IsNullOrEmpty($('#txtQuantidadePeca').val()) || IsNullOrEmpty($('#txtValorPecaUnitario').val())) return;
+
+    let valorUnitario = FormatarDinheiroParaDecimal($('#txtValorPecaUnitario').val());
+    let quantidade = FormatarDinheiroParaDecimal($('#txtQuantidadePeca').val());
+
+    let valorTotalCalculado = FormatDinheiro(FormatarDinheiroParaDecimal(valorUnitario * quantidade));
+
+    PreencherInput('txtValorPeca', 'divValorPeca', valorTotalCalculado);
+}
+
+function CalculaValorValorVenda(valorVendaInicial) {
+    if (IsNullOrEmpty($('#txtQuantidadePeca').val()) || valorVendaInicial === null) return;
+
+    let quantidade = FormatarDinheiroParaDecimal($('#txtQuantidadePeca').val());
+    let valorTotalVenda = FormatDinheiro(FormatarDinheiroParaDecimal(valorVendaInicial * quantidade));
+
+    PreencherInput('txtValorVenda', 'divValorVenda', valorTotalVenda);
+}
+
+function CalculaValorPecaUnitario() {
+    if (IsNullOrEmpty($('#txtQuantidadePeca').val()) || IsNullOrEmpty($('#txtValorPeca').val())) return;
+
+    let valorTotal = FormatarDinheiroParaDecimal($('#txtValorPeca').val());
+    let quantidade = FormatarDinheiroParaDecimal($('#txtQuantidadePeca').val());
+
+    let valorUnitarioCalculado = CalcularValorPecaUnitario(valorTotal, quantidade);
+
+    PreencherInput('txtValorPecaUnitario', 'divValorPecaUnitario', valorUnitarioCalculado);
+}
+
+function CalcularValorPecaUnitario(valorTotal, quantidade) {
+    return FormatDinheiro(FormatarDinheiroParaDecimal(valorTotal / quantidade));
+}
+
+function ObterPecasCadastradas() {
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/Pecas/ObterPecas",
+        success: function (dados) {
+            if (dados.erro === false) {
+                var select = document.getElementById("selectPecasOrdem");
+
+                if (IsNullOrEmpty(select)) return;
+
+                select.options.length = 0;
+
+                $(dados.pecas).each(function (i) {
+                    let idPeca = dados.pecas[i].id;
+                    let descricao = dados.pecas[i].codigo + " - " + dados.pecas[i].descricao;
+                    let valor = dados.pecas[i].valor_custo;
+                    let unidadeMedida = '';
+                    let valorVenda = dados.pecas[i].preco_venda;
+                    let token1 = dados.pecas[i].prazo_minimo;
+                    let token2 = dados.pecas[i].prazo_validade;
+                    let qtdEstoqueAtual = dados.pecas[i].quantidade_estoque_atual;
+
+                    if (!IsNullOrEmpty(dados.pecas[i].cfop_estado))
+                        unidadeMedida = dados.pecas[i].cfop_estado;
+
+                    let dataTokens = token1 + ' ' + token2;
+
+                    let tamanhoMaximo = 150;
+
+                    if (window.innerWidth <= 800)
+                        tamanhoMaximo = 80;
+                    else if (window.innerWidth <= 1050)
+                        tamanhoMaximo = 110;
+
+                    if (descricao.length > tamanhoMaximo) {
+                        descricao = descricao.substring(0, tamanhoMaximo - 3) + '...';
+                    }
+
+                    $('<option>').val(valor).text(descricao).attr('id', idPeca).attr(NOME_ATRIBUTO_SELECT_PECA_UNIDADE_DE_MEDIDA, unidadeMedida)
+                        .attr('valorVenda', valorVenda).attr('data-tokens', dataTokens).attr('quantidadeEstoqueAtual', qtdEstoqueAtual).appendTo('#selectPecasOrdem');
+                });
+
+                $('#selectPecasOrdem').selectpicker('refresh');
+            }
+        },
+        error: function (error) {
+            EncerraLoading();
+        }
+    });
+}
+
+function ObterCustoTotalPecas() {
+    if (!$.fn.DataTable.isDataTable('#tabelaPecas')) return;
+
+    let rowsData = tabelaPecas.rows().data();
+    let valorTotalCusto = 0;
+
+    for (let i = 0; i < rowsData.length; i++) {
+        valorTotalCusto += FormatarDinheiroParaDecimal(rowsData[i][INDEX_COLUNA_VALOR_CUSTO_TOTAL]);
+    }
+
+    return valorTotalCusto;
+}
+
+function ObterValorVendaTotalPecas() {
+    if (!$.fn.DataTable.isDataTable('#tabelaPecas')) return;
+
+    let rowsData = tabelaPecas.rows().data();
+
+    let valorTotalVenda = 0;
+
+    for (let i = 0; i < rowsData.length; i++) {
+
+        valorTotalVenda += FormatarDinheiroParaDecimal(rowsData[i][_indexColunaValorVenda]);
+    }
+
+    return valorTotalVenda;
+}
+
+function AlterarMargemLucroGeral() {
+    let rowsData = tabelaPecas.rows().data();
+    let margemLucroGeral = ObterValorInput('txtValorMargemLucroGeralPecas');
+
+    let margemLucroNumerica = parseFloat(margemLucroGeral.replace(',', '.'));
+    if (isNaN(margemLucroNumerica)) {
+        return;
+    }
+
+    for (let i = 0; i < rowsData.length; i++) {
+        let indexLinha = tabelaPecas.row('#' + rowsData[i][INDEX_COLUNA_ID_LINHA]).index();
+
+        tabelaPecas.cell({ row: indexLinha, column: INDEX_COLUNA_MARGEM_LUCRO })
+            .data(FormatDinheiro(margemLucroNumerica));
+    }
+
+    CalcularValorTotalPecas();
+}
+
+function ObterQuantidadeAtualEstoquePecas() {
+
+    let idOrdem = $('#txtIdOrdem').val();
+
+    if (IsNullOrEmpty(idOrdem))
+        return;
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/Pecas/ObterEstoque/" + idOrdem,
+        success: function (dados) {
+            if (!dados.erro) {
+
+                dados.dados.forEach(item => {
+                    let idPecaOrdem = item.item1;
+                    let quantidadeAtualEstoque = item.item2;
+
+                    let $row = $('#' + idPecaOrdem);
+
+                    if ($row.length === 0) return;
+
+                    let $cellDescricao = $row.find('td:nth-child(2)');
+                    let descricaoAtual = $cellDescricao.html();
+
+                    $cellDescricao.html(descricaoAtual + "<br/>Estoque Atual: " + quantidadeAtualEstoque);
+
+                    let quantidadePecaTexto = $row.find('td:nth-child(1)').text();
+                    quantidadePecaTexto = quantidadePecaTexto.replace(',', '.');
+                    let quantidadePeca = parseFloat(quantidadePecaTexto);
+
+                    if (isNaN(quantidadePeca)) {
+                        quantidadePeca = 0;
+                    }
+
+                    if (quantidadePeca > quantidadeAtualEstoque) {
+                        $row.addClass('red-row');
+                    }
+                });
+            }
+        },
+        error: function (error) {
+            EncerraLoading();
+        }
+    });
+}
+
+function getValorAntesDoBR(str) {
+    if (!str) return "";
+
+    if (str.includes('&lt;br')) {
+        // Divide a string no ponto onde aparece "&lt;br"
+        const partes = str.split("&lt;br");
+
+        // Retorna apenas a primeira parte (antes do &lt;br), removendo espaços extras
+        return partes[0].trim();
+    }
+    else if (str.includes('<br/>')) {
+        // Divide a string no ponto onde aparece "&lt;br"
+        const partes = str.split("<br/>");
+
+        // Retorna apenas a primeira parte (antes do &lt;br), removendo espaços extras
+        return partes[0].trim();
+    }
+    else
+        return str;
+}

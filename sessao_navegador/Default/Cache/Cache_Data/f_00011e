@@ -1,0 +1,519 @@
+﻿$(document).ready(function () {
+
+    LimparInput('txtLocalizarOrdem');
+
+    tabelaLocalizarOrdem = $('#tabelaLocalizarOrdem').DataTable({
+        "language": {
+            "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+        },
+        responsive: true
+    });
+
+    tabelaOrdensCliente = $('#tabelaOrdensCliente').DataTable({
+        "language": {
+            "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+        },
+        "pageLength": 5,
+        responsive: true,
+    });
+});
+
+var txtLocalizarOrdem = document.getElementById("txtLocalizarOrdem");
+var tabelaLocalizarOrdem = null;
+var tabelaOrdensCliente = null;
+var VALOR_OPCAO_BUSCAR_NUMERO_ORDEM = 1;
+var VALOR_OPCAO_BUSCAR_CLIENTE = 2;
+var VALOR_OPCAO_BUSCAR_NUMERO_SERIE_EQUIPAMENTO = 3;
+var VALOR_OPCAO_BUSCAR_ORDENS_EMPRESTIMOS_EQUIPAMENTO = 4;
+var VALOR_OPCAO_BUSCAR_ORDENS_VENDA = 5;
+var VALOR_OPCAO_BUSCAR_ORDENS_TIPO_EQUIPAMENTO = 6;
+var VALOR_OPCAO_BUSCAR_ORDENS_FABRICANTE = 7;
+var VALOR_OPCAO_BUSCAR_ORDENS_ROTACAO = 8;
+var VALOR_OPCAO_BUSCAR_ORDENS_POTENCIA = 9;
+var VALOR_OPCAO_BUSCAR_ORDENS_NUMERO_NOTA_FISCAL = 10;
+
+$("#selectFiltrarPor").change(function () {
+
+    var valorSelecionado = parseInt($(this).val());
+
+    if (valorSelecionado === VALOR_OPCAO_BUSCAR_NUMERO_ORDEM || valorSelecionado === VALOR_OPCAO_BUSCAR_NUMERO_SERIE_EQUIPAMENTO || valorSelecionado === VALOR_OPCAO_BUSCAR_ORDENS_NUMERO_NOTA_FISCAL) {
+        $('#divInputNumeroOrdemBuscar').show();
+        $('#divSelectTipoEquipamentoBuscar').hide();
+        $('#divSelectClienteBuscar').hide();
+        $('#divSelectBuscarPorFabricante').hide();
+    }
+    else if (valorSelecionado === VALOR_OPCAO_BUSCAR_CLIENTE) {
+        $('#divSelectClienteBuscar').show();
+        $('#divSelectTipoEquipamentoBuscar').hide();
+        $('#divInputNumeroOrdemBuscar').hide();
+        $('#divSelectBuscarPorFabricante').hide();
+        CarregarClientesSelectBuscar();
+    }
+    else if (valorSelecionado === VALOR_OPCAO_BUSCAR_ORDENS_TIPO_EQUIPAMENTO) {
+        $('#divSelectTipoEquipamentoBuscar').show();
+        $('#divSelectClienteBuscar').hide();
+        $('#divInputNumeroOrdemBuscar').hide();
+        $('#divSelectBuscarPorFabricante').hide();
+        CarregarTiposEquipamentosSelectBuscar();
+    }
+    else if (valorSelecionado === VALOR_OPCAO_BUSCAR_ORDENS_FABRICANTE) {
+        $('#divSelectBuscarPorFabricante').show();
+        $('#divSelectClienteBuscar').hide();
+        $('#divSelectTipoEquipamentoBuscar').hide();
+        $('#divInputNumeroOrdemBuscar').hide();
+        CarregarFabricantesSelectBuscar();
+    }
+    else if (valorSelecionado === VALOR_OPCAO_BUSCAR_ORDENS_ROTACAO) {
+        $('#divInputNumeroOrdemBuscar').show();
+        $('#divSelectBuscarPorFabricante').hide();
+        $('#divSelectClienteBuscar').hide();
+        $('#divSelectTipoEquipamentoBuscar').hide();
+        
+    }
+    else if (valorSelecionado === VALOR_OPCAO_BUSCAR_ORDENS_POTENCIA) {
+        $('#divInputNumeroOrdemBuscar').show();
+        $('#divSelectBuscarPorFabricante').hide();
+        $('#divSelectClienteBuscar').hide();
+        $('#divSelectTipoEquipamentoBuscar').hide();
+        
+    }
+    else if (valorSelecionado === VALOR_OPCAO_BUSCAR_ORDENS_EMPRESTIMOS_EQUIPAMENTO || valorSelecionado === VALOR_OPCAO_BUSCAR_ORDENS_VENDA) {
+        $('#divInputNumeroOrdemBuscar').hide();
+        $('#divSelectTipoEquipamentoBuscar').hide();
+        $('#divSelectClienteBuscar').hide();
+    }
+})
+
+function CarregarClientesSelectBuscar() {
+
+    var numeroDeOpcoes = $('#selectClientesFiltro option').length;
+
+    if (numeroDeOpcoes > 1)
+        return;
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/LizyClientes/ObterClientesLizy",
+        success: function (response) {
+            if (response.erro) return;
+            AtualizarSelectPickerSelecionandoIdDescricaoDaLista(response.clientes, 'selectClientesFiltro', 'id', 'razao_social');
+        }
+    });
+}
+
+function CarregarTiposEquipamentosSelectBuscar() {
+
+    var numeroDeOpcoes = $('#selectTipoEquipamentoBuscar option').length;
+
+    if (numeroDeOpcoes > 1)
+        return;
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/TipoEquipamento/ObterTiposEquipamento",
+        success: function (response) {
+            if (response.erro) return;
+            AtualizarSelectPickerSelecionandoIdDescricaoDaLista(response.tiposEquipamento, 'selectTipoEquipamentoBuscar', 'id_tipo_equipamento', 'descricao');
+        }
+    });
+}
+
+function CarregarFabricantesSelectBuscar() {
+
+    var numeroDeOpcoes = $('#selectBuscarPorFabricante option').length;
+
+    if (numeroDeOpcoes > 1)
+        return;
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/Fabricante/ObterFabricantes",
+        success: function (response) {
+            if (response.erro) return;
+            AtualizarSelectPickerSelecionandoIdDescricaoDaLista(response.fabricantes, 'selectBuscarPorFabricante', 'id_fabricante', 'descricao');
+        }
+    });
+}
+
+$("#botaoBuscar").click(function () {
+
+    var filtroPor = parseInt($("#selectFiltrarPor option:selected").val());
+
+    if (filtroPor === VALOR_OPCAO_BUSCAR_CLIENTE)
+        BuscarCliente();
+    else if (filtroPor === VALOR_OPCAO_BUSCAR_ORDENS_TIPO_EQUIPAMENTO)
+        BuscarOrdensPeloTipoEquipamento();
+    else if (filtroPor === VALOR_OPCAO_BUSCAR_ORDENS_FABRICANTE)
+        BuscarOrdensPeloFabricante();
+    else if (filtroPor === VALOR_OPCAO_BUSCAR_ORDENS_ROTACAO)
+        BuscarOrdensPeloRPM();
+    else if (filtroPor === VALOR_OPCAO_BUSCAR_ORDENS_POTENCIA)
+        BuscarOrdensPelaPotencia();
+    else if (filtroPor === VALOR_OPCAO_BUSCAR_NUMERO_SERIE_EQUIPAMENTO)
+        BuscarOrdensPeloNumeroSerieEquipamento();
+    else if (filtroPor === VALOR_OPCAO_BUSCAR_ORDENS_EMPRESTIMOS_EQUIPAMENTO)
+        BuscarOrdensDeEmprestimo();
+    else if (filtroPor === VALOR_OPCAO_BUSCAR_ORDENS_VENDA)
+        BuscarOrdensDeVenda();
+    else if (filtroPor === VALOR_OPCAO_BUSCAR_ORDENS_NUMERO_NOTA_FISCAL)
+        BuscarOrdensNumeroNotaFiscal();
+    else
+        LocalizarOrdem();
+});
+
+function BuscarCliente() {
+
+    var opcaoSelecionada = $("#selectClientesFiltro option:selected");
+
+    if (IsNullOrEmpty(opcaoSelecionada[0].value))
+        return;
+
+    $.ajax({
+        dataType: "json",
+        data: {
+            idCliente: opcaoSelecionada[0].value,
+        },
+        type: "GET",
+        url: "/Ordem/ObterOrdensCliente",
+        success: function (response) {
+            if (response === null)
+                return;
+            PreencherModalOrdensCliente(response.ordens, opcaoSelecionada[0].text);
+        }
+    });
+}
+
+function BuscarOrdensPeloTipoEquipamento() {
+
+    var opcaoSelecionada = $("#selectTipoEquipamentoBuscar option:selected");
+
+    if (IsNullOrEmpty(opcaoSelecionada[0].value))
+        return;
+
+    $.ajax({
+        dataType: "json",
+        data: {
+            idTipoEquipamento: opcaoSelecionada[0].value,
+        },
+        type: "GET",
+        url: "/Ordem/ObterOrdensPeloTipoEquipamento",
+        success: function (response) {
+            if (response === null) return;
+            if (response.erro) swal('Atenção', 'Nenhuma ordem encontrada para esse tipo de Equipamento!', 'warning');
+            else if (response.ordens.length == 1) RedirecionarVisualizarOrdemBuscar(response.ordens[0].id_ordem);
+            MostrarModalComOrdens(response.ordens, opcaoSelecionada[0].text);
+        }
+    });
+}
+
+function BuscarOrdensPeloFabricante() {
+
+    var opcaoSelecionada = $("#selectBuscarPorFabricante option:selected");
+
+    if (IsNullOrEmpty(opcaoSelecionada[0].value))
+        return;
+
+    $.ajax({
+        dataType: "json",
+        data: {
+            idFabricante: opcaoSelecionada[0].value,
+        },
+        type: "GET",
+        url: "/Ordem/ObterOrdensPeloFabricante",
+        success: function (response) {
+            if (response === null) return;
+            if (response.erro) swal('Atenção', 'Nenhuma ordem encontrada para esse Fabricante!', 'warning');         
+            MostrarModalComOrdens(response.ordens, opcaoSelecionada[0].text);
+        }
+    });
+}
+
+function BuscarOrdensPeloRPM() {
+
+    $.ajax({
+        dataType: "json",
+        data: {
+            numeroRPM: txtLocalizarOrdem.value,
+        },
+        type: "GET",
+        url: "/Ordem/LocalizarOrdemPeloRPM",
+        success: function (response) {
+            if (response === null) return;
+            if (response.erro) swal('Atenção', 'Nenhuma ordem encontrada para esse número de Rotação(RPM)!', 'warning');           
+            MostrarModalComOrdens(response.ordens);
+        }
+    });
+}
+
+function BuscarOrdensPelaPotencia() {
+
+    $.ajax({
+        dataType: "json",
+        data: {
+            numeroPotencia: txtLocalizarOrdem.value,
+        },
+        type: "GET",
+        url: "/Ordem/LocalizarOrdemPelaPotencia",
+        success: function (response) {
+            if (response === null) return;
+            if (response.erro) swal('Atenção', 'Nenhuma ordem encontrada para esse número de Potência!', 'warning');           
+            MostrarModalComOrdens(response.ordens);
+        }
+    });
+}
+
+function BuscarOrdensPeloNumeroSerieEquipamento() {
+    $.ajax({
+        dataType: "json",
+        data: {
+            numeroSerieEquipamento: txtLocalizarOrdem.value,
+        },
+        type: "GET",
+        url: "/Ordem/LocalizarOrdemPeloNumeroSerieEquipamento",
+        success: function (response) {
+            if (response.erro) swal('Atenção', 'Nenhuma ordem encontrada para esse número de série', 'warning');
+            else if (response.ordens.length == 1) RedirecionarVisualizarOrdemBuscar(response.ordens[0].id_ordem);
+            else MostrarModalComOrdens(response.ordens);
+        }
+    });
+}
+
+function BuscarOrdensDeEmprestimo() {
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/Ordem/BuscarOrdensDeEmprestimo",
+        success: function (response) {
+            if (response.erro) swal('Atenção', 'Nenhuma ordem encontrada de empréstimo', 'warning');
+            else if (response.ordens.length == 1) RedirecionarVisualizarOrdemBuscar(response.ordens[0].id_ordem);
+            else MostrarModalComOrdens(response.ordens);
+        }
+    });
+}
+
+function BuscarOrdensDeVenda() {
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/Ordem/BuscarOrdensDeVenda",
+        success: function (response) {
+            if (response.erro) swal('Atenção', 'Nenhuma ordem encontrada de venda', 'warning');
+            else if (response.ordens.length == 1) RedirecionarVisualizarOrdemBuscar(response.ordens[0].id_ordem);
+            else MostrarModalComOrdens(response.ordens);
+        }
+    });
+}
+
+function BuscarOrdensNumeroNotaFiscal() {
+    $.ajax({
+        dataType: "json",
+        data: {
+            numeroNota: txtLocalizarOrdem.value,
+        },
+        type: "GET",
+        url: "/Ordem/BuscarOrdensNumeroNotaFiscal",
+        success: function (response) {
+            if (response === null) swal('Atenção', 'Nenhuma ordem encontrada para esse número de nota fiscal!', 'warning');
+            if (response.erro) swal('Atenção', 'Nenhuma ordem encontrada para esse número de nota fiscal!', 'warning');
+            else if (response.ordens.length == 1) {
+                RedirecionarVisualizarOrdemBuscar(response.ordens[0].id_ordem);
+            }
+            else {
+                MostrarModalComOrdens(response.ordens);
+            }
+        }
+    });
+}
+
+function PreencherModalOrdensCliente(ordens, nomeCliente) {
+
+    LimparTabela(tabelaOrdensCliente);
+
+    AlterarTituloModalOrdens();
+
+    for (var i = 0; i < ordens.length; i++) {
+
+        tabelaOrdensCliente.row.add([
+            ordens[i].numero_ordem,
+            ordens[i].setor,
+            ordens[i].status,
+            ordens[i].potencia,
+            ordens[i].nota_fiscal,
+            ordens[i].rpm,
+            ordens[i].tensao,
+            ordens[i].corrente,
+            ordens[i].tipo_equipamento,
+            ordens[i].fabricante,
+            ordens[i].modelo,
+            ordens[i].numero_serie,
+        ]).node().id = ordens[i].id_ordem;
+    }
+
+    tabelaOrdensCliente.draw();
+
+    AbrirModal('modal-ordens-cliente');
+    CriarEventoTabelaOrdensClientes();
+
+    $('#buscaTabelaOrdensBuscarCliente').keyup(function () {
+        tabelaOrdensCliente.search($(this).val()).draw();
+    });
+}
+
+function CriarFuncaoOrdensCliente(idOrdem) {
+
+    return '<a style="font-size:24px;" data-toggle="tooltip" title="Imprimir" onclick="ImprimirLaudoOrdemCliente(' + idOrdem + ')"' +
+        'class="btn btn-link btn-info btn-just-icon like"><i class="material-icons">print</i></a>';
+}
+
+function ImprimirLaudoOrdemCliente(idOrdem) {
+
+    $.ajax({
+        dataType: "json",
+        data: {
+            idOrdem: idOrdem
+        },
+        type: "GET",
+        url: "/Relatorio/GerarOrcamentoOrdem",
+        success: function (dados) {
+            PossuiRelatorioSendoGerado();
+            $('#modal-ordens-cliente').modal('toggle');
+        },
+        error: function (dados) {
+            console.log(dados.responseText);
+            PossuiRelatorioSendoGerado();
+            $('#modal-ordens-cliente').modal('toggle');
+        }
+    });
+}
+
+function CriarEventoTabelaOrdensClientes() {
+
+    $('#tabelaOrdensCliente tbody').on('dblclick', 'tr', function () {
+        var id = this.id;
+        RedirecionarVisualizarOrdemBuscar(id);
+    });
+}
+
+function LocalizarOrdem() {
+
+    if (txtLocalizarOrdem.value == 0)
+        return swal('Atenção', 'Número Ordem Invalido', 'warning');
+
+    $.ajax({
+        dataType: "json",
+        data: {
+            numeroOrdem: txtLocalizarOrdem.value,
+        },
+        type: "GET",
+        url: "/Ordem/LocalizarOrdem",
+        success: function (response) {
+            if (response.erro) swal('Atenção', 'Ordem não encontrada', 'warning');
+            else if (response.ordens.length == 1) RedirecionarVisualizarOrdemBuscar(response.ordens[0].id_ordem);
+            else MostrarModalComOrdens(response.ordens);
+        }
+    });
+}
+
+function RedirecionarVisualizarOrdemBuscar(idOrdem) {
+    $.ajax({
+        dataType: "json",
+        data: {
+            idOrdem: idOrdem,
+        },
+        type: "GET",
+        url: "/Ordem/ObterFilaAtualOrdem",
+        success: function (response) {
+            if (response.erro) swal('Atenção', 'Ordem não encontrada', 'warning');
+            else {
+                if (IsNullOrEmpty(response.fila)) window.location = '/FilaFinalizados/VisualizacaoOrdem/' + idOrdem;
+                else if (response.fila.id_tipo_fila == 1) window.location = '/FilaAnalise/EdicaoOrdem/' + idOrdem + '/0';
+                else if (response.fila.id_tipo_fila == 2) window.location = '/FilaOrcamento/AlteracaoOrcamento/' + idOrdem;
+                else if (response.fila.id_tipo_fila == 3) window.location = '/FilaAprovados/EdicaoOrdem/' + idOrdem + '/0';
+                else if (response.fila.id_tipo_fila == 4) window.location = '/FilaNaoAprovados/EdicaoOrdem/' + idOrdem;
+                else if (response.fila.id_tipo_fila == 5) window.location = '/FilaExpedicao/EdicaoOrdem/' + idOrdem;
+                else if (response.fila.id_tipo_fila == 6) window.location = '/FilaFaturamento/VisualizacaoOrdem/' + idOrdem;        
+            }
+
+            LimparInput('txtLocalizarOrdem');
+        }
+    });
+}
+
+function MostrarModalComOrdens(ordens) {
+    AlterarTituloModalOrdens();
+
+    LimparTabela(tabelaLocalizarOrdem);
+    CriarEventoTabelaLocalizarOrdem();
+
+    for (var i = 0; i < ordens.length; i++) {
+
+        tabelaLocalizarOrdem.row.add([
+            ordens[i].tipo_ordem,
+            ordens[i].cliente,
+            ordens[i].numero_ordem,
+            ordens[i].equipamento,
+            ordens[i].valor_ordem
+        ]).node().id = ordens[i].id_ordem;
+    }
+
+    tabelaLocalizarOrdem.draw();
+
+    $('#modal-localizar-ordem').modal('toggle');
+    $('#buscaTabelaOrdensBuscar').keyup(function () {
+
+        tabelaLocalizarOrdem.search($(this).val()).draw();
+    });
+
+    LimparInput('txtLocalizarOrdem');
+}
+
+function AlterarTituloModalOrdens() {
+    var filtroPor = parseInt($("#selectFiltrarPor option:selected").val());
+
+    if (filtroPor === VALOR_OPCAO_BUSCAR_CLIENTE) {
+        var opcaoSelecionada = $("#selectClientesFiltro option:selected");
+
+        $('#tituloModalOrdensCliente').text(opcaoSelecionada[0].text);
+    }
+    else if (filtroPor === VALOR_OPCAO_BUSCAR_ORDENS_TIPO_EQUIPAMENTO) {
+        var opcaoSelecionada = $("#selectTipoEquipamentoBuscar option:selected");
+
+        $('#tituLoModalLocalizarOrdem').text('Tipo de Equipamento: ' + opcaoSelecionada[0].text);
+    }
+    else if (filtroPor === VALOR_OPCAO_BUSCAR_ORDENS_FABRICANTE) {
+        var opcaoSelecionada = $("#selectBuscarPorFabricante option:selected");
+
+        $('#tituLoModalLocalizarOrdem').text('Fabricante: ' + opcaoSelecionada[0].text);
+    }
+    else if (filtroPor === VALOR_OPCAO_BUSCAR_ORDENS_ROTACAO) {
+        var opcaoSelecionada = $('#txtLocalizarOrdem').val();
+
+        $('#tituLoModalLocalizarOrdem').text('RPM: ' + opcaoSelecionada);
+    }
+    else if (filtroPor === VALOR_OPCAO_BUSCAR_ORDENS_POTENCIA) {
+        var opcaoSelecionada = ObterValorInput('txtLocalizarOrdem');
+
+        $('#tituLoModalLocalizarOrdem').text('Potência: ' + opcaoSelecionada);
+    }
+    else if (filtroPor === VALOR_OPCAO_BUSCAR_ORDENS_NUMERO_NOTA_FISCAL) {
+        var opcaoSelecionada = ObterValorInput('txtLocalizarOrdem');
+
+        $('#tituLoModalLocalizarOrdem').text('N° Nota Fiscal: ' + txtLocalizarOrdem.value);
+    }
+    else if (filtroPor === VALOR_OPCAO_BUSCAR_NUMERO_SERIE_EQUIPAMENTO)
+        $('#tituLoModalLocalizarOrdem').text('N° Série Equipamento: ' + txtLocalizarOrdem.value);
+    else {
+        $('#tituLoModalLocalizarOrdem').text('N° da Ordem: ' + txtLocalizarOrdem.value);
+    }
+}
+
+function CriarEventoTabelaLocalizarOrdem() {
+
+    $('#tabelaLocalizarOrdem tbody').on('dblclick', 'tr', function () {
+        var id = this.id;
+        RedirecionarVisualizarOrdemBuscar(id);
+    });
+}

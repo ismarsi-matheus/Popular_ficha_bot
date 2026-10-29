@@ -1,0 +1,684 @@
+﻿$(document).ready(function () {
+
+    tabelaPecas = $('#tabelaPecas').DataTable({
+        "language": {
+            "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+        },
+        "columns": [
+            { "width": "100px", className: "editavel" }, 
+            { className: "editavel" },
+            { className: "editavel" }, 
+            { className: "" }, 
+            { className: "" },
+            { className: "editavel", visible: _displayValor }, 
+            { visible: false }, 
+            { className: "editavel", visible: _displayValor }, 
+            { "width": "110px" },
+            null, 
+            { className: "editavel", visible: _displayValor }, 
+            { visible: false },
+            { visible: false }, 
+        ],
+        responsive: true,
+        infoCallback: function (settings) {
+            ArmazenarUltimaPaginaSelecionadaTabela(tabelaPecas);
+        },
+        paging: false,
+    });
+
+    ValidarPermissaoOrcamentosLizy(() => {
+        _displayValor = false;
+        $('.valor-total').hide();
+        $('#divValorPecaUnitario').addClass('d-none');
+        $('#divValorPeca').addClass('d-none');
+
+        tabelaPecas.column(INDEX_COLUNA_VALOR_A_VISTA).visible(false);
+        tabelaPecas.column(INDEX_COLUNA_VALOR_TOTAL).visible(false);
+   
+    }, () => {
+        _displayValor = true;
+        tabelaPecas.column(INDEX_COLUNA_VALOR_A_VISTA).visible(true);
+        tabelaPecas.column(INDEX_COLUNA_VALOR_TOTAL).visible(true);
+     
+    });
+
+    tabelaPecas.column(INDEX_COLUNA_ID_PECA).visible(false);
+    tabelaPecas.column(INDEX_COLUNA_ID_LINHA).visible(false);
+
+    ObterPecasDaOrdem();
+    ObterPecasCadastradas();
+});
+
+
+const INDEX_COLUNA_QUANTIDADE = 0;
+const INDEX_COLUNA_DESCRICAO = 1;
+const INDEX_COLUNA_UNIDADE_MEDIDA = 2;
+const INDEX_COLUNA_REUTILIZAR_PECA = 3;
+const INDEX_COLUNA_CLIENTE_FORNECE = 4;
+const INDEX_COLUNA_VALOR_A_VISTA = 5;
+const INDEX_COLUNA_DESCRICAO_PECA_ORCAMENTO = 6;
+const INDEX_COLUNA_VALOR_TOTAL = 7;
+const INDEX_COLUNA_FUNCOES = 8;
+const INDEX_COLUNA_ID_PECA = 9;
+const INDEX_COLUNA_ID_LINHA = 10;
+const INDEX_COLUNA_CONFERIDO_POR_TABELA_PECAS_ORDEM = 11;
+const INDEX_COLUNA_DATA_CONFERENCIA_TABELA_PECAS_ORDEM = 12;
+
+var _displayValor = true;
+var _idPecaEditando = 0;
+var IndexColunaEditando = 0;
+
+const PREFIXO_ELEMENTO_CHECKBOX_REUTILIZAR_PECA = 'checkReutilizarPeca-';
+const PREFIXO_ELEMENTO_CHECKBOX_CLIENTE_FORNECE = 'checkClienteFornecePeca-';
+
+const ID_ELEMENTO_QUANTIDADE_PECA_DA_ORDEM_ADICIONAR = 'txtQuantidadePeca';
+const ID_ELEMENTO_DESCRICAO_PECA_DA_ORDEM = 'selectPecasOrdem';
+const ID_ELEMENTO_UNIDADE_DE_MEDIDA_PECA_DA_ORDEM = 'txtUnidadeMedida';
+const ID_ELEMENTO_VALOR_A_VISTA_PECA_DA_ORDEM = 'txtValorPecaUnitario';
+const ID_ELEMENTO_VALOR_TOTAL_PECA_DA_ORDEM = 'txtValorPeca';
+
+
+$('#tabelaPecas tbody').on('click', 'td.editavel', function () {
+   
+    IndexColunaEditando = tabelaPecas.cell(this).index().column;
+  
+    var colunaEhCampoDinheiro = IndexColunaEditando === INDEX_COLUNA_VALOR_A_VISTA
+        || IndexColunaEditando === INDEX_COLUNA_VALOR_TOTAL;
+
+    var colunaEhCampoQuantidade = (IndexColunaEditando === INDEX_COLUNA_QUANTIDADE);
+
+    AddInput(this, colunaEhCampoDinheiro, colunaEhCampoQuantidade);
+});
+
+$('#tabelaServicosDaOrdem tbody').on('dblclick', 'tr', function () {
+
+    AbrirModalAlterarPecadaOrdem(this.id);
+});
+
+const NOME_ATRIBUTO_SELECT_PECA_UNIDADE_DE_MEDIDA = 'unidadeMedida';
+
+var valorVendaInicial = null;
+
+$('#selectPecasOrdem').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+    valorVendaInicial = $('#selectPecasOrdem option:selected').attr('valorVenda');
+
+    var valor = CarregarValorSelectDefaultZero('selectPecasOrdem');
+    var unidadeMedidaPecaSelecionada = $('#selectPecasOrdem option:selected').attr(NOME_ATRIBUTO_SELECT_PECA_UNIDADE_DE_MEDIDA);
+    var valorVendaPeca = $('#selectPecasOrdem option:selected').attr('valorVenda');
+
+    if (IsNullOrEmpty(valor))
+        valor = valorVendaPeca;
+
+    if (IsNullOrEmpty(valor))
+        valor = 0;
+
+    PreencherInput('txtValorPecaUnitario', 'divValorPecaUnitario', FormatDinheiro(parseFloat(valor)));
+    PreencherInput('txtUnidadeMedida', 'divUnidadeMedida', unidadeMedidaPecaSelecionada);
+    PreencherInput('txtValorVenda', 'divValorVenda', valorVendaPeca);
+
+    CalculaValorPecaTotal();   
+});
+
+
+function AdicionarPecaSemCadastro() {
+    DesabilitarBotao('btnAdicionarPecasNova', 'Adicionando . . .');
+
+    const quantidade = parseFloat($('#txtQuantidadePecaNova').val());
+    const descricao = $('#txtDescricaoPeca').val();
+
+    if (isNaN(quantidade) || quantidade <= 0) {
+        HabilitarBotao('btnAdicionarPecasNova', 'Adicionar');
+        return MostrarModalErro('quantidade', 'txtQuantidadePecaNova');
+    }
+
+    if (IsNullOrEmpty(descricao)) {
+        HabilitarBotao('btnAdicionarPecasNova', 'Adicionar');
+        return MostrarModalErro('descrição', 'txtDescricaoPeca');
+    }
+
+    const objeto = {
+        quantidade: quantidade,
+        descricao: descricao,
+        unidade_medida: "", 
+        id_peca_ordem: 0,
+        id_ordem: ObterValorInput(ID_ORDEM), 
+        id_peca_lizy: null, 
+        reutilizar_peca: false,
+        cliente_fornece: false,
+        valor_unitario: 0,
+        valor_total: 0
+    };
+
+    $.ajax({
+        data: JSON.stringify(objeto),
+        type: "POST",
+        url: "/PecasOrdem/AdicionarPecasDaOrdem",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            HabilitarBotao('btnAdicionarPecasNova', 'Adicionar');
+
+            if (response.erro) {
+                swal("Ops!", response.mensagem, "warning");
+            } else {
+                swal("Sucesso", "Peça adicionada com sucesso", "success");
+                $('#modal-nova-peca').modal('hide');
+                $('#txtQuantidadePecaNova').val('');
+                $('#txtDescricaoPeca').val('');
+                ObterPecasDaOrdem(); 
+            }
+        },
+        error: function () {
+            HabilitarBotao('btnAdicionarPecasNova', 'Adicionar');
+            swal("Erro", "Não foi possível adicionar a peça", "error");
+        }
+    });
+}
+
+
+
+function ValidarCamposPecaOrdem() {
+  
+    if (IsNullOrEmpty($('#txtQuantidadePeca').val())) return MostrarModalErro('quantidade', 'txtQuantidadePeca');
+    if (IsNullOrEmpty($('#selectPecasOrdem option:selected').text())) return MostrarModalErroSelect('descrição', 'selectPecasOrdem');
+    if (IsNullOrEmpty($('#txtUnidadeMedida').val())) return MostrarModalErro('unidade de medida', 'txtUnidadeMedida');
+    if (IsNullOrEmpty($('#txtValorPecaUnitario').val())) return MostrarModalErro('valor unitário', 'txtValorPecaUnitario');
+    if (IsNullOrEmpty($('#txtValorPeca').val())) return MostrarModalErro('valor total', 'txtValorPeca');
+
+    return true;
+}
+
+function VerificaValorDeVenda(valorVenda, valorUnitario) {
+    if (valorVenda === 0 || valorVenda === null)
+        return valorUnitario;
+    else
+        return valorVenda;
+}
+
+
+function CriarFuncoesTabelaPecas(idLinha) {
+    return `<div class="dropdown">
+                <button class="btnFuncoes btn-link btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-ellipsis-h"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" style="width:230px;">
+                    <a class="dropdown-item" title="Alterar Peça" href="javascript:void(0);" onclick="AbrirModalAlterarPecadaOrdem(${idLinha})">
+                        Alterar Peça
+                    </a>
+                    <a class="dropdown-item text-red" title="Excluir Peça" href="javascript:void(0);" onclick="ExcluirPeca(${idLinha})">
+                        Excluir Peça
+                    </a>
+                </div>
+            </div>`;
+}
+
+function CriarCheckBoxReutilizarPeca(idDaLinhaAtual, isChecked) {
+    let checkedAttribute = isChecked ? 'checked' : ''; 
+    return `
+        <div class="form-group">
+            <div class="form-check text-center">
+                <label class="form-check-label">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="${PREFIXO_ELEMENTO_CHECKBOX_REUTILIZAR_PECA}${idDaLinhaAtual}"
+                        onchange="AlterarReutilizarPeca(this, ${idDaLinhaAtual})"
+                        ${checkedAttribute} />
+                    <span class="form-check-sign"><span class="check"></span></span>
+                </label>
+            </div>
+        </div>`;
+}
+
+function CriarCheckBoxClienteFornecePeca(idDaLinhaAtual, isChecked) {
+    let checkedAttribute = isChecked ? 'checked' : ''; 
+    return `
+        <div class="form-group">
+            <div class="form-check text-center">
+                <label class="form-check-label">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="${PREFIXO_ELEMENTO_CHECKBOX_CLIENTE_FORNECE}${idDaLinhaAtual}"
+                        onchange="AlterarClienteFornece(this, ${idDaLinhaAtual})"
+                        ${checkedAttribute} />
+                    <span class="form-check-sign"><span class="check"></span></span>
+                </label>
+            </div>
+        </div>`;
+}
+
+function ExcluirPeca(idLinha) {
+    swal({
+        title: "Você tem certeza?",
+        text: "Essa peça será removida da ordem.",
+        icon: "warning",
+        buttons: true
+    }).then((willDelete) => {
+        if (willDelete) {
+
+            $.ajax({
+                url: "/PecasOrdem/ExcluirPecaDaOrdem/" + idLinha,
+                type: "PUT",
+                success: function (response) {
+                    if (response.erro) {
+                        swal("Ops!", response.mensagem, "error");
+                    } else {
+                        swal("Sucesso!", "A peça foi excluída com sucesso!", "success");
+                        ObterPecasDaOrdem();
+                    }
+                }
+            });
+        }
+    });
+}
+
+
+function AddInput(elmemento, campoDinheiro, campoQuantidade) {
+    if (elmemento.getElementsByTagName('input').length > 0) return;
+
+    _valorAntesEdicao = elmemento.innerText.trim();
+    elmemento.innerHTML = '';
+
+    var input = document.createElement('input');
+    input.setAttribute('type', 'text');
+    input.setAttribute('id', 'inputEditando');
+    input.setAttribute('class', 'editando');
+    input.setAttribute('style', 'width:100%');
+    input.setAttribute('onBlur', 'CloseInput(this,' + campoDinheiro + ')');
+    input.setAttribute('onkeyup', 'enterVerify(event)');
+    elmemento.appendChild(input);
+    input.focus();
+
+    if (campoDinheiro)
+        $('#inputEditando').mask('000.000.000.000.000,00', { reverse: true });
+    else if (campoQuantidade)
+        $('#inputEditando').mask('0000000000');
+
+    $('#inputEditando').val(_valorAntesEdicao);
+}
+
+function CloseInput(elmemento, campoDinheiro) {
+    var td = elmemento.parentNode;
+    var value = elmemento.value;
+    td.removeChild(elmemento);
+    var cell = tabelaPecas.cell(td);
+
+    if (_valorAntesEdicao !== value && value !== "") {
+        let idPecaOrdem = $(td).closest('tr').attr("id");
+        let requestURL = '';
+        let novoValor = value;
+
+
+        if (IndexColunaEditando === INDEX_COLUNA_VALOR_A_VISTA) {
+            requestURL = '/PecasOrdem/AlterarValorUnitarioPecaDaOrdem';
+            novoValor = parseFloat(novoValor.replace(/\./g, '').replace(',', '.'));
+        } else if (IndexColunaEditando === INDEX_COLUNA_QUANTIDADE) {
+            requestURL = '/PecasOrdem/AlterarQuantidadePecasDaOrdem';
+            novoValor = parseInt(novoValor);
+        } else if (IndexColunaEditando === INDEX_COLUNA_VALOR_TOTAL) {
+            requestURL = '/PecasOrdem/AlterarValorTotalPecaDaOrdem';
+            novoValor = parseFloat(novoValor.replace(/\./g, '').replace(',', '.'));
+        }
+        else if (IndexColunaEditando === INDEX_COLUNA_DESCRICAO_PECA_ORCAMENTO) {
+            requestURL = '/PecasOrdem/AlterarObservacaoPecasDaOrdem';
+            novoValor = value.trim();
+        }
+        else if (IndexColunaEditando === INDEX_COLUNA_DESCRICAO) {
+            requestURL = '/PecasOrdem/AlterarDescricaoPecasDaOrdem';
+            novoValor = value.trim();
+        }
+        else if (IndexColunaEditando === INDEX_COLUNA_UNIDADE_MEDIDA) {
+            requestURL = '/PecasOrdem/AlterarUnidadeMedidaPecasDaOrdem';
+            novoValor = value.trim();
+        }
+
+        if (requestURL !== '') {
+            td.innerHTML = 'Alterando...';
+
+            $.ajax({
+                data: JSON.stringify(novoValor),
+                type: "PUT",
+                url: requestURL + '/' + idPecaOrdem,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.erro) {
+                        swal("Ops!", response.mensagem, "warning");
+                        td.innerHTML = _valorAntesEdicao;
+                    } else {
+                        ObterPecasDaOrdem();                       
+                    }
+                }
+            });
+        }
+    } else {
+        td.innerHTML = _valorAntesEdicao;
+    }
+
+    _valorAntesEdicao = '';
+}
+
+function MenuOrcamentoAtivo() {
+    return window.location.href.includes('FilaOrcamento');
+}
+
+function CalculaValorPecaTotal() {
+    if (IsNullOrEmpty($('#txtQuantidadePeca').val()) || IsNullOrEmpty($('#txtValorPecaUnitario').val())) return;
+
+    let valorUnitario = FormatarDinheiroParaDecimal($('#txtValorPecaUnitario').val());
+    let quantidade = FormatarDinheiroParaDecimal($('#txtQuantidadePeca').val());
+
+    let valorTotalCalculado = FormatDinheiro(FormatarDinheiroParaDecimal(valorUnitario * quantidade));
+
+    PreencherInput('txtValorPeca', 'divValorPeca', valorTotalCalculado);
+}
+
+
+function CalculaValorPecaUnitario() {
+    if (IsNullOrEmpty($('#txtQuantidadePeca').val()) || IsNullOrEmpty($('#txtValorPeca').val())) return;
+
+    let valorTotal = FormatarDinheiroParaDecimal($('#txtValorPeca').val());
+    let quantidade = FormatarDinheiroParaDecimal($('#txtQuantidadePeca').val());
+
+    let valorUnitarioCalculado = CalcularValorPecaUnitario(valorTotal, quantidade);
+
+    PreencherInput('txtValorPecaUnitario', 'divValorPecaUnitario', valorUnitarioCalculado);
+}
+
+function CalcularValorPecaUnitario(valorTotal, quantidade) {
+    return FormatDinheiro(FormatarDinheiroParaDecimal(valorTotal / quantidade));
+}
+
+function ObterPecasCadastradas() {
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/Pecas/ObterPecas",
+        success: function (dados) {
+            if (dados.erro === false) {
+                var select = document.getElementById("selectPecasOrdem");
+
+                if (IsNullOrEmpty(select)) return;
+
+                select.options.length = 0;
+
+                $(dados.pecas).each(function (i) {
+                    let idPeca = dados.pecas[i].id;
+                    let descricao = dados.pecas[i].descricao;
+                    let valor = dados.pecas[i].valor_custo;
+                    let unidadeMedida = '';
+                    let valorVenda = dados.pecas[i].preco_venda;
+
+                    if (!IsNullOrEmpty(dados.pecas[i].cfop_estado))
+                        unidadeMedida = dados.pecas[i].cfop_estado;
+
+                    $('<option>').val(valorVenda).text(descricao).attr('id', idPeca).attr(NOME_ATRIBUTO_SELECT_PECA_UNIDADE_DE_MEDIDA, unidadeMedida).attr('valorVenda', valorVenda).appendTo('#selectPecasOrdem');
+                });
+
+                $('#selectPecasOrdem').selectpicker('refresh');
+            }
+        },
+        error: function (error) {
+            EncerraLoading();
+        }
+    });
+}
+
+function ObterPecasDaOrdem() {
+    let idOrdem = $('#txtIdOrdem').val();
+    if (IsNullOrEmpty(idOrdem)) {
+        return;
+    }
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/PecasOrdem/ObterPecasDaOrdem/" + idOrdem,
+        success: function (response) {
+            if (response.erro) {
+                swal("Ops!", response.mensagem, "warning");
+            } else {
+                LimparTabela(tabelaPecas);
+
+                let pecas = response.pecas_ordem;
+                let valorTotalCusto = 0;
+                let valorTotalVenda = 0;
+                let valorIPI = 0;
+
+                for (let i = 0; i < pecas.length; i++) {
+                    let peca = pecas[i];
+
+                    let checkReutilizarHtml = CriarCheckBoxReutilizarPeca(
+                        peca.id_peca_ordem,
+                        peca.reutilizar_peca
+                    );
+                    let checkClienteForneceHtml = CriarCheckBoxClienteFornecePeca(
+                        peca.id_peca_ordem,
+                        peca.cliente_fornece
+                    );
+
+                    let valorUnitario = `R$ ${FormatDinheiro(peca.valor_unitario)}`;
+                    let valorTotalVendaFormatado = `R$ ${FormatDinheiro(peca.valor_total)}`;
+
+                    tabelaPecas.row
+                        .add([
+                            peca.quantidade,
+                            peca.descricao,
+                            peca.unidade_de_medida,
+                            checkReutilizarHtml,
+                            checkClienteForneceHtml,
+                            valorUnitario,
+                            peca.descricao_orcamento,
+                            valorTotalVendaFormatado,
+                            CriarFuncoesTabelaPecas(peca.id_peca_ordem),
+                            peca.id_peca_lizy,
+                            peca.id_peca_ordem,
+                            peca.conferido_por,
+                            FormataJsonData(peca.data_conferencia)
+                        ])
+                        .node().id = peca.id_peca_ordem;
+
+                    
+                    valorTotalCusto += parseFloat(peca.valor_unitario || 0);
+                    valorTotalVenda += parseFloat(peca.valor_total || 0);
+
+                   
+                    let porcentagemIPI = parseFloat(peca.porcentagem_ipi || 0);
+                    valorIPI += peca.valor_total * (porcentagemIPI / 100);
+                }
+
+                                          
+                let valorTotalComImposto = valorTotalVenda + valorIPI;
+
+                
+                $('#valorTotalCustosPecas').text(`R$ ${FormatDinheiro(valorTotalCusto)}`);
+                $('#valorTotalPecas').text(`R$ ${FormatDinheiro(valorTotalVenda)}`);
+
+                
+                $('#valorProdutos').text(`R$ ${FormatDinheiro(valorTotalVenda)}`);
+                $('#valorIPI').text(`R$ ${FormatDinheiro(valorIPI)}`);
+                $('#valorTotalComImposto').text(`R$ ${FormatDinheiro(valorTotalComImposto)}`);
+
+                RenderizarDatatable(tabelaPecas);
+                CalcularValorTotalHorasCustoEVenda();
+            }
+        },
+        error: function (error) {
+            swal(
+                "Erro!",
+                "Houve um erro ao buscar as peças. Detalhes: " + error.responseText,
+                "error"
+            );
+        }
+    });
+}
+
+function AlterarReutilizarPeca(checkbox, idPecaOrdem) {
+    let marcado = checkbox.checked;
+
+    if (marcado) {
+        swal({
+            title: "Reutilizar Peça?",
+            text: "Ao marcar essa opção, o valor unitário e o valor total da peça serão zerados. Deseja continuar?",
+            icon: "warning",
+            buttons: ["Cancelar", "Sim"],
+            dangerMode: true,
+        }).then(function (confirmado) {
+            if (confirmado) {
+                atualizarCheckBoxReutilizar(idPecaOrdem, true, checkbox);
+            } else {
+                checkbox.checked = false;
+            }
+        });
+    } else {
+
+        atualizarCheckBoxReutilizar(idPecaOrdem, false, checkbox);
+    }
+}
+
+function AlterarClienteFornece(checkbox, idPecaOrdem) {
+    let marcado = checkbox.checked;
+
+    if (marcado) {
+        swal({
+            title: "Cliente Fornece?",
+            text: "Ao marcar essa opção, o valor unitário e o valor total da peça serão zerados. Deseja continuar?",
+            icon: "warning",
+            buttons: ["Cancelar", "Sim"],
+            dangerMode: true,
+        }).then(function (confirmado) {
+            if (confirmado) {
+                atualizarCheckBoxClienteFornece(idPecaOrdem, true, checkbox);
+            } else {
+                checkbox.checked = false;
+            }
+        });
+    } else {
+
+        atualizarCheckBoxClienteFornece(idPecaOrdem, false, checkbox);
+    }
+}
+
+function atualizarCheckBoxReutilizar(idPecaOrdem, marcado, checkbox) {
+    $.ajax({
+        url: '/PecasOrdem/AlterarCheckBoxReutilizarPecaPecasDaOrdem/' + idPecaOrdem,
+        type: 'PUT',
+        data: JSON.stringify(marcado),
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function (response) {
+            if (response.erro) {
+                swal("Erro", response.mensagem, "warning");
+                checkbox.checked = !marcado;
+            } else {
+                ObterPecasDaOrdem();
+            }
+        },
+        error: function () {
+            swal("Erro", "Não foi possível atualizar a peça.", "error");
+            checkbox.checked = !marcado;
+        }
+    });
+}
+
+function atualizarCheckBoxClienteFornece(idPecaOrdem, marcado, checkbox) {
+    $.ajax({
+        url: '/PecasOrdem/atualizarCheckBoxClienteFornece/' + idPecaOrdem,
+        type: 'PUT',
+        data: JSON.stringify(marcado),
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function (response) {
+            if (response.erro) {
+                swal("Erro", response.mensagem, "warning");
+                checkbox.checked = !marcado;
+            } else {
+                ObterPecasDaOrdem();
+            }
+        },
+        error: function () {
+            swal("Erro", "Não foi possível atualizar a peça.", "error");
+            checkbox.checked = !marcado;
+        }
+    });
+}
+
+function IncluirPecasDaOrdem() {
+
+    if (!ValidarCamposPecaOrdem()) {
+        return;
+    }
+
+    const quantidade = FormatarDinheiroParaDecimal(ObterValorInput(ID_ELEMENTO_QUANTIDADE_PECA_DA_ORDEM_ADICIONAR));
+    const descricao = $('#selectPecasOrdem option:selected').text();
+    const idPecaLizy = $('#selectPecasOrdem option:selected').attr('id');
+    const unidadeMedida = ObterValorInput(ID_ELEMENTO_UNIDADE_DE_MEDIDA_PECA_DA_ORDEM);
+    const valorUnitario = ObterValorInput(ID_ELEMENTO_VALOR_A_VISTA_PECA_DA_ORDEM);
+    const valorTotal = ObterValorInput(ID_ELEMENTO_VALOR_TOTAL_PECA_DA_ORDEM);
+    const porcentagemIcms = $('#selectPecasOrdem option:selected').attr('porcentagem_icms');
+    const porcentagemIpi = $('#selectPecasOrdem option:selected').attr('porcentagem_ipi');
+
+
+    const objeto = GerarObjetoPecasDaOrdem(quantidade, descricao, unidadeMedida, valorUnitario, valorTotal, idPecaLizy, porcentagemIcms, porcentagemIpi);
+    AdicionarPecasDaOrdem(objeto);
+}
+
+
+function GerarObjetoPecasDaOrdem(quantidade, descricao, unidadeMedida, valorUnitario, valorTotal, idPecaLizy, porcentagemIcms, porcentagemIpi) {
+    return {
+        "quantidade": quantidade,
+        "descricao": descricao,
+        "unidade_de_medida": unidadeMedida,
+        "id_peca_ordem": 0,
+        "id_ordem": ObterValorInput(ID_ORDEM),
+        "id_peca_lizy": idPecaLizy,
+        "reutilizar_peca": false,
+        "cliente_fornece": false,
+        "valor_unitario": FormatarDinheiroParaDecimal(valorUnitario),
+        "valor_total": FormatarDinheiroParaDecimal(valorTotal),
+        "porcentagem_icms": porcentagemIcms,
+        "porcentagem_ipi": porcentagemIpi
+    };
+}
+
+
+function AdicionarPecasDaOrdem(objeto, buscarServicosDaOrdem = true) {
+
+    $.ajax({
+        data: JSON.stringify(objeto),
+        type: "POST",
+        url: "/PecasOrdem/AdicionarPecasDaOrdem",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response.erro)
+                swal("Ops!", response.mensagem, "warning");
+            else {
+                if (buscarServicosDaOrdem) {
+                    swal("Sucesso", "Adicionado com sucesso", "success");
+
+                    LimparCamposAdicionarPecasDaOrdem();
+                    ObterPecasDaOrdem();
+                }
+            }
+        }
+    });
+}
+
+function LimparCamposAdicionarPecasDaOrdem() {
+
+    LimparInput(ID_ELEMENTO_QUANTIDADE_PECA_DA_ORDEM_ADICIONAR, 'txtQuantidadePeca');
+    LimparInput(ID_ELEMENTO_UNIDADE_DE_MEDIDA_PECA_DA_ORDEM, 'txtUnidadeMedida');
+    LimparInput(ID_ELEMENTO_VALOR_A_VISTA_PECA_DA_ORDEM, 'txtValorPecaUnitario');
+    LimparInput(ID_ELEMENTO_VALOR_TOTAL_PECA_DA_ORDEM, 'txtValorPeca');
+    ResetSelectPicker(ID_ELEMENTO_DESCRICAO_PECA_DA_ORDEM);
+    HabilitarBotao('btnAdicionarPeca', 'Adicionar');
+}
+
+function ObterValorVendaTotalPecas() {
+    let valorFormatado = $('#valorTotalComImposto').text(); 
+    return FormatarDinheiroParaDecimal(valorFormatado);
+}
+
+

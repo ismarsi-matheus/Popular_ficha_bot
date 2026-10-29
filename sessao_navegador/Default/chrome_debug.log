@@ -1,0 +1,5 @@
+[1027/125708.674:INFO:CONSOLE:18] "CSS Hot Reload ignoring https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css because it was inaccessible or had more than 7000 rules.", source: https://localhost:50390/_vs/browserLink (18)
+[1027/125708.680:INFO:CONSOLE:18] "CSS Hot Reload ignoring https://localhost:50390/css/material-dashboard.css?v=2.2.65 because it was inaccessible or had more than 7000 rules.", source: https://localhost:50390/_vs/browserLink (18)
+[1027/125708.681:INFO:CONSOLE:18] "CSS Hot Reload ignoring https://cdn.quilljs.com/1.3.7/quill.snow.css because it was inaccessible or had more than 7000 rules.", source: https://localhost:50390/_vs/browserLink (18)
+[1027/125708.682:INFO:CONSOLE:18] "CSS Hot Reload ignoring https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap because it was inaccessible or had more than 7000 rules.", source: https://localhost:50390/_vs/browserLink (18)
+[1027/125710.562:INFO:CONSOLE:405] "response [object Object]", source: https://localhost:50390/js/Pages/OrdemEdicao.js?v=E9Fh616f9ahWP7gmo1arBTRp_EW34Aa2B53W7OHHpG0 (405)

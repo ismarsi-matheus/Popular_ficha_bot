@@ -1,0 +1,1384 @@
+﻿$(document).ready(function () {
+
+    setTimeout(EsconderCamposNaoVisiveisCategoriaEquipamento, 1500);
+    setTimeout(CriarLinksITS, 1500);
+    setTimeout(AlterarImagens, 1500);
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+
+        $("." + CLASSE_SLICK_CARROUSEL).each(function () {
+
+            if (!$(this).is(":hidden")) {
+
+                if (!$(this).hasClass('slick-initialized')) {
+
+                    var idMomentoFoto = $(this).attr("data-idMomentoFoto");
+
+                    if (idMomentoFoto)
+                        BuscarFotosIlimitadasDaOrdem(idMomentoFoto);
+                }
+            }
+        });
+    });
+
+    if (PaginaAtivaEh('CriarOrdem')) {
+        setTimeout(() => {
+            CarregarFotosIlimitadas();
+        }, 1000)
+    }
+});
+
+
+var _geracaoFichaFinalizada = false;
+
+
+const PERITAGEM_INICIAL_MECANICA_VENTILACAO_FORCADA_CC = 65;
+const PERITAGEM_FINAL_MECANICA_VENTILACAO_FORCADA = 72;
+const PERITAGEM_INICIAL_ELETRICA_VENTILACAO_FORCADA_CC = 67;
+const SERVICOS_VENTILACAO_FORCADA = 69;
+
+const CATEGORIA_EQUIPAMENTO_MOTO_BOMBA = 6;
+
+const PERITAGEM_VISUAL_CAMPO_VENTILACAO_FORCADA_TITULO = 5481;
+const PERITEGEM_VISUAL_CAMPO_VENTILACAO_FORCADA_CHECKBOX_SIM = 5482;
+const PERITEGEM_VISUAL_CAMPO_VENTILACAO_FORCADA_CHECKBOX_NAO = 5483;
+
+const PERITAGEM_VISUAL_CAMPO_VENTILACAO_FORCADA_CC_CHECKBOX_NAO = 5972;
+
+
+function OcultarCamposVentilacaoForcada(codigoGrupo) {
+
+    $("#groupRow" + codigoGrupo).hide();
+    $("#titulo-" + codigoGrupo).hide();
+}
+
+function OcultarCamposVentilacaoForcadaPeritagemVisual() {
+    let idCategoriaEquipamento = ObterValorInput('txtIdCategoriaEquipamento');
+
+    if (idCategoriaEquipamento == CATEGORIA_EQUIPAMENTO_MOTO_BOMBA) {
+        $("#label" + PERITAGEM_VISUAL_CAMPO_VENTILACAO_FORCADA_TITULO).hide();
+        $("#check" + PERITEGEM_VISUAL_CAMPO_VENTILACAO_FORCADA_CHECKBOX_SIM).parent().parent().parent().hide();
+        $("#check" + PERITEGEM_VISUAL_CAMPO_VENTILACAO_FORCADA_CHECKBOX_NAO).parent().parent().parent().hide();
+        $("#label6554").parent().hide();
+    }
+
+}
+
+function OcultarCamposVentilacaoForcadaPeritagemVisualCC(idCampoFichaNao) {
+    if (idCampoFichaNao == PERITAGEM_VISUAL_CAMPO_VENTILACAO_FORCADA_CC_CHECKBOX_NAO) {
+
+        EsconderGrupoDaPagina(PERITAGEM_INICIAL_MECANICA_VENTILACAO_FORCADA_CC);
+        EsconderGrupoDaPagina(PERITAGEM_INICIAL_MECANICA_VENTILACAO_FORCADA_CC);
+        EsconderGrupoDaPagina(PERITAGEM_FINAL_MECANICA_VENTILACAO_FORCADA);
+        EsconderGrupoDaPagina(PERITAGEM_INICIAL_ELETRICA_VENTILACAO_FORCADA_CC);
+    }
+}
+
+function OcultarCamposVentilacaoForcadaPeritagemVisual(idCampoFichaNao) {
+    if (idCampoFichaNao == PERITEGEM_VISUAL_CAMPO_VENTILACAO_FORCADA_CHECKBOX_NAO) {
+
+        EsconderGrupoDaPagina(PERITAGEM_INICIAL_MECANICA_VENTILACAO_FORCADA_CC);
+        EsconderGrupoDaPagina(PERITAGEM_FINAL_MECANICA_VENTILACAO_FORCADA);
+        EsconderGrupoDaPagina(PERITAGEM_INICIAL_ELETRICA_VENTILACAO_FORCADA_CC);
+        EsconderGrupoDaPagina(SERVICOS_VENTILACAO_FORCADA);
+    }
+}
+
+function AlterarImagens() {
+    if (!$('#label5068').hasClass("d-none")) {
+
+        $('#label5068').parent().prepend('<img id="img5068" style="width:256px" src="https://empowcdn.blob.core.windows.net/fotos/3ad9a4b5-c840-45db-8113-5ae5f58c32b7.jpg" />');
+        $('#label5068').remove();
+    }
+
+    if (!$('#label2454').hasClass("d-none")) {
+
+        $('#label2454').parent().prepend('<img id="img2454" style="max-height:70px;margin-bottom:10px" src="https://empowcdn.blob.core.windows.net/fotos/51504545-5baf-4bee-beee-edfbe92ddbc4.png" />');
+        $('#label2454').remove();
+    }
+
+    if (!$('#label2475').hasClass("d-none")) {
+
+        $('#label2475').parent().prepend('<img id="img2475" style="max-height: 400px;" src="https://empowcdn.blob.core.windows.net/fotos/a48148a1-3162-4242-ac82-f670bec63f62.png" />');
+        $('#label2475').remove();
+    }
+
+    if (!$('#label10613').hasClass("d-none")) {
+
+        $('#label10613').parent().prepend('<img id="imglabel10613" class="w-100" src="https://empowcdn.blob.core.windows.net/fotos/aa718720-84c3-4cbe-bcb4-ec01b79a746a.png" />');
+        $('#label10613').remove();
+    }
+    if (!$('#label10613').hasClass("d-none")) {
+
+        $('#label10614').parent().prepend('<img id="imglabel10614" class="w-100" src="https://empowcdn.blob.core.windows.net/fotos/dbc1f1f7-4ccc-4713-b4bc-2f40e4e3dbe8.png" />');
+        $('#label10614').remove();
+    }
+    if (!$('#label10615').hasClass("d-none")) {
+
+        $('#label10615').parent().prepend('<img id="imglabel10615" class="w-100" src="https://empowcdn.blob.core.windows.net/fotos/225c9eea-e01c-479e-8ba3-804d51c28508.png" />');
+        $('#label10615').remove();
+    }
+
+}
+
+var ID_TIPO_CAMPO_INPUT = 1;
+var ID_TIPO_CAMPO_TEXTAREA = 2;
+var ID_TIPO_CAMPO_CHECKBOX = 3;
+var ID_TIPO_CAMPO_RADIOBUTTON = 4;
+var ID_TIPO_CAMPO_SELECTPICKER = 5;
+var ID_TIPO_CAMPO_DATETIMEPICKER = 6;
+var ID_TIPO_CAMPO_DATEPICKER = 7;
+var ID_TIPO_CAMPO_TIMEPICKER = 8;
+var ID_TIPO_CAMPO_FOTOS = 9;
+var ID_TIPO_CAMPO_TABELA = 10;
+var ID_TIPO_CAMPO_TITULO = 11;
+var ID_TIPO_CAMPO_LABEL = 12;
+
+var _listaIDSelectPickers = [];
+var _listaIDTitulos = [];
+
+function GerarGrupo(idGrupo, editavel, idPreGrupo, visualizarApenasTituloPreGrupo) {
+    if (idPreGrupo > 0) {
+        $.ajax({
+            dataType: "json",
+            type: "GET",
+            url: "/GrupoFicha/ObterPreGrupo",
+            data: {
+                idPreGrupo: idPreGrupo
+            },
+            success: function (dados) {
+                GerarHtmlPreGrupo(dados.preGrupo, visualizarApenasTituloPreGrupo);
+            }
+        });
+    }
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/CampoFicha/BuscaCamposGrupo",
+        data: {
+            idGrupo: idGrupo
+        },
+        success: function (dados) {
+            var html = "";
+            _listaIDSelectPickers = [];
+
+            if (!dados.erro) {
+
+                if ($(window).width() < 1024)
+                    dados.campos = dados.campos.sort((a, b) => {
+                        let ordemA = a.ordem;
+                        let ordemB = b.ordem;
+
+                        if (!IsNullOrEmpty(a.ordem_mobile))
+                            ordemA = a.ordem_mobile;
+
+                        if (!IsNullOrEmpty(b.ordem_mobile))
+                            ordemB = b.ordem_mobile;
+
+                        return ordemA - ordemB;
+                    });
+
+                $(dados.campos).each(function (i) {
+                    html += GerarHtmlCampo(dados.campos[i], editavel);
+
+                });
+            }
+
+            $('#groupRow' + idGrupo).html(html);
+
+            for (i = 0; i < _listaIDSelectPickers.length; i++) {
+                var idCampoFicha = _listaIDSelectPickers[i];
+
+                BuscaItensSelectPicker(idCampoFicha, "select" + idCampoFicha);
+            }
+
+            for (i = 0; i < _listaIDTitulos.length; i++) {
+                idCampoFicha = _listaIDTitulos[i];
+
+                BuscaTitulo(idCampoFicha, "titulo" + idCampoFicha);
+            }
+        },
+        error: function (error) {
+            EncerraLoading();
+        }
+    });
+}
+
+
+function GerarHtmlPreGrupo(preGrupo, visualizarApenasTituloPreGrupo) {
+    if (IsNullOrEmpty(preGrupo)) return;
+    if (IsNullOrEmpty(preGrupo.id_pre_grupo_tabela_referenciada)) return;
+
+    var idValorSelecionado = 0;
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/GrupoFicha/ObterValorPreGrupo",
+        data:
+        {
+            idOrdem: $('#txtIdOrdem').val(),
+            idPreGrupo: preGrupo.id_pre_grupo_tabela_referenciada
+        },
+        success: function (dados) {
+            if (dados.valorExiste) idValorSelecionado = dados.valorPreGrupo.id_selecionado;
+
+            if (visualizarApenasTituloPreGrupo > 0) GerarPreGrupoApenasTitulo(preGrupo, idValorSelecionado);
+            else GerarPreGrupoSelectPicker(preGrupo, idValorSelecionado);
+        }
+    });
+}
+
+function GerarPreGrupoApenasTitulo(preGrupo, idValorSelecionado) {
+
+    var html = "";
+
+    if (idValorSelecionado > 0) {
+        $.ajax({
+            url: "/GrupoFicha/ObterDescricaoSelecionadoPreGrupo/" + idValorSelecionado,
+            type: "POST",
+            data: JSON.stringify(preGrupo),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (dados) {
+                html += GerarHtmlTituloPreGrupo(preGrupo.titulo_selectpicker + " " + FormatarStrng(dados.descricao));
+                $('#preGroupRow' + preGrupo.id_pre_grupo_tabela_referenciada).html(html);
+            }
+        });
+    }
+    else {
+        html += GerarHtmlTituloPreGrupo(preGrupo.titulo_selectpicker);
+        $('#preGroupRow' + preGrupo.id_pre_grupo_tabela_referenciada).html(html);
+    }
+}
+
+function GerarHtmlTituloPreGrupo(titulo) {
+
+    return "<div class='col-md-12'>" +
+        " <h3>" + titulo + "</h3>" +
+        "</div>";
+}
+
+function GerarPreGrupoSelectPicker(preGrupo, idValorSelecionado) {
+    if (IsNullOrEmpty(preGrupo.nome_tabela_selectpicker) || IsNullOrEmpty(preGrupo.nome_coluna_id_selectpicker) || IsNullOrEmpty(preGrupo.nome_coluna_descricao_selectpicker)) return;
+
+    var html = "";
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/GrupoFicha/ObterRegistrosTabelaPreGrupo",
+        data:
+        {
+            nomeTabela: preGrupo.nome_tabela_selectpicker,
+            nomeColunaId: preGrupo.nome_coluna_id_selectpicker,
+            nomeColunaDescricao: preGrupo.nome_coluna_descricao_selectpicker
+        },
+        success: function (dados) {
+            html += GerarHtmlSelectPreGrupo(preGrupo);
+            $('#preGroupRow' + preGrupo.id_pre_grupo_tabela_referenciada).html(html);
+            AtualizarSelectPickerPreGrupo(dados.registrosSelectPicker, preGrupo, idValorSelecionado);
+        }
+    });
+}
+
+function GerarHtmlSelectPreGrupo(preGrupo) {
+
+    return "<div class='col-md-12'>" +
+        "      <select name='select" + preGrupo.id_pre_grupo_tabela_referenciada + "' id='select" + preGrupo.id_pre_grupo_tabela_referenciada + "' class='selectpicker select-pre-grupo' title='" + preGrupo.titulo_selectpicker + "'" +
+        "                         data-width='100%'  data-style='select-with-transition' data-size='5'>" +
+        "         </select>" +
+        "</div>";
+}
+
+function AtualizarSelectPickerPreGrupo(registros, preGrupo, idValorSelecionado) {
+
+    var nomeSelectPicker = 'select' + preGrupo.id_pre_grupo_tabela_referenciada;
+    AtualizarSelectPicker(registros, nomeSelectPicker, 'id');
+
+    if (idValorSelecionado) UpdateSelectPicker(nomeSelectPicker, idValorSelecionado);
+}
+
+const PREFIXO_DATA_ATTRIBUTE_CODIGO_SUBGRUPO_DESCRICAO = "data-codigo-subgrupo";
+const PREFIXO_DATA_ATTRIBUTE_CODIGO_SUBGRUPO = PREFIXO_DATA_ATTRIBUTE_CODIGO_SUBGRUPO_DESCRICAO + "='";
+
+function GerarHtmlCampo(campo, editavel) {
+
+    var html = "";
+
+    if (campo.id_tipo_campo === ID_TIPO_CAMPO_INPUT) html += CriaCampoInput(campo, editavel);
+    else if (campo.id_tipo_campo === ID_TIPO_CAMPO_TEXTAREA) html += CriaCampoTextArea(campo, editavel);
+    else if (campo.id_tipo_campo === ID_TIPO_CAMPO_CHECKBOX) html += CriaCampoCheckBox(campo, editavel);
+    else if (campo.id_tipo_campo === ID_TIPO_CAMPO_RADIOBUTTON) html += CriaCampoRadioButton(campo, editavel);
+    else if (campo.id_tipo_campo === ID_TIPO_CAMPO_SELECTPICKER) {
+        html += CriaCampoSelectPicker(campo, editavel);
+        _listaIDSelectPickers.push(campo.id_campo_ficha);
+
+    }
+    else if (campo.id_tipo_campo === ID_TIPO_CAMPO_DATETIMEPICKER) html += CriaCampoDateTimePicker(campo, editavel);
+    else if (campo.id_tipo_campo === ID_TIPO_CAMPO_DATEPICKER) html += CriaCampoDatePicker(campo, editavel);
+    else if (campo.id_tipo_campo === ID_TIPO_CAMPO_TIMEPICKER) html += CriaCampoTimePicker(campo, editavel);
+    else if (campo.id_tipo_campo === ID_TIPO_CAMPO_FOTOS) {
+        html += CriaCampoFotos(campo);
+        html += CriaCampoFotosIlimitados(campo);
+    }
+    else if (campo.id_tipo_campo === ID_TIPO_CAMPO_TITULO) {
+        html += CriaCampoTitulo(campo);
+        _listaIDTitulos.push(idCampoFicha);
+    }
+    else if (campo.id_tipo_campo === ID_TIPO_CAMPO_LABEL) html += CriaCampoLabel(campo, editavel);
+
+    return html;
+}
+
+function CriaCampoInput(campoInput, editavel) {
+
+    var html = "";
+
+    let onBlurEvent = "";
+    let styleDivDefault = '';
+
+    if (!IsNullOrEmpty(campoInput.on_blur_event)) {
+        onBlurEvent = 'onblur="' + campoInput.on_blur_event + '"';
+    }
+
+    let dataAttributeCodigoSubGrupo = "";
+
+    if (!IsNullOrEmpty(campoInput.codigo_subgrupo)) {
+        dataAttributeCodigoSubGrupo = PREFIXO_DATA_ATTRIBUTE_CODIGO_SUBGRUPO + campoInput.codigo_subgrupo + "'";;
+        styleDivDefault = 'display:none';
+    }
+
+    let valorPadraoCampo = "";
+
+    if (!IsNullOrEmpty(campoInput.valor_padrao))
+        valorPadraoCampo = campoInput.valor_padrao;
+
+    let quantidadeColunasMobile = '';
+
+    if (!IsNullOrEmpty(campoInput.quantidade_colunas_mobile))
+        quantidadeColunasMobile = ' col-' + campoInput.quantidade_colunas_mobile
+
+    let classeDiv = '';
+
+    if (!IsNullOrEmpty(campoInput.classes_div))
+        classeDiv = campoInput.classes_div;
+
+    html += "<div class=' " + quantidadeColunasMobile + " col-md-" + campoInput.quantidade_colunas + "   " + classeDiv + "' >" +
+        "      <div class='form-group' id='div" + campoInput.id_campo_ficha + "' style='" + styleDivDefault + "'> " +
+        "           <label for='txt" + campoInput.id_campo_ficha + "' class='bmd-label-floating'>" + campoInput.nome_campo + "</label>" +
+        "           <input type='text' data-='" + campoInput.descricao_subgrupo_campo_pertence + "' " + dataAttributeCodigoSubGrupo + " value='" + valorPadraoCampo + "' name='txt" + campoInput.id_campo_ficha + "' id='txt" + campoInput.id_campo_ficha + "' " + onBlurEvent + " class='form-control input-xl input-valor-campo conversao-maiusculo " + campoInput.classes_campo + "'" +
+        ObterSeCampoEhDisabled(editavel) + ">" +
+        "       </div>" +
+        "</div>";
+
+    return html;
+}
+
+function CriaCampoTextArea(campoTextArea, editavel) {
+
+    let dataAttributeCodigoSubGrupo = "";
+
+    if (!IsNullOrEmpty(campoTextArea.codigo_subgrupo)) {
+        dataAttributeCodigoSubGrupo = PREFIXO_DATA_ATTRIBUTE_CODIGO_SUBGRUPO + campoTextArea.codigo_subgrupo + "'";;
+    }
+
+    let quantidadeColunasMobile = '';
+
+    if (!IsNullOrEmpty(campoTextArea.quantidade_colunas_mobile))
+        quantidadeColunasMobile = ' col-' + campoTextArea.quantidade_colunas_mobile
+
+    let classeDiv = '';
+
+    if (!IsNullOrEmpty(campoTextArea.classes_div))
+        classeDiv = campoTextArea.classes_div;
+
+    return "<div class='" + quantidadeColunasMobile + " col-md-" + campoTextArea.quantidade_colunas + "    " + classeDiv + " pt-2' >" +
+        "      <div class='form-group' id='div" + campoTextArea.id_campo_ficha + "'>" +
+        "           <label class='titulo-div' style='color:#000'>" + campoTextArea.nome_campo + "</label>" +
+        "           <textarea id='txt" + campoTextArea.id_campo_ficha + "' oninput='AumentarTamanhoTextAreaAutomaticamente(this)' " + dataAttributeCodigoSubGrupo + " name='txt" + campoTextArea.id_campo_ficha + "' class='form-control input-valor-campo conversao-maiusculo' rows='3' " +
+        ObterSeCampoEhDisabled(editavel) + "></textarea>" +
+        "       </div>" +
+        "</div>";
+}
+
+function CriaCampoCheckBox(campoCheckBox, editavel) {
+
+    let dataAttributeCodigoSubGrupo = "";
+    let styleDivDefault = '';
+
+
+    if (!IsNullOrEmpty(campoCheckBox.codigo_subgrupo)) {
+        dataAttributeCodigoSubGrupo = PREFIXO_DATA_ATTRIBUTE_CODIGO_SUBGRUPO + campoCheckBox.codigo_subgrupo + "'";;
+        styleDivDefault = 'display:none';
+    }
+
+    let onClickEvent = "";
+    let onChangeEvent = "";
+
+    if (!IsNullOrEmpty(campoCheckBox.on_click_event)) {
+        onClickEvent = 'onclick="' + campoCheckBox.on_click_event + '"';
+    }
+
+    if (!IsNullOrEmpty(campoCheckBox.on_change_event)) {
+        onChangeEvent = 'onchange="' + campoCheckBox.on_change_event + '"';
+    }
+
+    let quantidadeColunasMobile = '';
+
+    if (!IsNullOrEmpty(campoCheckBox.quantidade_colunas_mobile))
+        quantidadeColunasMobile = ' col-' + campoCheckBox.quantidade_colunas_mobile
+
+    let classeDiv = '';
+
+    if (!IsNullOrEmpty(campoCheckBox.classes_div))
+        classeDiv = campoCheckBox.classes_div;
+
+
+    return "<div class=' " + quantidadeColunasMobile + " col-md-" + campoCheckBox.quantidade_colunas + "   " + classeDiv + "'  style='" + styleDivDefault + "'> " +
+        "       <div class='form-check inline-input' >" +
+        "           <label class='form-check-label'>" +
+        "               <input " + dataAttributeCodigoSubGrupo + " " + onClickEvent + " " + onChangeEvent + " class='form-check-input check-valor-campo  " + campoCheckBox.classes_campo + " ' type='checkbox' id='check" + campoCheckBox.id_campo_ficha + "' name='check" + campoCheckBox.id_campo_ficha + "' " +
+        ObterSeCampoCheckboxJaComecaMarcado(campoCheckBox.campo_checkbox_comecar_ja_marcado) + " " + ObterSeCampoEhDisabled(editavel) + "/>" + campoCheckBox.nome_campo +
+        "                   <span class='form-check-sign'>" +
+        "                       <span class='check'></span>" +
+        "                   </span>" +
+        "           </label>" +
+        "       </div>" +
+        "</div>";
+}
+
+function CriaCampoRadioButton(campoRadioButton, editavel) {
+
+    return "<div class='col-md-" + campoRadioButton.quantidade_colunas + "'>" +
+        "       <div class='form-check inline-input'>" +
+        "           <label class='form-check-label'>" +
+        "               <input class='form-check-input check-valor-campo' type='checkbox' id='check" + campoRadioButton.id_campo_ficha + "' name='check" + campoRadioButton.id_campo_ficha + "' " +
+        ObterSeCampoEhDisabled(editavel) + "/>" + campoRadioButton.nome_campo +
+        "                   <span class='form-check-sign'>" +
+        "                       <span class='check'></span>" +
+        "                   </span>" +
+        "           </label>" +
+        "       </div>" +
+        "</div>";
+}
+
+function CriaCampoSelectPicker(campoSelect, editavel) {
+
+    let onClickEvent = "";
+    let onChangeEvent = "";
+
+    if (!IsNullOrEmpty(campoSelect.on_click_event)) {
+        onClickEvent = 'onclick="' + campoSelect.on_click_event + '"';
+    }
+
+    if (!IsNullOrEmpty(campoSelect.on_change_event)) {
+        onChangeEvent = 'onchange="' + campoSelect.on_change_event + '"';
+    }
+
+    return "<div class='col-md-" + campoSelect.quantidade_colunas + "'>" +
+        "      <select " + onClickEvent + " " + onChangeEvent + " name='select" + campoSelect.id_campo_ficha + "' id='select" + campoSelect.id_campo_ficha + "' class='selectpicker select-valor-campo " + campoSelect.classes_campo + "' title='" + campoSelect.nome_campo + "'" +
+        "                         data-width='100%'  data-style='select-with-transition' data-size='5' " + ObterSeCampoEhDisabled(editavel) + ">" +
+        "         </select>" +
+        "</div>";
+}
+
+function CriaCampoDateTimePicker(campoDateTimePicker, editavel) {
+
+    return "<div class='col-md-" + campoDateTimePicker.quantidade_colunas + "'>" +
+        "      <div class='form-group' id='div" + campoDateTimePicker.id_campo_ficha + "'>" +
+        "           <label for='dtp" + idCampoFicha + "' class='bmd-label-floating'>" + campoDateTimePicker.nome_campo + "</label>" +
+        "           <input type='text' style='text-align:center' id='dtp" + campoDateTimePicker.id_campo_ficha + "' name='dtp" + campoDateTimePicker.id_campo_ficha + "' class='datepicker-here datetime-init form-control input-xl  input-datetime " + campoDateTimePicker.classes_campo + "' data-language='pt-BR' data-timepicker='true' " +
+        ObterSeCampoEhDisabled(editavel) + "/>" +
+        "       </div>" +
+        "</div>";
+}
+
+function CriaCampoDatePicker(campoDatePicker, editavel) {
+
+    return "<div class='col-md-" + campoDatePicker.quantidade_colunas + "'>" +
+        "      <div class='form-group' id='div" + campoDatePicker.id_campo_ficha + "'> " +
+        "           <label for='dtp" + campoDatePicker.id_campo_ficha + "' class='bmd-label-floating'>" + campoDatePicker.nome_campo + "</label>" +
+        "           <input type='text' style='text-align:center' id='dtp" + campoDatePicker.id_campo_ficha + "' name='dtp" + campoDatePicker.id_campo_ficha + "' class='datepicker-here  form-control input-xl date " + campoDatePicker.classes_campo + "' data-language='pt-BR' " +
+        ObterSeCampoEhDisabled(editavel) + "/>" +
+        "       </div>" +
+        "</div>";
+}
+
+function CriaCampoTimePicker(campoTimePicker, editavel) {
+    var html = "";
+
+    html += "<div class='col-md-" + campoTimePicker.quantidade_colunas + "'>" +
+        "      <div class='form-group'  id='div" + campoTimePicker.id_campo_ficha + "'>" +
+        "           <label for='dtp" + idCampoFicha + "' class='bmd-label-floating'>" + campoTimePicker.nome_campo + "</label>" +
+        "           <input type='text' style='text-align:center' id='dtp" + campoTimePicker.id_campo_ficha + "' name='dtp" + campoTimePicker.id_campo_ficha + "' class='form-control input-valor-campo input-xl time " + campoTimePicker.classes_campo + "' " +
+        ObterSeCampoEhDisabled(editavel) + "/>" +
+        "       </div>" +
+        "</div>";
+
+    return html;
+}
+
+function CriaCampoFotos(campoFotos) {
+
+    var html = "";
+
+    caminhoImageDefault = "/img/image_placeholder.jpg";
+
+    html += "<div class='col-md-12 fotos-ordem-limitadas d-none'>" +
+        "<h3>" + campoFotos.nome_campo + "</h3>" +
+        "</div>";
+
+    var nomeCampoFormatado = FormatarDescricaoMomentoFoto(campoFotos.nome_campo);
+    var nomeAnchorFotos = 'anchor' + nomeCampoFormatado;
+
+    for (countImage = 1; countImage <= 4; countImage++) {
+        var idImagem = FormatarIdCampoFotos(nomeCampoFormatado, countImage);
+
+        html += "<div class='col-md-3 fotos-ordem-limitadas  d-none'>" +
+            "       <div class='card-product'>" +
+            "           <div class='card-header card-header-image'>" +
+            "               <div class='fileinput fileinput-new text-center' style='width: 100%;cursor:pointer;' onclick=AlteraImagem('" + idImagem + "File','" + nomeAnchorFotos + "') data-provides='fileinput'>" +
+            "                   <div class='fileinput-new thumbnail' style='width: 100%;'>" +
+            "                       <div class='right-corner-box'>" +
+            "                           <span class='btn-rose btn-round btn-file'>" +
+            "                               <span class='fileinput-new'>Escolher imagem</span>" +
+            "                               <span class='fileinput-exists'>Trocar</span>" +
+            "                           </span>" +
+            "                           <a href='#pablo' class='btn btn-danger btn-round fileinput-exists' data-dismiss='fileinput'><i class='fa fa-times'></i> Remover</a>" +
+            "                       </div>" +
+            "                       <img class='img image-valor-campo' id='" + idImagem + "Img' data-idcampoficha='" + campoFotos.id_campo_ficha + "' data-countimage='" + countImage + "' src='" + caminhoImageDefault + "'>" +
+            "                  </div>" +
+            "               <div class='fileinput-preview fileinput-exists thumbnail'></div>" +
+            "               </div>" +
+            "               <div class='text-danger' style='display:inline-block;cursor:pointer;margin-left:5px;'>" +
+            "                   <a onclick='RemoverFotoAdicionada(\"" + idImagem + "Img\")'><i style='font-size:20px;' class='fas fa-trash'></i></a>" +
+            "               </div>" +
+            "               <input type='file' onchange='UploadImage(this)' style='position:absolute;top:-9999px;' data-idcampoficha='" + campoFotos.id_campo_ficha + "' data-countimage='" + countImage + "'" +
+            "                   class='input-upload-foto' id = '" + idImagem + "File' accept = 'image/png, image/jpeg, image/gif' /> " +
+            "               <h4 class='text-center' style='color:black' id='" + idImagem + "Legenda'></h4>" +
+            "           </div>";
+
+        var styleZoomIcon = 'style="display:none"';
+
+        if (countImage === 1) styleZoomIcon = '';
+
+        html += "   <div class='zoom-icon fotos-ordem-limitadas' " + styleZoomIcon + ">" +
+            "           <a class='lightbox' id='" + idImagem + "Gallery' data-lightbox-gallery='" + nomeCampoFormatado + "' href='" + caminhoImageDefault + "' ><i class='fas fa-search-plus'></i></a>" +
+            "       </div>";
+
+
+        html += "  </div>" +
+            "   </div>";
+    }
+
+    html += "<input id='" + nomeAnchorFotos + "' style='display:none'/>";
+
+    return html;
+}
+
+function RemoverFotoAdicionada(idImagem) {
+    $('#' + idImagem.trim()).attr('src', "/img/image_placeholder.jpg");
+}
+
+function CriaCampoFotosIlimitados(campoFotos) {
+
+    var html = "";
+
+    caminhoImageDefault = "/img/image_placeholder.png";
+    let uploadImageDefault = "/img/upload_placeholder.png";
+
+    const idMomento = campoFotos.id_momento_foto;
+
+    let classeSortable = ' sortable-' + idMomento + " ";
+    let classeDraggable = ' draggable-' + idMomento + " ";
+
+    html += "<div class='col-md-12 fotos-ordem-ilimitadas " + classeDraggable + classeSortable + "'>" +
+        "<h3>" + campoFotos.nome_campo + "</h3>" +
+        "</div>";
+
+
+    let idFile = 'ordemFotosIlimitadasFile' + idMomento;
+    let idAnchorFile = 'anchorFotosOrdemFotosIlimitadas' + idMomento;
+    let idImagemIlimitada = 'ordemFotosIlimitadasImg' + idMomento;
+
+    html += "<div class='col-md-3 fotos-ordem-ilimitadas' data-idMomentoFoto='" + campoFotos.id_momento_foto + "' >" +
+        "       <div class='card-product'>" +
+        "           <div class='card-header card-header-image'>" +
+        "               <div class='fileinput fileinput-new text-center' style='width: 100%;cursor:pointer;' onclick=AlteraImagem('" + idFile + "','" + idAnchorFile + "') data-provides='fileinput'>" +
+        "                   <div class='fileinput-new thumbnail'>" +
+
+        "                       <img class='img image-valor-campo' style='height:unset' id='" + idImagemIlimitada + "' data-idcampoficha='" + campoFotos.id_campo_ficha + "' src='" + uploadImageDefault + "'>" +
+        "                  </div>" +
+        "               <div class='fileinput-preview fileinput-exists thumbnail'></div>" +
+        "               </div>" +
+        "               <input type='file' onchange='UploadImageOrdemFotosIlimitadasNoMomento(this, " + campoFotos.id_momento_foto + ")' multiple style='position:absolute;top:-9999px;' data-idcampoficha='" + campoFotos.id_campo_ficha + "'" +
+        "                   class='input-upload-foto' id='" + idFile + "' accept = 'image/png, image/jpeg, image/gif' /> " +
+        "           </div>" +
+        "       </div>" +
+        "    </div>";
+
+    html += "<input id='" + idAnchorFile + "' style='display:none'/>";
+
+    html += "<div class='col-12'> <div class='carousel-fotos' id='carousel-fotos" + campoFotos.id_momento_foto + "' data-idMomentoFoto='" + campoFotos.id_momento_foto + "'> </div></div>";
+
+
+
+    return html;
+}
+
+function CriaCampoTitulo(campoTitulo) {
+
+    return "<div class='col-md-" + campoTitulo.quantidade_colunas + "'>" +
+        "       <h3 id='titulo" + campoTitulo.id_campo_ficha + "' class='" + campoTitulo.classes_campo + "'>" + campoTitulo.nome_campo + "</h3>" +
+        "    </div>";
+}
+
+function CriaCampoLabel(campoLabel) {
+
+    let dataAttributeCodigoSubGrupo = "";
+
+    if (!IsNullOrEmpty(campoLabel.codigo_subgrupo)) {
+        dataAttributeCodigoSubGrupo = PREFIXO_DATA_ATTRIBUTE_CODIGO_SUBGRUPO + campoLabel.codigo_subgrupo + "'";;
+    }
+
+
+    let quantidadeColunasMobile = '';
+
+    if (!IsNullOrEmpty(campoLabel.quantidade_colunas_mobile))
+        quantidadeColunasMobile = ' col-' + campoLabel.quantidade_colunas_mobile
+
+    let classeDiv = '';
+
+    if (!IsNullOrEmpty(campoLabel.classes_div))
+        classeDiv = campoLabel.classes_div;
+
+    return "<div class='" + quantidadeColunasMobile + " col-md-" + campoLabel.quantidade_colunas + "    " + classeDiv + "'  >" +
+        "       <label id='label" + campoLabel.id_campo_ficha + "'  " + dataAttributeCodigoSubGrupo + " class='" + campoLabel.classes_campo + "' " + dataAttributeCodigoSubGrupo + ">" + campoLabel.nome_campo + "</label>" +
+        "    </div>";
+}
+
+function BuscaItensSelectPicker(idCampoFicha, idSelectPicker) {
+    $.ajax({
+        url: "/CampoFicha/BuscaItensSelectPicker",
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: {
+            idCampo: idCampoFicha
+        },
+        error: function (response) {
+            swal("Ops!", "Houve um erro ao carregar itens da lista. Tente novamente em instantes.", "error");
+        },
+        success: function (response) {
+            if (response.erro) {
+                swal("Ops!", "Houve um erro ao carregar  itens da lista. Tente novamente em instantes.", "error");
+            }
+            else {
+                var select = document.getElementById(idSelectPicker);
+                select.options.length = 0;
+
+                for (var i = 0; i < response.itens.length; i++)
+                    select.options[select.options.length] = new Option(response.itens[i].descricao, response.itens[i].id);
+
+                if ($.fn.selectpicker) $('#' + idSelectPicker).selectpicker('refresh');
+            }
+        }
+    });
+}
+
+function BuscaTitulo(idCampoFicha, idCampoTitulo) {
+    $.ajax({
+        url: "/CampoFicha/BuscaTitulo",
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: {
+            idCampo: idCampoFicha
+        },
+        error: function (response) {
+            swal("Ops!", "Houve um erro ao carregar titulo. Tente novamente em instantes.", "error");
+        },
+        success: function (response) {
+            if (response.erro)
+                swal("Ops!", "Houve um erro ao carregar titulo. Tente novamente em instantes.", "error");
+            else {
+                var $objCampoTitulo = $('#' + idCampoTitulo);
+
+                $objCampoTitulo.text($objCampoTitulo.text() + " " + response.descricao);
+            }
+        }
+    });
+}
+
+function ObterSeCampoEhDisabled(usuarioEhAdmnistrador) {
+    return usuarioEhAdmnistrador ? "" : "disabled";
+}
+
+var _usuarioEhAdmnistrador = false;
+
+function VerificarSeUsuarioEhAdministrador() {
+    $.get('/Permissao/VerificarSeUsuarioEhAdministrador', function (response) {
+        _usuarioEhAdmnistrador = response.liberado;
+    });
+}
+
+VerificarSeUsuarioEhAdministrador();
+
+function ObterEstiloMostrarApenasCamposPreenchidos(apenasPreenchidos, campoEstaPreenchido) {
+    return apenasPreenchidos === 1 && !campoEstaPreenchido ? "style='display:none'" : "";
+}
+
+function CalcularValorCampoDivisaoPrimeiroParametroPeloSegundo(idCampoValor1, idCampoValor2, idCampoPreencherValor) {
+    let valorCampo1 = ObterValorInput(idCampoValor1);
+    let valorCampo2 = ObterValorInput(idCampoValor2);
+
+    if (IsNullOrEmpty(valorCampo1) || IsNullOrEmpty(valorCampo2)) return;
+
+    PreencherInputIdElementoEValor(idCampoPreencherValor, FormatDinheiro(FormatarDinheiroParaDecimal(valorCampo1) / FormatarDinheiroParaDecimal(valorCampo2)));
+}
+
+function EsconderCamposNaoVisiveisCategoriaEquipamento() {
+    let idCategoriaEquipamento = ObterValorInput('txtIdCategoriaEquipamento');
+
+    if (IsNullOrEmpty(idCategoriaEquipamento)) return;
+
+    $('.esconder-campo-categoria-equipamento-' + idCategoriaEquipamento).each(function () {
+
+        if ($(this).is("th") || $(this).is("td") || $(this).is("div")) {
+
+            $(this).addClass('d-none');
+        }
+        else {
+            let parentDiv = $(this).parent('div');
+
+            if (IsNullOrEmpty(parentDiv)) {
+
+                $(this).parent('label').parent('div').parent('div').addClass('d-none');
+            }
+            else {
+                if (parentDiv.attr('class').includes('col-'))
+                    parentDiv.addClass('d-none');
+                else if (parentDiv.parent('div').attr('class').includes('col-'))
+                    parentDiv.parent('div').addClass('d-none');
+            }
+        }
+    });
+}
+
+const HTML_ICONE_TESTE_NAO_CONFORME = '<i class="fas fa-times"></i>';
+
+function CalcularITResistenciaOhmica(idCampoValor1, idCampoValor2, idCampoValor3, idLabel) {
+    let valorCampo1 = ObterValorInput(idCampoValor1);
+    let valorCampo2 = ObterValorInput(idCampoValor2);
+    let valorCampo3 = ObterValorInput(idCampoValor3);
+
+    if (IsNullOrEmpty(valorCampo1) || IsNullOrEmpty(valorCampo2) || IsNullOrEmpty(valorCampo3)) return;
+
+    let maiorNumero = Math.max.apply(null, [FormatarDinheiroParaDecimal(valorCampo1), FormatarDinheiroParaDecimal(valorCampo2), FormatarDinheiroParaDecimal(valorCampo3)]);
+    let menorNumero = Math.min.apply(null, [FormatarDinheiroParaDecimal(valorCampo1), FormatarDinheiroParaDecimal(valorCampo2), FormatarDinheiroParaDecimal(valorCampo3)]);
+
+    menorNumero += (menorNumero * 5) / 100;
+
+    if (maiorNumero > menorNumero) {
+        AdicionarIconeTesteNaoConforme(idLabel);
+        $('#' + idLabel).addClass('text-danger');
+    }
+    else {
+        RemoverIconeTesteNaoConforme(idLabel);
+        $('#' + idLabel).removeClass('text-danger');
+    }
+}
+
+function CalcularITResistenciaIsolacao(idCampoValor1, idCampoValor2, idCampoValor3, idCampoAbsorcao, idCampoPolarizacao, idLabel) {
+    let valorCampo1 = ObterValorInput(idCampoValor1);
+    let valorCampo2 = ObterValorInput(idCampoValor2);
+    let valorCampo3 = ObterValorInput(idCampoValor3);
+    let valorAbsorcacao = ObterValorInput(idCampoAbsorcao);
+    let valorPolarizacao = ObterValorInput(idCampoPolarizacao);
+
+    // if (IsNullOrEmpty(valorCampo1) || IsNullOrEmpty(valorCampo2) || IsNullOrEmpty(valorCampo3) || IsNullOrEmpty(valorAbsorcacao) || IsNullOrEmpty(valorPolarizacao)) return;
+
+    let valorCampo1Formatado = FormatarDinheiroParaDecimal(valorCampo1);
+    let valorCampo2Formatado = FormatarDinheiroParaDecimal(valorCampo2);
+    let valorCampo3Formatado = FormatarDinheiroParaDecimal(valorCampo3);
+    let valorCampoAbsorcacao = FormatarDinheiroParaDecimal(valorAbsorcacao);
+    let valorCampoPolarizacao = FormatarDinheiroParaDecimal(valorPolarizacao);
+
+    if ((valorCampo1Formatado < 100 && valorCampo1Formatado > 0) || (valorCampo2Formatado < 100 && valorCampo2Formatado > 0) || (valorCampo3Formatado < 100 && valorCampo3Formatado > 0)) {
+        AdicionarIconeTesteNaoConforme(idLabel);
+        $('#' + idLabel).addClass('text-danger');
+        return;
+    }
+
+    if (valorCampoAbsorcacao < 1.4 && valorCampoAbsorcacao > 0) {
+        AdicionarIconeTesteNaoConforme(idLabel);
+        $('#' + idLabel).addClass('text-danger');
+        return;
+    }
+
+    if (valorCampoPolarizacao < 2 && valorCampoPolarizacao > 0) {
+        AdicionarIconeTesteNaoConforme(idLabel);
+        $('#' + idLabel).addClass('text-danger');
+        return;
+    }
+
+    RemoverIconeTesteNaoConforme(idLabel);
+    $('#' + idLabel).removeClass('text-danger');
+}
+
+function AdicionarIconeTesteNaoConforme(idElemento) {
+
+    let htmlAtualElemento = $('#' + idElemento).html();
+
+    if (htmlAtualElemento.includes(HTML_ICONE_TESTE_NAO_CONFORME)) return;
+
+    $('#' + idElemento).html(htmlAtualElemento + " " + HTML_ICONE_TESTE_NAO_CONFORME);
+}
+function RemoverIconeTesteNaoConforme(idElemento) {
+    $('#' + idElemento).html($('#' + idElemento).html().replace(HTML_ICONE_TESTE_NAO_CONFORME, ''));
+}
+
+function CriarLinksITS() {
+    $("label").each(function (i, el) {
+        let textoAtualLabel = $(this).text();
+
+        if (textoAtualLabel.includes("{{IT_RESISTENCIA_OHMICA}}")) {
+            $(this).html(textoAtualLabel.replace("{{IT_RESISTENCIA_OHMICA}}", CriarHtmlBotaoInformativoIT("https://empowcdn.blob.core.windows.net/fotos/a6cfaf61-69a1-4151-b2d2-551894fb2f9b.pdf")))
+        }
+        else if (textoAtualLabel.includes("{{IT_RESISTENCIA_ISOLACAO}}")) {
+            $(this).html(textoAtualLabel.replace("{{IT_RESISTENCIA_ISOLACAO}}", CriarHtmlBotaoInformativoIT("https://empowcdn.blob.core.windows.net/fotos/cd53f590-14ae-4537-bce4-cd93bde35824.pdf")))
+        }
+    });
+}
+
+function CriarHtmlBotaoInformativoIT(linkIT) {
+    return '<a style="display:inline-block" class="btn btn-info btn-link p-0 pl-2 pb-1" title="Clique aqui para ver as normas" target="_blank" href="' + linkIT + '">'
+        + '<i class="fas fa-question-circle" style="font-size:22px"></i>'
+        + '<div class="ripple-container"></div></a>'
+}
+
+
+const ID_ELEMENTO_INPUT_ROTACAO_NOMINAL = 'txt2474';
+const ID_ELEMENTO_INPUT_CLASSE_QUALIDADE_BALANCEAMENTO = 'txt2476';
+const ID_ELEMENTO_INPUT_MASSA_ROTOR = 'txt2473';
+const ID_ELEMENTO_INPUT_DESBALANCEAMENTO_RESIDUAL_ADMISSIVEL = 'txt2477';
+const ID_ELEMENTO_INPUT_DESBALANCEAMENTO_RESIDUAL_ADMISSIVEL_2 = 'txt2518';
+const ID_ELEMENTO_INPUT_DESBALANCEAMENTO_RESIDUAL_ADMISSIVEL_POR_PLANO = 'txt2478';
+const ID_ELEMENTO_INPUT_R1 = 'txt2481';
+const ID_ELEMENTO_INPUT_R2 = 'txt2482';
+const ID_ELEMENTO_INPUT_TOLERANCIA_PLANO_R1 = 'txt2520';
+const ID_ELEMENTO_INPUT_TOLERANCIA_PLANO_R2 = 'txt2521';
+const ID_ELEMENTO_INPUT_RAIO_PACOTE = 'txt2522';
+const ID_ELEMENTO_INPUT_COMPRIMENTO_PACOTE = 'txt2523';
+const ID_ELEMENTO_INPUT_BALANCEAMENTO_CAMPO_B = 'txt2485';
+
+function CalcularValoresBalanceamento() {
+
+    let valorRaioPacote = FormatarDinheiroParaDecimal(ObterValorInput(ID_ELEMENTO_INPUT_RAIO_PACOTE));
+    let valorComprimentoPacote = FormatarDinheiroParaDecimal(ObterValorInput(ID_ELEMENTO_INPUT_COMPRIMENTO_PACOTE));
+
+    if (IsNullOrEmpty(valorRaioPacote) || IsNullOrEmpty(valorComprimentoPacote)) return;
+    //Massa Rotor
+    let valorMassaRotor = ((valorRaioPacote * valorRaioPacote) * 3.1416 * 7.89 * valorComprimentoPacote) / 1000;
+    PreencherInputIdElementoEValor(ID_ELEMENTO_INPUT_MASSA_ROTOR, valorMassaRotor.toFixed(3).replace('.', ','));
+
+    let valorRotacaoNominal = FormatarDinheiroParaDecimal(ObterValorInput(ID_ELEMENTO_INPUT_ROTACAO_NOMINAL));
+    let valorClasseQualidadeBalanceamento = FormatarDinheiroParaDecimal(ObterValorInput(ID_ELEMENTO_INPUT_CLASSE_QUALIDADE_BALANCEAMENTO));
+
+    if (IsNullOrEmpty(valorRotacaoNominal) || IsNullOrEmpty(valorClasseQualidadeBalanceamento)) return;
+
+    //Desbalanceamento Residual Admissivel
+    let valorDesbalanceamentoResidualAdmissivel = (valorClasseQualidadeBalanceamento * 9549) / valorRotacaoNominal;
+
+    PreencherInputIdElementoEValor(ID_ELEMENTO_INPUT_DESBALANCEAMENTO_RESIDUAL_ADMISSIVEL, valorDesbalanceamentoResidualAdmissivel.toFixed(3).replace('.', ','));
+
+    if (IsNullOrEmpty(valorMassaRotor) || IsNullOrEmpty(valorDesbalanceamentoResidualAdmissivel)) return;
+
+    //Desbalanceamento Residual Admissivel 2
+    let valorDesbalanceamentoResidualAdmissivel2 = valorDesbalanceamentoResidualAdmissivel * valorMassaRotor;
+
+    PreencherInputIdElementoEValor(ID_ELEMENTO_INPUT_DESBALANCEAMENTO_RESIDUAL_ADMISSIVEL_2, valorDesbalanceamentoResidualAdmissivel2.toFixed(3).replace('.', ','));
+
+    if (IsNullOrEmpty(valorDesbalanceamentoResidualAdmissivel2)) return;
+
+    //Desbalanceamento Residual Admissivel Por Plano
+    let valorDesbalanceamentoResidualAdmissivelPorPlano = valorDesbalanceamentoResidualAdmissivel2 / 2;
+
+    PreencherInputIdElementoEValor(ID_ELEMENTO_INPUT_DESBALANCEAMENTO_RESIDUAL_ADMISSIVEL_POR_PLANO, valorDesbalanceamentoResidualAdmissivelPorPlano.toFixed(3).replace('.', ','));
+
+    if (IsNullOrEmpty(valorDesbalanceamentoResidualAdmissivelPorPlano)) return;
+
+    let valorR1 = FormatarDinheiroParaDecimal(ObterValorInput(ID_ELEMENTO_INPUT_R1));
+    let valorR2 = FormatarDinheiroParaDecimal(ObterValorInput(ID_ELEMENTO_INPUT_R2));
+
+    if (IsNullOrEmpty(valorR1) || IsNullOrEmpty(valorR2)) return;
+
+    PreencherInputIdElementoEValor(ID_ELEMENTO_INPUT_TOLERANCIA_PLANO_R1, (valorDesbalanceamentoResidualAdmissivelPorPlano / valorR1).toFixed(2).replace('.', ','));
+    PreencherInputIdElementoEValor(ID_ELEMENTO_INPUT_TOLERANCIA_PLANO_R2, (valorDesbalanceamentoResidualAdmissivelPorPlano / valorR2).toFixed(2).replace('.', ','));
+}
+
+
+function redirecionamentoParaLinkMenu() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            let href = this.getAttribute('href');
+
+            if (IsNullOrEmpty(href) || href === "#") return;
+
+            document.querySelector(href).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+}
+
+function CriarAtalhos() {
+
+    if (PaginaAtivaEh('EdicaoOrdem') || PaginaAtivaEh('AlteracaoOrcamento') || PaginaAtivaEh('EncaminhamentoOrcamento')) {
+        let btnAtalho = $("#btnAtalho")
+        let menuOrdemServico = $("#menuOrdemServico");
+
+        btnAtalho.removeClass("d-none");
+
+        $("h3").each(function (i, el) {
+
+            if (!IsNullOrEmpty(el.id) && !IsNullOrEmpty(el.textContent) && $(el).is(':visible')) {
+
+                redirecionamentoParaLinkMenu()
+                menuOrdemServico.append('<a href="#' + el.id + '" class="menuAtalhosLink" onclick="FecharMenuAtalhosDaOrdem()">' + el.textContent + '</a>');
+            }
+        });
+    }
+}
+
+
+function EsconderGruposFichaLevantamentoCustos() {
+
+    if (PaginaAtivaEh('LevantamentoCustos')) {
+        $('#groupRow28').hide();
+        $('#titulo-28').hide();
+        $('#groupRow27').hide();
+        $('#titulo-27').hide();
+        $('#groupRow26').hide();
+        $('#titulo-26').hide();
+        $('#groupRow25').hide();
+        $('#titulo-25').hide();
+        $('#groupRow24').hide();
+        $('#titulo-24').hide();
+        $('#groupRow23').hide();
+        $('#titulo-23').hide();
+        $('#groupRow22').hide();
+        $('#titulo-22').hide();
+        $('#groupRow21').hide();
+        $('#titulo-21').hide();
+        $('#groupRow20').hide();
+        $('#titulo-20').hide();
+        $('#groupRow19').hide();
+        $('#titulo-19').hide();
+        $('#groupRow18').hide();
+        $('#titulo-18').hide();
+        $('#groupRow37').hide();
+        $('#titulo-37').hide();
+        $('#groupRow32').hide();
+        $('#titulo-32').hide();
+        $('#groupRow30').hide();
+        $('#titulo-30').hide();
+        $('#groupRow29').hide();
+        $('#titulo-29').hide();
+        $('#groupRow11').hide();
+        $('#titulo-11').hide();
+        $('#groupRow1').hide();
+        $('#titulo-1').hide();
+        $('#groupRow33').hide();
+        $('#titulo-33').hide();
+        $('#groupRow35').hide();
+        $('#titulo-35').hide();
+        $('#btnInformativoGrupo-35').hide();
+        $('#groupRow36').hide();
+        $('#titulo-36').hide();
+        $('#groupRow38').hide();
+        $('#titulo-38').hide();
+    }
+    else if (PaginaAtivaEh('FilaAprovados/EdicaoOrdem')) {
+
+        $('#groupRow28').hide();
+        $('#titulo-28').hide();
+        $('#groupRow27').hide();
+        $('#titulo-27').hide();
+        $('#groupRow26').hide();
+        $('#titulo-26').hide();
+        $('#groupRow25').hide();
+        $('#titulo-25').hide();
+        $('#groupRow24').hide();
+        $('#titulo-24').hide();
+        $('#groupRow23').hide();
+        $('#titulo-23').hide();
+        $('#groupRow22').hide();
+        $('#titulo-22').hide();
+        $('#groupRow21').hide();
+        $('#titulo-21').hide();
+        $('#groupRow20').hide();
+        $('#titulo-20').hide();
+        $('#groupRow19').hide();
+        $('#titulo-19').hide();
+    }
+}
+
+function MarcarDesmarcarCheckboxConformeSelecao(elementoClicado, listaIdCheckboxASeremMarcados) {
+
+    var marcarCheckboxes = false;
+
+    if (ObterValorCheckBox(elementoClicado.id)) {
+        marcarCheckboxes = true;
+    }
+
+    for (var i = 0; i < listaIdCheckboxASeremMarcados.length; i++) {
+
+        let idASerMarcado = listaIdCheckboxASeremMarcados[i];
+
+        if (!idASerMarcado.includes('check'))
+            idASerMarcado = ObterIdCheckboxVariavel(idASerMarcado);
+
+        $('#' + idASerMarcado).prop('checked', marcarCheckboxes);
+    }
+}
+
+const DESCRICAO_TIPO_SERVICO_BALANCEAR_ROTOR = 'balancearRotor';
+
+const ID_ELEMENTO_CHECKBOX_ACESSORIO_CHAVETA = 'check1140';
+const ID_ELEMENTO_CHECKBOX_ACESSORIO_ACOPLAMENTO = 'check2535';
+
+const ID_ELEMENTO_CHECKBOX_BALANCEAR_ROTOR_COM_CHAVETA = 'check948';
+const ID_ELEMENTO_CHECKBOX_BALANCEAR_ROTOR_SEM_CHAVETA = 'check950';
+const ID_ELEMENTO_CHECKBOX_BALANCEAR_ROTOR_COM_ACOMPLAMENTO = 'check947';
+
+function ObterIdCheckboxVariavel(descricaoTipoServico) {
+
+    if (descricaoTipoServico == DESCRICAO_TIPO_SERVICO_BALANCEAR_ROTOR) {
+
+        if (ObterValorCheckBox(ID_ELEMENTO_CHECKBOX_ACESSORIO_ACOPLAMENTO))
+            return ID_ELEMENTO_CHECKBOX_BALANCEAR_ROTOR_COM_ACOMPLAMENTO;
+        else if (ObterValorCheckBox(ID_ELEMENTO_CHECKBOX_ACESSORIO_CHAVETA))
+            return ID_ELEMENTO_CHECKBOX_BALANCEAR_ROTOR_COM_CHAVETA;
+        else
+            return ID_ELEMENTO_CHECKBOX_BALANCEAR_ROTOR_SEM_CHAVETA;
+    }
+
+    return '';
+}
+
+function AumentarTamanhoTextAreaAutomaticamente(element) {
+    element.style.height = "5px";
+    element.style.height = (element.scrollHeight) + "px";
+}
+
+function MostrarBobinasDeAcordoComQuantidade(inputComQuantidade, codigoSubgrupoDasBobinas) {
+
+    let quantidadeBobinas = $(inputComQuantidade).val();
+
+    let inputsBobinas = $("[" + PREFIXO_DATA_ATTRIBUTE_CODIGO_SUBGRUPO_DESCRICAO + "='" + codigoSubgrupoDasBobinas + "']");
+
+    for (let i = 1; i <= 16; i++) {
+
+        let input = inputsBobinas[i - 1];
+
+        if (!IsNullOrEmpty(input)) {
+
+            if (i <= quantidadeBobinas)
+                $(input).parent('div').show();
+            else
+                $(input).parent('div').hide();
+        }
+    }
+}
+
+function AlterarVisibilidadeCamposDoSubGrupo(sender, codigoSubgrupo) {
+
+    let elementosGrupo = $("[" + PREFIXO_DATA_ATTRIBUTE_CODIGO_SUBGRUPO_DESCRICAO + "='" + codigoSubgrupo + "']");
+
+    if (elementosGrupo.length <= 0) return;
+
+    let mostrarElementos = ObterValorCheckBox(sender.id);
+
+    for (let i = 0; i <= elementosGrupo.length; i++) {
+
+        let elemento = elementosGrupo[i];
+
+        if (!IsNullOrEmpty(elemento)) {
+            MostrarCampoOcultado(elemento, mostrarElementos)
+        }
+    }
+}
+
+function AlterarVisibilidadeCamposDoGrupo(sender, codigoGrupo) {
+    let mostrarGrupo = ObterValorCheckBox(sender.id);
+
+    if (mostrarGrupo) {
+        $("#groupRow" + codigoGrupo).show();
+        $("#titulo-" + codigoGrupo).show();
+    } else {
+        $("#groupRow" + codigoGrupo).hide();
+        $("#titulo-" + codigoGrupo).hide();
+    }
+}
+
+function MarcarCheckboxSubConjunto(sender, codigoSubgrupo) {
+
+    let elementosGrupo = $("[" + PREFIXO_DATA_ATTRIBUTE_CODIGO_SUBGRUPO_DESCRICAO + "='" + codigoSubgrupo + "']");
+
+    if (elementosGrupo.length <= 0) return;
+
+    var marcarCheckboxes = false;
+
+    if (ObterValorCheckBox(sender.id)) {
+        marcarCheckboxes = true;
+    }
+
+    for (let i = 0; i <= elementosGrupo.length; i++) {
+
+        let elemento = elementosGrupo[i];
+
+        if (!IsNullOrEmpty(elemento)) {
+            if (marcarCheckboxes) {
+                MostrarCampoOcultado(elemento, marcarCheckboxes)
+                $(elemento).show();
+                MarcarCheckBox(elemento.id, true);
+            } else {
+                MostrarCampoOcultado(elemento, marcarCheckboxes)
+                DesmarcarCheckBox(elemento.id)
+            }
+        }
+    }
+}
+
+function PermitirApenasUmaOpcaoCheckboxSim(idCampoFichaSim, idCampoFichaNao) {
+    if (ObterValorCheckBox('check' + idCampoFichaSim))
+        DesmarcarCheckBox('check' + idCampoFichaNao)
+}
+
+
+function PermitirApenasUmaOpcaoCheckboxNao(idCampoFichaSim, idCampoFichaNao, sender, codigoSubgrupo) {
+    if (ObterValorCheckBox('check' + idCampoFichaNao)) {
+        DesmarcarCheckBox('check' + idCampoFichaSim)
+        AlterarVisibilidadeCamposDoSubGrupo(sender, codigoSubgrupo)
+    }
+}
+
+function PermitirApenasCaixaComTampa(idCampoFichaComTampa, idCampoFichaSemTampa) {
+    if (ObterValorCheckBox('check' + idCampoFichaComTampa))
+        DesmarcarCheckBox('check' + idCampoFichaSemTampa)
+}
+
+function PermitirApenasCaixaSemTampa(idCampoFichaComTampa, idCampoFichaSemTampa) {
+    if (ObterValorCheckBox('check' + idCampoFichaSemTampa))
+        DesmarcarCheckBox('check' + idCampoFichaComTampa)
+}
+
+
+function ObterSeCampoCheckboxJaComecaMarcado(campoCheckboxComecarJaMarcado) {
+    return campoCheckboxComecarJaMarcado == 1 ? "checked" : "";
+}
+
+
+function MostrarCampoOcultado(elemento, mostrarMarcarElemento) {
+
+    let parentDiv = $(elemento).parent('div');
+
+    if (IsNullOrEmpty(parentDiv)) {
+
+        if (mostrarMarcarElemento)
+            $(elemento).parent('label').parent('div').parent('div').show();
+        else
+            $(elemento).parent('label').parent('div').parent('div').hide();
+    }
+    else {
+        if (mostrarMarcarElemento)
+            $(elemento).parent('div').show();
+        else
+            $(elemento).parent('div').hide();
+    }
+}
+
+function FormatarCamposEntradaEquipamentoPotencia(idCampoFicha) {
+
+    let $objeto = $('#txt' + idCampoFicha);
+
+    $objeto.val($objeto.val().toUpperCase().split(' ').join(''));
+}
+
+function FormatarCamposEntradaEquipamentoRpm(idCampoFicha) {
+
+    let $objeto = $('#txt' + idCampoFicha);
+
+    $objeto.val($objeto.val().toUpperCase().split(' ').join(''));
+}
+
+function FormatarCamposEntradaEquipamentoTensao(idCampoFicha) {
+
+    let $objeto = $('#txt' + idCampoFicha);
+
+    $objeto.val($objeto.val().toUpperCase().split(' ').join(''));
+}
+
+function FormatarCamposEntradaEquipamentoCorrente(idCampoFicha) {
+
+    let $objeto = $('#txt' + idCampoFicha);
+
+    $objeto.val($objeto.val().toUpperCase().split(' ').join(''));
+}
+
+function SincronizarCheckBoxInspecaoMecanicaEServicos(idCampoCheckboxInspecao, idCampoCheckboxServicos) {
+    if (ObterValorCheckBox('check' + idCampoCheckboxInspecao))
+        MarcarCheckBox('check' + idCampoCheckboxServicos, true)
+    if (!ObterValorCheckBox('check' + idCampoCheckboxInspecao))
+        DesmarcarCheckBox('check' + idCampoCheckboxServicos)
+}
+
+const ID_CAMPO_CHECKBOX_REBOBINAMENTO = 'check6956';
+const ID_CAMPO_CHECKBOX_REBOBINAMENTO_CA = 'check6948';
+const ID_CAMPO_CHECKBOX_REJUVENESCIMENTO = 'check6957';
+const ID_CAMPO_CHECKBOX_REJUVENESCIMENTO_CA = 'check6949';
+
+
+const ID_SERVICOS_ELETRICOS = [
+    7171,
+    7172,
+    7173,
+    7174,
+    7175,
+    7176,
+    7177,
+    7178,
+    7162,
+    7163,
+    7164,
+    7165,
+    7166,
+    7167,
+    7168,
+    7169,
+    7180,
+    7181,
+    7182,
+    7183,
+    7184,
+    7185,
+    7186,
+    7187,
+]
+
+const ID_SERVICOS_ELETRICOS_APENAS_REJUVENESCIMENTO = [
+    7185,
+    7186,
+    7187,
+    7167,
+    7168,
+    7169,
+    7176,
+    7177,
+    7178,
+]
+
+function OnChangeCheckRebobinamento() {
+
+
+    if (ObterValorCheckBox(ID_CAMPO_CHECKBOX_REBOBINAMENTO) || ObterValorCheckBox(ID_CAMPO_CHECKBOX_REBOBINAMENTO_CA)) {
+
+        DesmarcarCheckBox(ID_CAMPO_CHECKBOX_REJUVENESCIMENTO);
+        DesmarcarCheckBox(ID_CAMPO_CHECKBOX_REJUVENESCIMENTO_CA);
+
+        DesmarcarServicosEletricos();
+
+        MarcarServicosRebobinamento();
+    }
+}
+
+
+function OnChangeCheckRejuvenescimento() {
+
+    if (ObterValorCheckBox(ID_CAMPO_CHECKBOX_REJUVENESCIMENTO) || ObterValorCheckBox(ID_CAMPO_CHECKBOX_REJUVENESCIMENTO_CA)) {
+
+        DesmarcarCheckBox(ID_CAMPO_CHECKBOX_REBOBINAMENTO);
+        DesmarcarCheckBox(ID_CAMPO_CHECKBOX_REBOBINAMENTO_CA);
+
+        DesmarcarServicosEletricos();
+
+        MarcarServicosRejuvenescimento();
+    }
+}
+
+function DesmarcarServicosEletricos() {
+    for (let i = 0; i < ID_SERVICOS_ELETRICOS.length; i++) {
+        const id = 'check' + ID_SERVICOS_ELETRICOS[i];
+
+        if (ElementoExiste(id))
+            DesmarcarCheckBox(id);
+    }
+}
+
+function MarcarServicosRebobinamento() {
+    for (let i = 0; i < ID_SERVICOS_ELETRICOS.length; i++) {
+        const id = 'check' + ID_SERVICOS_ELETRICOS[i];
+
+        if (ElementoExiste(id))
+            MarcarCheckBox(id, true);
+    }
+}
+function MarcarServicosRejuvenescimento() {
+    for (let i = 0; i < ID_SERVICOS_ELETRICOS_APENAS_REJUVENESCIMENTO.length; i++) {
+        const id = 'check' + ID_SERVICOS_ELETRICOS_APENAS_REJUVENESCIMENTO[i];
+
+        if (ElementoExiste(id))
+            MarcarCheckBox(id, true);
+    }
+}
+
+function PermitirApenasUmaOpcaoCheckboxSim(idCampoFichaSim, idCampoFichaNao) {
+    if (ObterValorCheckBox('check' + idCampoFichaSim))
+        DesmarcarCheckBoxExecutandoChange('check' + idCampoFichaNao)
+}
+
+function PermitirApenasUmaOpcaoCheckboxNao(idCampoFichaSim, idCampoFichaNao, sender, codigoSubgrupo) {
+    if (ObterValorCheckBox('check' + idCampoFichaNao)) {
+        DesmarcarCheckBoxExecutandoChange('check' + idCampoFichaSim)
+        AlterarVisibilidadeCamposDoSubGrupo(sender, codigoSubgrupo)
+    }
+}
+
+function DesmarcarCheckBoxExecutandoChange(checkboxId) {
+    isProgrammaticChange = true;
+    $('#' + checkboxId).prop('checked', false).trigger("change");
+    isProgrammaticChange = false;
+}
+
+function PermitirApenasUmCheckboxTresParametros(id1, id2, id3) {
+
+    if (isProgrammaticChange) return;
+
+    var elementoClicado = (typeof event !== 'undefined' && event) ? event.target : null;
+    if (!elementoClicado) return;
+    var idClicado = elementoClicado.id;
+
+    var idCheck1 = 'check' + id1;
+    var idCheck2 = 'check' + id2;
+    var idCheck3 = 'check' + id3;
+
+    if (!elementoClicado.checked) return;
+
+    if (idClicado === idCheck1) {
+        DesmarcarCheckBoxExecutandoChange(idCheck2);
+        DesmarcarCheckBoxExecutandoChange(idCheck3);
+    }
+    else if (idClicado === idCheck2) {
+        DesmarcarCheckBoxExecutandoChange(idCheck1);
+        DesmarcarCheckBoxExecutandoChange(idCheck3);
+    }
+    else if (idClicado === idCheck3) {
+        DesmarcarCheckBoxExecutandoChange(idCheck1);
+        DesmarcarCheckBoxExecutandoChange(idCheck2);
+    }
+}

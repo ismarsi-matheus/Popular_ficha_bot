@@ -1,0 +1,683 @@
+﻿$(document).ready(function () {
+    InicializarDatePicker('txtxDataInicioFaturamentoPendente');
+    InicializarDatePicker('txtxDataFimFaturamentoPendente');
+    InicializarDatePicker('txtDataInicioEquipamentosMontadosPorTecnico');
+    InicializarDatePicker('txtDataFimEquipamentosMontadosPorTecnico');
+    InicializarDatePicker('txtDataInicioOrdensFinalizadas');
+    InicializarDatePicker('txtDataFimOrdensFinalizadas');
+    InicializarDatePicker('txtDataInicioOrdensEntraramNoPeriodo');
+    InicializarDatePicker('txtDataFimOrdensEntraramNoPeriodo');
+    InicializarDatePicker('txtDataInicioOrdensFaturamentoEFinalizadasPeriodo');
+    InicializarDatePicker('txtDataFimOrdensFaturamentoEFinalizadasPeriodo');
+    InicializarDatePicker('txtDataInicioEquipamentosFinalizadosPorTecnico');
+    InicializarDatePicker('txtDataFimEquipamentosFinalizadosPorTecnico');
+    InicializarDatePicker('txtDataInicioTipoManutencao');
+    InicializarDatePicker('txtDataFimTipoManutencao');
+    InicializarDatePicker('txtDataInicioFaturamentoPeriodo');
+    InicializarDatePicker('txtDataFimFaturamentoPeriodo');
+
+    if (ElementoExiste('txtDataComissoesVendedores')) {
+        $('#txtDataComissoesVendedores').datepicker({
+            todayButton: new Date(),
+            autoClose: true,
+            onSelect: function (fd, d, inst) {
+                _dataRelatorioComissaoVendedor = d;
+            }
+        });
+        dpMensal = $('#txtDataComissoesVendedores').datepicker().data('datepicker');
+        dpMensal.selectDate(new Date());
+    }
+
+});
+
+const VALOR_TIPO_MANUTENCAO_CORRETIVA = "1";
+const VALOR_TIPO_MANUTENCAO_PREVENTIVA = "2";
+const VALOR_TIPO_MANUTENCAO_EMPRESTIMO = "3";
+const VALOR_TIPO_MANUTENCAO_VENDA = "4";
+var _urlImpressaoLaudoInternoOrcamento = "/Relatorio/GerarOrcamentoOrdem";
+var _urlImpressaoLaudoInternoFinal = "/Relatorio/GerarLaudoFinalOrdem";
+
+var _urlImpressaoLaudoExterno = "/Relatorio/GerarLaudoExterno";
+
+const _urlImpressaoOrcamento = "/Relatorio/GerarOrcamentoOrdem";
+const _urlImpressaoRelatorioTecnico = "/Relatorio/GerarRelatorioTecnicoOrdem";
+
+var _dataRelatorioComissaoVendedor = null;
+
+$(".checkbox-impressao-ordem").change(function () {
+
+    if (this.checked) {
+        if (this.id === "checkLaudoInterno") LimparCheckBox("checkLaudoExterno");
+        else LimparCheckBox("checkLaudoInterno");
+    }
+});
+
+function ReimprimirOrcamentoOrdem() {
+
+    let idOrdem = ObterValorSelectPickerOuDefaultNull('selectOrdemReimprimirOrcamento');
+
+    if (IsNullOrEmpty(idOrdem))
+        return;
+
+    ImprimirOrcamentoOrdem(idOrdem)
+}
+// As duas propostas imprimem a seção CONDIÇÕES COMERCIAIS, cujo VALOR TOTAL vem do que está gravado
+// em dados_ordem - por isso avisam antes se há alteração de valor pendente de gravação. O laudo
+// técnico não imprime valor e não passa pela guarda.
+function ImprimirPropostaComercial(idOrdem) {
+
+    ConfirmarGravacaoAntesDeGerarOrcamento(function () {
+        window.open("/Relatorio/GerarRelatorioOrdemPdf/" + idOrdem + "/2", '_blank');
+    });
+}
+
+
+function ImprimirOrcamentoOrdem(idOrdem) {
+
+    ConfirmarGravacaoAntesDeGerarOrcamento(function () {
+        window.open("/Relatorio/GerarRelatorioOrdemPdf/" + idOrdem + "/1", '_blank');
+    });
+}
+
+function ImprimirLaudoOrdem(idOrdem) {
+
+    window.open("/Relatorio/GerarRelatorioOrdemPdf/" + idOrdem + "/0", '_blank');
+}
+
+function ImprimirLaudoFinalOrdem(idOrdem) {
+    window.open("/Relatorio/GerarRelatorioOrdemCompletoPdf/" + idOrdem, '_blank');
+}
+
+function ImprimirLaudoTecnicoOrdem(idOrdem) {
+    window.open("/Relatorio/GerarLaudoTecnicoOrdemPdf/" + idOrdem, '_blank');
+}
+function ImprimirLaudoTecnicoInicialOrdem(idOrdem) {
+    window.open("/Relatorio/GerarLaudoTecnicoInicialOrdemPdf/" + idOrdem, '_blank');
+}
+function ImprimirDataBook(idOrdem) {
+    window.open("/Relatorio/GerarDataBook/" + idOrdem, '_blank');
+}
+
+function ImprimirRelatorioPCP() {
+    window.open("/Relatorio/GerarRelatorioPCPExcel/", '_blank');
+}
+
+function ImprimirEtiqueta(idOrdem) {
+    window.open("/Relatorio/GerarEtiqueta/" + idOrdem, '_blank')
+}
+
+function ImprimirRelatorioTecnicoOrdem(idOrdem) {
+    var url = _urlImpressaoRelatorioTecnico;
+
+    $.ajax({
+        dataType: "json",
+        data: {
+            idOrdem: idOrdem
+        },
+        type: "GET",
+        url: url,
+        success: function (dados) {
+            PossuiRelatorioSendoGerado();
+        },
+        error: function (dados) {
+            console.log(dados.responseText);
+            PossuiRelatorioSendoGerado();
+        }
+    });
+}
+
+function ValidarModeloSelecionadoImpressaoOrcamento(modeloOrcamento1, modeloPaisagem) {
+
+    if (!modeloOrcamento1 && !modeloPaisagem)
+        return MostrarModalErroComMensagemPersonalizada('É necessário escolher um modelo', 'checkModelo1');
+
+    return true;
+}
+
+$(document).on('hidden.bs.modal', '#modal-ordens-setor', function () {
+    LimparCamposModalOrdensPorSetor();
+});
+
+function GerarRelatorioOrdensPorSetor() {
+
+    var nomeCliente = $("#selectClienteOrdensSetor option:selected").text();
+
+    if (nomeCliente === "Todos")
+        nomeCliente = " ";
+
+    $.ajax({
+        dataType: "json",
+        data: {
+            idSetorSelecionado: $("#selectSetor option:selected").val(),
+            nomeCliente: nomeCliente
+        },
+        type: "GET",
+        url: "/Relatorio/GerarRelatorioOrdensPorSetor",
+        success: function (dados) {
+            $('#modal-ordens-setor').modal('toggle');
+            PossuiRelatorioSendoGerado();
+        },
+        error: function (dados) {
+            $('#modal-ordens-setor').modal('toggle');
+            PossuiRelatorioSendoGerado();
+        }
+    });
+}
+
+function GerarLaudoFinalOrdem(idOrdem) {
+
+    $.ajax({
+        dataType: "json",
+        data: {
+            idOrdem: idOrdem
+        },
+        type: "GET",
+        url: _urlImpressaoRelatorioTecnico,
+        success: function (dados) {
+            PossuiRelatorioSendoGerado();
+        },
+        error: function (dados) {
+            PossuiRelatorioSendoGerado();
+        }
+    });
+}
+
+function GerarRelatorioOrdensMaisDezDiasFilas() {
+
+    var idClienteSelecionado = $("#selectClienteOrdensMaisDezDiasFila option:selected").val();
+
+    if (IsNullOrEmpty(idClienteSelecionado))
+        idClienteSelecionado = 0;
+
+    $.ajax({
+        dataType: "json",
+        data: {
+            idCliente: idClienteSelecionado,
+        },
+        type: "GET",
+        url: "/Relatorio/GerarRelatorioOrdensMaisDezDiasFila",
+        success: function (dados) {
+            $('#modal-ordens-mais-dez-dias-fila').modal('toggle');
+            PossuiRelatorioSendoGerado();
+        },
+        error: function (dados) {
+            $('#modal-ordens-mais-dez-dias-fila').modal('toggle');
+            PossuiRelatorioSendoGerado();
+        }
+    });
+}
+
+function ObterLinkRequisicaoLaudoInterno() {
+
+    if ($('#menuitem-FilaAnalise').hasClass('active') ||
+        $('#menuitem-FilaOrcamento').hasClass('active'))
+        return _urlImpressaoLaudoInternoOrcamento;
+    else
+        return _urlImpressaoLaudoInternoFinal;
+}
+
+function ValidarTipoLaudoSelecionado(impressaoLaudoInterno, impressaoLaudoExterno) {
+
+    if (!impressaoLaudoInterno && !impressaoLaudoExterno)
+        return MostrarModalErroComMensagemPersonalizada('É necessário escolher um laudo', 'checkLaudoInterno');
+
+    return true;
+}
+
+function ImprimirRelatorioFaturamentoPendente() {
+    var idCliente = $("#selectClienteFaturamentoPendente option:selected").val();
+    var nomeCliente = $("#selectClienteFaturamentoPendente option:selected").text();
+    var dataInicio = null;
+    var dataFim = null;
+
+    if (IsNullOrEmpty(idCliente)) idCliente = 0;
+
+    if (ObterValorCheckBox('checkFiltrarPorDataFaturamentoPendente')) {
+        dataInicio = FormatarDataParaCSharp($('#txtxDataInicioFaturamentoPendente').val());
+        dataFim = FormatarDataParaCSharp($('#txtxDataFimFaturamentoPendente').val());
+    }
+
+    var filtroBody = GerarModelFiltroRelatorio(idCliente, nomeCliente, dataInicio, dataFim);
+
+    $.ajax({
+        type: "POST",
+        data: JSON.stringify(filtroBody),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: "/Relatorio/GerarRelatorioFaturamentoPendente",
+        success: function (dados) {
+            PossuiRelatorioSendoGerado();
+        },
+        error: function (dados) {
+            console.log(dados.responseText);
+        }
+    });
+}
+
+function GerarRelatorioOrdensFinalizadas() {
+
+    $.ajax({
+        dataType: "json",
+        data: {
+            dataInicio: FormatarDataParaCSharp($('#txtDataInicioOrdensFinalizadas').val()),
+            dataFim: FormatarDataParaCSharp($('#txtDataFimOrdensFinalizadas').val())
+        },
+        type: "GET",
+        url: "/Relatorio/GerarRelatorioOrdensFinalizadas",
+        success: function (dados) {
+            $('#modal-ordens-finalizadas').modal('toggle');
+            PossuiRelatorioSendoGerado();
+        },
+        error: function (dados) {
+            $('#modal-ordens-finalizadas').modal('toggle');
+        }
+    });
+}
+
+function GerarRelatorioEquipamentosMontadosPorTecnico() {
+
+    if (!ValidarCamposObrigatoriosEquipamentosMontandosPorTecnico()) return;
+
+    $.ajax({
+        dataType: "json",
+        data: {
+            dataInicio: FormatarDataParaCSharp($('#txtDataInicioEquipamentosMontadosPorTecnico').val()),
+            dataFim: FormatarDataParaCSharp($('#txtDataFimEquipamentosMontadosPorTecnico').val()),
+            apresentarOrdensNaoAprovadas: ObterValorCheckBox('checkApresentarOrdensNaoAprovadas')
+        },
+        type: "GET",
+        url: "/Relatorio/GerarRelatorioEquipamentosMontadosPorTecnico",
+        success: function (dados) {
+            $('#modal-equipamentos-montados').modal('toggle');
+            PossuiRelatorioSendoGerado();
+        },
+        error: function (dados) {
+            $('#modal-equipamentos-montados').modal('toggle');
+            PossuiRelatorioSendoGerado();
+        }
+    });
+}
+
+function ValidarCamposObrigatoriosEquipamentosMontandosPorTecnico() {
+    return ValidarDataInicioEDataFim('txtDataInicioEquipamentosMontadosPorTecnico', 'txtDataFimEquipamentosMontadosPorTecnico');
+}
+
+function GerarModelFiltroRelatorio(idCliente, nomeCliente, dataInicio, dataFim) {
+    return {
+        "id_cliente": idCliente,
+        "nome_cliente": nomeCliente,
+        "data_inicio": dataInicio,
+        "data_fim": dataFim
+    };
+}
+
+function GerarRelatorioOrcamentosAguardandoAprovacao() {
+
+    var nomeCliente = $("#selectClienteOrcamentosAguardandoAprovacao option:selected").text();
+
+    if (nomeCliente === "Todos")
+        nomeCliente = " ";
+
+    $.ajax({
+        dataType: "json",
+        data: {
+            nomeCliente: nomeCliente
+        },
+        type: "GET",
+        url: "/Relatorio/GerarRelatorioOrcamentosAguardandoAprovacao",
+        success: function (dados) {
+            $('#modal-orcamentos-aguardando-aprovacao').modal('toggle');
+            PossuiRelatorioSendoGerado();
+        },
+        error: function (dados) {
+            $('#modal-orcamentos-aguardando-aprovacao').modal('toggle');
+        }
+    });
+}
+
+function GerarRelatorioOrdensEntraramNoPeriodo() {
+
+    $.ajax({
+        dataType: "json",
+        data: {
+            dataInicio: FormatarDataParaCSharp($('#txtDataInicioOrdensEntraramNoPeriodo').val()),
+            dataFim: FormatarDataParaCSharp($('#txtDataFimOrdensEntraramNoPeriodo').val())
+        },
+        type: "GET",
+        url: "/Relatorio/GerarRelatorioOrdensEntraramNoPeriodoAsync",
+        success: function (dados) {
+            $('#modal-ordens-entraram-periodo').modal('toggle');
+            PossuiRelatorioSendoGerado();
+        },
+        error: function (dados) {
+            $('#modal-ordens-entraram-periodo').modal('toggle');
+        }
+    });
+}
+
+function GerarRelatorioOrcamentoPendenteAprovados() {
+
+    var nomeCliente = $("#selectClienteOrcamentosPendentesAprovados option:selected").text();
+    var idCliente = $("#selectClienteOrcamentosPendentesAprovados option:selected").val();
+
+    if (nomeCliente === "Todos")
+        nomeCliente = " ";
+
+    let buscarOrdensEmAndamento = ObterValorCheckBox('checkOrdensDoClienteFinalizadas') ? 1 : 0;
+    let buscarOrdensFinalizadas = ObterValorCheckBox('checkOrdensDoClienteFinalizadas') ? 1 : 0;
+
+    let urlRequest = "/Relatorio/RelatorioCliente/" + idCliente + "/" + buscarOrdensEmAndamento + "/" + buscarOrdensFinalizadas;
+
+    if (ObterValorCheckBox('checkGerarExcel'))
+        urlRequest = "/Relatorio/RelatorioClienteXml/" + idCliente + "/" + buscarOrdensEmAndamento + "/" + buscarOrdensFinalizadas;
+
+    window.open(urlRequest, '_blank');
+}
+
+function GerarRelatorioComissaoVendedor() {
+
+    var idVendedor = $("#selectVendedorComissaoVendedor option:selected").val();
+
+    if (IsNullOrEmpty(idVendedor)) idVendedor = 0;
+
+    if (!ValidarCamposObrigatoriosComissaoVendedor()) return;
+
+    $.ajax({
+        dataType: "json",
+        data: {
+            mesSelecionado: _dataRelatorioComissaoVendedor.getMonth() + 1,
+            anoSelecionado: _dataRelatorioComissaoVendedor.getFullYear(),
+            idVendedor: idVendedor
+        },
+        type: "GET",
+        url: "/Relatorio/GerarRelatorioComissaoVendedor",
+        success: function (dados) {
+            $('#modal-comissoes-vendedores').modal('toggle');
+            PossuiRelatorioSendoGerado();
+        },
+        error: function (dados) {
+            $('#modal-comissao-vendedor').modal('toggle');
+            PossuiRelatorioSendoGerado();
+        }
+    });
+}
+
+function ValidarCamposObrigatoriosComissaoVendedor() {
+
+    if (IsNullOrEmpty($('#txtDataComissoesVendedores').val())) return MostrarModalErro('data', 'txtDataComissoesVendedores');
+
+    return true;
+}
+
+function LimparCamposModalComissaoVendedor() {
+
+    LimparInput('txtDataComissoesVendedores', 'divDataComissoesVendedores');
+    ResetSelectPicker('selectVendedorComissaoVendedor');
+    _dataRelatorioComissaoVendedor = null;
+}
+
+function GerarRelatorioOrdensFaturamentoEFinalizadasPeriodo() {
+
+    var nomeCliente = $("#selectClienteOrdensFaturamentoEFinalizasPeriodo option:selected").text();
+
+    if (nomeCliente === "Todos")
+        nomeCliente = " ";
+
+    $.ajax({
+        dataType: "json",
+        data: {
+            dataInicio: FormatarDataParaCSharp($('#txtDataInicioOrdensFaturamentoEFinalizadasPeriodo').val()),
+            dataFim: FormatarDataParaCSharp($('#txtDataFimOrdensFaturamentoEFinalizadasPeriodo').val()),
+            nomeCliente: nomeCliente,
+        },
+        type: "GET",
+        url: "/Relatorio/GerarRelatorioOrdensFaturamentoEFinalizadoPeriodo",
+        success: function (dados) {
+            $('#modal-ordens-faturamento-finalizados-periodo').modal('toggle');
+            PossuiRelatorioSendoGerado();
+        },
+        error: function (dados) {
+            $('#modal-ordens-faturamento-finalizados-periodo').modal('toggle');
+        }
+    });
+}
+
+function GerarRelatorioEquipamentosFinalizadosPorTecnico() {
+    var nomeCliente = $("#selectClienteOrdensFaturamentoEFinalizasPeriodo option:selected").text();
+
+    if (nomeCliente === "Todos")
+        nomeCliente = " ";
+
+    $.ajax({
+        dataType: "json",
+        data: {
+            dataInicio: FormatarDataParaCSharp($('#txtDataInicioEquipamentosFinalizadosPorTecnico').val()),
+            dataFim: FormatarDataParaCSharp($('#txtDataFimEquipamentosFinalizadosPorTecnico').val()),
+            nomeCliente: nomeCliente,
+        },
+        type: "GET",
+        url: "/Relatorio/GerarRelatorioEquipamentosMontadosPorTecnico",
+        success: function (dados) {
+            $('#modal-equipamentos-finalizados-por-tecnico').modal('toggle');
+            PossuiRelatorioSendoGerado();
+        },
+        error: function (dados) {
+            $('#modal-equipamentos-finalizados-por-tecnico').modal('toggle');
+        }
+    });
+}
+
+function GerarRelatorioOrdensPorTipoManutencaoNoPeriodo() {
+
+    if (IsNullOrEmpty($("#selectTiposManutencao").val())) {
+        MostrarModalErroSelect('tipo de manutenção', 'selectTiposManutencao');
+        return;
+    }
+
+    var filtroRelatorio = CarregarObjetoFiltroRelatorioOrdensPorTipoManutencao();
+
+    $.ajax({
+        type: "POST",
+        data: JSON.stringify(filtroRelatorio),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        url: "/Relatorio/GerarRelatorioOrdensPorTipoManutencaoNoPeriodo",
+        success: function (dados) {
+            $('#modal-tipo-manutencao-periodo').modal('toggle');
+            PossuiRelatorioSendoGerado();
+        },
+        error: function (dados) {
+            $('#modal-tipo-manutencao-periodo').modal('toggle');
+        }
+    });
+}
+
+
+function CarregarObjetoFiltroRelatorioOrdensPorTipoManutencao() {
+
+    var tiposManutencao = $("#selectTiposManutencao").val();
+
+    return {
+
+        data_inicio: FormatarDataParaCSharp($('#txtDataInicioTipoManutencao').val()),
+        data_fim: FormatarDataParaCSharp($('#txtDataFimTipoManutencao').val()),
+        mostrar_tipo_manutencao_corretiva: tiposManutencao.includes(VALOR_TIPO_MANUTENCAO_CORRETIVA) ? true : false,
+        mostrar_tipo_manutencao_preventiva: tiposManutencao.includes(VALOR_TIPO_MANUTENCAO_PREVENTIVA) ? true : false,
+        mostrar_tipo_manutencao_emprestimo: tiposManutencao.includes(VALOR_TIPO_MANUTENCAO_EMPRESTIMO) ? true : false,
+        mostrar_tipo_manutencao_venda: tiposManutencao.includes(VALOR_TIPO_MANUTENCAO_VENDA) ? true : false
+    }
+}
+
+
+function GerarRelatorioFaturamentoPeriodo() {
+    let nomeModal = "modal-faturamento-periodo";
+    var nomeCliente = $("#selectClienteFaturamentoPeriodo option:selected").text();
+    var statusFaturamento = $("#selectStatusFaturamentoPeriodo option:selected").text();
+
+    if (nomeCliente === "Todos")
+        nomeCliente = " ";
+
+    if (statusFaturamento === "Selecione o status" || statusFaturamento === "Todos")
+        statusFaturamento = " ";
+
+    $.ajax({
+        dataType: "json",
+        data: {
+            dataInicio: FormatarDataParaCSharp($('#txtDataInicioFaturamentoPeriodo').val()),
+            dataFim: FormatarDataParaCSharp($('#txtDataFimFaturamentoPeriodo').val()),
+            nomeCliente: nomeCliente,
+            statusFaturamento: statusFaturamento
+        },
+        type: "GET",
+        url: "/Relatorio/GerarRelatorioFaturamento",
+        success: function (dados) {
+            $('#' + nomeModal).modal('toggle');
+            PossuiRelatorioSendoGerado();
+        },
+        error: function (dados) {
+            $('#' + nomeModal).modal('toggle');
+        }
+    });
+
+
+}
+
+function GerarRelatorioPecasOrdemPdf(idOrdem) {
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/Relatorio/GerarRelatorioPecasOrdemPdf/" + idOrdem,
+        success: function (dados) {
+            console.log("Relatório gerado com sucesso: " + dados);
+        },
+        error: function (dados) {
+            console.log("Erro ao gerar Relatório! :" + dados);
+        }
+    });
+}
+
+
+function printPageArea(areaID, tituloGrupo) {
+
+    $('#btnImprimirGrupoFicha_' + areaID).attr('disabled', 'disabled');
+    $('#btnImprimirGrupoFicha_' + areaID).css('color', '#ccc');
+
+    $("#groupRow" + areaID).css('padding-top', '20px');
+
+    $('#btnImprimirGrupoFicha_' + areaID).text('Gerando arquivo...');
+
+    let numeroOrdem = $('#txtNumeroOrdem').val();
+
+    setTimeout(() => {
+
+        $("#groupRow" + areaID + ' img').each(function () {
+            $(this).css('height', '0px');
+        });
+
+        $("#groupRow" + areaID).prepend('<div class="col-md-12"><h3>' + tituloGrupo + " - NPA: " + numeroOrdem + '</h3></div>');
+
+        $("#groupRow" + areaID + ' textarea').each(function () {
+            if (!$(this).hasClass('d-none')) {
+
+                let lines = $(this).val().split('\n');
+                let linhasFormatadas = '';
+
+                $.each(lines, function () {
+                    linhasFormatadas += '<div>' + this + '</div>';
+                });
+
+                $(this).after("<div class='divTemporaria' contenteditable=\"true\" style='padding-top:10px'>" + linhasFormatadas + "</div>");
+                $(this).addClass('d-none');
+            }
+        });
+
+        html2canvas($("#groupRow" + areaID)[0]).then((canvas) => {
+
+            theCanvas = canvas;
+
+            $("#groupRow" + areaID).find('div:first').remove();
+
+            canvas.toBlob(function (blob) {
+                saveAs(blob, tituloGrupo + ".png");
+                $("#groupRow" + areaID).css('padding-top', '0');
+                $('#btnImprimirGrupoFicha_' + areaID).attr('disabled', 'false');
+                $('#btnImprimirGrupoFicha_' + areaID).text('Imprimir');
+                $('#btnImprimirGrupoFicha_' + areaID).css('color', '#009ef7');
+
+                $("#groupRow" + areaID + ' img').each(function () {
+                    $(this).css('height', 'unset');
+                });
+
+                $("#groupRow" + areaID + ' textarea').each(function () {
+                    $(this).removeClass('d-none');
+                });
+
+                $("#groupRow" + areaID + ' div.divTemporaria').remove();
+            });
+
+        });
+    }, 1000);
+}
+
+function GerarRelatorioOrdemCompletoPdf(idOrdem) {
+
+    window.open("/Relatorio/GerarRelatorioOrdemCompletoPdf/" + idOrdem, '_blank');
+}
+
+async function GerarRelatorioOrdensClienteV2() {
+    const idClienteSelecionado = ObterValorOuDefault(
+        "#selectClienteOrdensMaisDezDiasFila",
+        "00000000-0000-0000-0000-000000000000"
+    );
+
+    const idSetorSelecionado = ObterValorOuDefault(
+        "#selectSetoresOrdensMaisDezDias",
+        0
+    );
+
+    const gerarEmExcel = ObterValorCheckBoxOuDefault('checkGerarEmExcelOrdensDoCliente');
+
+    const baseUrl = gerarEmExcel
+        ? '/Relatorio/GerarRelatorioOrdensClienteExcel'
+        : '/Relatorio/GerarRelatorioOrdensCliente';
+
+    const url = `${baseUrl}/${idClienteSelecionado}/${idSetorSelecionado}`;
+
+    try {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            swal("Ops!", errorMessage || "Erro ao gerar relatório.", "warning");
+            return;
+        }
+
+        if (gerarEmExcel) {
+            window.open(url, '_blank');
+        } else {
+            await BaixarArquivo(response, 'RelatorioOrdensCliente.pdf');
+        }
+
+    } catch (error) {
+        swal("Ops!", "Ocorreu um erro ao gerar o relatório.", "error");
+    }
+}
+
+function ObterValorOuDefault(selector, defaultValue) {
+    const valor = $(`${selector} option:selected`).val();
+    return IsNullOrEmpty(valor) ? defaultValue : valor;
+}
+
+async function BaixarArquivo(response, nomeArquivo) {
+    const blob = await response.blob();
+    const downloadUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    a.download = nomeArquivo;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(downloadUrl);
+}
+

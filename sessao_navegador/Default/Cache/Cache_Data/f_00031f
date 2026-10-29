@@ -1,0 +1,1280 @@
+﻿$(document).ready(function () {
+
+    IniciarCarregando();
+
+    ValidarSeUsuarioLogadoEhTecnico();
+
+    ObterModelosPropostaComercial();
+
+    setTimeout(() => {
+        ObterOrdem($('#txtIdOrdem').val());
+    }, 1500);
+
+    VerificarSeOrdemPrecisaPreencherBalanceamento($('#txtIdOrdem').val());
+
+    if (PaginaAtivaEh('FilaAnalise')) {
+        //$('a[href="#abaFicha_14"]').hide();
+    }
+
+    if (PaginaAtivaEh('EdicaoOrdemMecanica')) {
+        $('#label7170').parent().hide();
+        $('#txt7210').parent().parent().hide();
+        $('#check7171').parent().parent().parent().hide();
+        $('#check7172').parent().parent().parent().hide();
+        $('#check7173').parent().parent().parent().hide();
+        $('#check7174').parent().parent().parent().hide();
+        $('#check7175').parent().parent().parent().hide();
+        $('#check7176').parent().parent().parent().hide();
+        $('#check7177').parent().parent().parent().hide();
+        $('#check7178').parent().parent().parent().hide();
+    }
+
+    else if (PaginaAtivaEh('/FilaAprovados/EdicaoOrdemUsinagemA')) {
+        $('#txt7264').parent().parent().hide();
+        $('#txt7258').parent().parent().hide();
+        $('#txt7255').parent().parent().hide();
+        $('#txt7262').parent().parent().hide();
+        $('#txt7263').parent().parent().hide();
+        $('#txt7267').parent().parent().hide();
+        $('#txt7268').parent().parent().hide();
+        $('#txt7269').parent().parent().hide();
+        $('#txt7270').parent().parent().hide();
+        $('#txt7265').parent().parent().hide();
+        $('#txt7266').parent().parent().hide();
+        $('#txt7271').parent().parent().hide();
+        $('#label7256').parent().hide();
+        $('#label7257').parent().hide();
+        $('#label7254').parent().hide();
+        $('a[href="#abaFicha_6"]').text('Análise Mecânica');
+    }
+
+    else if (PaginaAtivaEh('EdicaoOrdemEletrica')) {
+        DesabilitarCampos(ID_CHECKBOX_SERVICOS_MECANICOS);
+    }
+
+    else if (PaginaAtivaEh('FilaAprovados/EdicaoOrdemCorte')) {
+        $('#groupRow289').hide();
+        $('#titulo-289').hide();
+    }
+
+    else if (PaginaAtivaEh('FilaAprovados/EdicaoOrdemRebobinamento')) {
+        DesabilitarCamposDoGrupoFicha(0, 5200, 280);
+    }
+
+    else if (PaginaAtivaEh('FilaAprovados/EdicaoOrdemUsinagem')) {
+
+        $('a[href="#abaFicha_1"]').hide();
+        $('a[href="#abaFicha_14"]').hide();
+        $('a[href="#abaFicha_16"]').hide();
+        $('#navItemAba_6 a').click();
+    }
+    else if (PaginaAtivaEh('FilaAprovados/EdicaoOrdemDestinacao')) {
+        $('a[href="#abaFicha_1"]').hide();
+        $('a[href="#abaFicha_2"]').hide();
+        $('a[href="#abaFicha_16"]').hide();
+        $('a[href="#abaFicha_14"]').hide();
+        $('a[href="#abaFicha_13"]').hide();
+        $('a[href="#abaFicha_8"]').hide();
+        $('a[href="#abaFicha_6"]').hide();
+        $('a[href="#abaFicha_7"]').hide();
+        $('a[href="#abaFicha_11"]').hide();
+        $('#navItemAba_3 a').click();
+
+        $('#groupRow83').addClass('disabled');
+        $('#groupRow69').addClass('disabled');
+        $('a[href="#abaFicha_3"]').addClass('disabled');
+
+        $('#div5429').addClass('disabled');
+        $('#div5430').addClass('disabled');
+        $('#div5431').addClass('disabled');
+        $('#div5432').addClass('disabled');
+        $('#div7224').addClass('disabled');
+
+        setTimeout(() => { $('#btnAlterarOrdem').show(); }, 1000)
+    }
+    else if (PaginaAtivaEdicaoEhDaMontagem()) {
+        $('a[href="#abaFicha_7"]').hide();
+        $('a[href="#abaFicha_14"]').hide();
+    }
+    else if (PaginaAtivaEdicaoEhDoBalanceamento()) {
+        $('a[href="#abaFicha_2"]').hide();
+        $('a[href="#abaFicha_3"]').hide();
+        $('a[href="#abaFicha_16"]').hide();
+        $('a[href="#abaFicha_14"]').hide();
+        $('a[href="#abaFicha_13"]').hide();
+        $('a[href="#abaFicha_6"]').hide();
+        $('a[href="#abaFicha_7"]').hide();
+        $('a[href="#abaFicha_11"]').hide();
+        $('a[href="#abaFicha_8"]').show();
+
+        $('#groupRow83').addClass('disabled');
+        $('#groupRow69').addClass('disabled');
+        $('#groupRow54').addClass('disabled');
+    }
+
+    ObterCondicoesPagamentoCadastradas();
+
+    setTimeout(() => {
+        CalcularValorTotalVenda(true);
+    }, 6500);
+});
+
+function PaginaAtivaEdicaoEhDaMontagem() {
+    let str = window.location.href;
+
+    let regex = /FilaAprovados\/EdicaoOrdem\/.*\/35\/1/;
+
+    if (regex.test(str)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function DesabilitarCheckVeioLigado(idCheckSim) {
+
+    var sim = ObterValorCheckBox('check' + idCheckSim);
+
+    if (sim) {
+        $('#check21885, #check21886, #check21887, #check21888')
+            .prop('disabled', false);
+    } else {
+        $('#check21885, #check21886, #check21887, #check21888')
+            .prop('disabled', true);
+    }
+}
+
+function PaginaAtivaEdicaoEhDoBalanceamento() {
+    let str = window.location.href;
+
+    let regex = /FilaAprovados\/EdicaoOrdem\/.*\/19\/1/;
+
+    if (regex.test(str)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+var _idDadosOrdem = 0;
+var _usuarioAtualEhTecnico = false;
+
+const ID_CATEGORIA_EQUIPAMENTO_MOTORES = 1;
+const ID_GRUPO_FICHA_MOTOR_AC = 8;
+const ID_GRUPO_FICHA_MOTOR_DC = 9;
+const ID_GRUPO_FICHA_ACESSORIOS_EQUIPAMENTO = 1;
+const ID_TIPO_EQUIPAMENTO_MOTOR_AC = 2;
+const ID_TIPO_EQUIPAMENTO_MOTOR_DC = 3;
+
+const ID_ELEMENTO_SELECTPICKER_MODELO_PROSPOTA_COMERCIAL_ORDEM = 'selectModeloPropostaComercialOrdem'
+const ID_ELEMENTO_SELECTPICKER_MODELO_SECOES_ADICIONAIS_PROSPOTA_COMERCIAL_ORDEM = 'selectModeloSecoesAdicionaisPropostaComercialOrdem'
+const ID_ELEMENTO_SELECTPICKER_USUARIO_RESPONSAVEL_PROPOSTA_COMERCIAL_ORDEM = 'selectUsuarioResponsavelPropostaComercialOrdem'
+const ID_ELEMENTO_SELECTPICKER_USUARIO_MODELO_PROPOSTA_COMERCIAL = 'selectModeloPropostaComercialOrdem'
+
+function isLastTabSelected() {
+    var lastTab = $('#idTabsGrupoFicha .nav-item:last .nav-link');
+    return lastTab.hasClass('active');
+}
+
+function VerificarSeOrdemPrecisaPreencherBalanceamento(idOrdem) {
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/FilaAprovados/ObterOrdensPrecisaPreencherBalanceamento/" + idOrdem,
+        success: function (response) {
+            if (!response.precisa) {
+                $('#navItemAba_8').hide();
+            }
+        }
+    });
+}
+
+$('#selectCliente').on('change', function () {
+
+    var razaoSocial = $(this).find('option:selected').data('razao-social');
+
+    if (!IsNullOrEmpty(razaoSocial)) PreencherInput('txtReferenciaCliente', 'divReferenciaCliente', razaoSocial);
+});
+
+$('#uploadArquivoPropostaComercialOrdem').on('change', function (e) {
+
+    $("#labelUploadArquivoPropostaComercialOrdem").html("Salvando . . .");
+
+    var files = e.target.files;
+
+    if (files.length <= 0)
+        return;
+
+    if (window.FormData === undefined) {
+        swal("Ops!", "Houve um erro ao fazer o upload do arquivo", "error");
+        $("#labelUploadArquivoPropostaComercialOrdem").html("Fazer upload do arquivo da proposta");
+        return;
+    }
+
+    var data = new FormData();
+    for (var x = 0; x < files.length; x++) {
+        data.append("file" + x, files[x]);
+    }
+
+    $.ajax({
+        url: "/Arquivos/UploadArquivo/",
+        type: "POST",
+        contentType: false,
+        processData: false,
+        data: data,
+        success: function (response) {
+            if (response.erro) {
+                swal("Ops!", "Houve um erro ao fazer o upload da proposta. Detalhes: " + response.mensagem, "error");
+                $("#labelUploadArquivoPropostaComercialOrdem").html("Fazer upload do arquivo da proposta");
+            }
+            else {
+                AdicionarArquivoPropostaComercialOrdem($('#txtIdOrdem').val(), response.caminhoArquivo);
+            }
+        }
+    });
+});
+
+function ValidarSeUsuarioLogadoEhTecnico() {
+
+    $.get('/Tecnico/ValidarSeUsuarioLogadoEhTecnico', function (response) {
+        _usuarioAtualEhTecnico = response.eh_tecnico;
+
+        if (_usuarioAtualEhTecnico) {
+
+            if (PaginaAtivaEh('FilaAprovados')) {
+                $('a[href="#abaFicha_14"]').hide();
+                $('a[href="#abaFicha_15"]').hide();
+                $('a[href="#abaFicha_16"]').hide();
+            }
+        }
+    });
+}
+
+function AdicionarArquivoPropostaComercialOrdem(idOrdem, caminhoArquivo) {
+    swal({
+        title: "Atenção",
+        text: "Deseja gerar um novo número de revisão para a proposta?",
+        icon: "warning",
+        buttons: ["Não", "Sim"],
+    }).then((acrescentarNumeroRevisao) => {
+        if (acrescentarNumeroRevisao) {
+
+            $.ajax({
+                url: "/Ordem/GerarNovoNumeroRevisaoOrdem/" + idOrdem,
+                type: "PUT",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.erro) {
+                        swal("Ops!", "Houve um erro ao fazer o upload da proposta. Detalhes: " + response.mensagem, "error");
+                        $("#labelUploadArquivoPropostaComercialOrdem").html("Fazer upload do arquivo da proposta");
+                    }
+                    else {
+                        PreencherInputIdElementoEValor('txtNumeroRevisao', FormatarDinheiroParaDecimal(ObterValorInput('txtNumeroRevisao')) + 1);
+                        RequestAdicionarArquivoPropostaComercialOrdem(idOrdem, caminhoArquivo);
+                    }
+                }
+            });
+        }
+        else {
+            RequestAdicionarArquivoPropostaComercialOrdem(idOrdem, caminhoArquivo);
+        }
+    });
+}
+
+function RequestAdicionarArquivoPropostaComercialOrdem(idOrdem, caminhoArquivo) {
+    $.ajax({
+        url: "/Relatorio/AdicionarArquivoPropostaComercialOrdem/" + idOrdem,
+        type: "POST",
+        data: JSON.stringify({
+            caminho_arquivo: caminhoArquivo
+        }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response.erro) {
+                swal("Ops!", "Houve um erro ao fazer o upload da proposta. Detalhes: " + response.mensagem, "error");
+                $("#labelUploadArquivoPropostaComercialOrdem").html("Fazer upload do arquivo da proposta");
+            }
+            else {
+                swal("Sucesso", "Proposta comercial gravada com sucesso", "success");
+                $("#labelUploadArquivoPropostaComercialOrdem").html("Fazer upload do arquivo da proposta");
+            }
+        }
+    });
+}
+
+function ObterModelosPropostaComercial() {
+
+    let idOrdem = $('#txtIdOrdem').val();
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/Proposta/ObterModelos/" + idOrdem,
+        success: function (dados) {
+            if (dados.erro === false) {
+                let select = document.getElementById(ID_ELEMENTO_SELECTPICKER_MODELO_PROSPOTA_COMERCIAL_ORDEM);
+
+                if (select == undefined) return;
+
+                select.options.length = 0;
+
+                $('<option disabled=disabled>').val(0).text("Selecione o modelo da proposta comercial").appendTo('#' + ID_ELEMENTO_SELECTPICKER_MODELO_PROSPOTA_COMERCIAL_ORDEM);
+
+                $(dados.modelos).each(function (i) {
+                    let id = dados.modelos[i].id_modelo_proposta_comercial;
+                    let descricao = dados.modelos[i].descricao;;
+
+                    $('<option>').val(id).text(descricao).appendTo('#' + ID_ELEMENTO_SELECTPICKER_MODELO_PROSPOTA_COMERCIAL_ORDEM);
+                });
+
+                $('#' + ID_ELEMENTO_SELECTPICKER_MODELO_PROSPOTA_COMERCIAL_ORDEM).selectpicker('refresh');
+            }
+        },
+        error: function (error) {
+            EncerraLoading();
+        }
+    });
+}
+
+function ObterModelosSecoesAdicionaisPropostaComercial() {
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/Proposta/ObterModelosSecoesAdicionais",
+        success: function (dados) {
+            if (dados.erro === false) {
+                let select = document.getElementById(ID_ELEMENTO_SELECTPICKER_MODELO_SECOES_ADICIONAIS_PROSPOTA_COMERCIAL_ORDEM);
+
+                if (select == undefined) return;
+
+                select.options.length = 0;
+
+                $('<option disabled="disabled">').val(0).text("Selecione os descritivos adicionais").appendTo('#' + ID_ELEMENTO_SELECTPICKER_MODELO_SECOES_ADICIONAIS_PROSPOTA_COMERCIAL_ORDEM);
+
+                $(dados.modelos).each(function (i) {
+                    let id = dados.modelos[i].id_modelo_secao_adicionalproposta_comercial;
+                    let descricao = dados.modelos[i].descricao;
+
+                    $('<option>').val(id).text(descricao).appendTo('#' + ID_ELEMENTO_SELECTPICKER_MODELO_SECOES_ADICIONAIS_PROSPOTA_COMERCIAL_ORDEM);
+                });
+
+                $('#' + ID_ELEMENTO_SELECTPICKER_MODELO_SECOES_ADICIONAIS_PROSPOTA_COMERCIAL_ORDEM).selectpicker('refresh');
+            }
+        },
+        error: function (error) {
+            EncerraLoading();
+        }
+    });
+}
+
+function ObterUsuariosPodemSerResponsaveisPropostaComercial() {
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/Usuario/ObterUsuariosPodemSerResponsaveisPropostaComercial",
+        success: function (dados) {
+            if (dados.erro === false) {
+                var select = document.getElementById(ID_ELEMENTO_SELECTPICKER_USUARIO_RESPONSAVEL_PROPOSTA_COMERCIAL_ORDEM);
+
+                if (IsNullOrEmpty(select)) return;
+
+                select.options.length = 0;
+
+                $('<option disabled="disabled">').val(0).text("Selecione o responsável pela proposta").appendTo('#' + ID_ELEMENTO_SELECTPICKER_USUARIO_RESPONSAVEL_PROPOSTA_COMERCIAL_ORDEM);
+
+                $(dados.usuarios).each(function (i) {
+                    let id = dados.usuarios[i].id_usuario;
+                    let descricao = dados.usuarios[i].nome;;
+
+                    $('<option>').val(id).text(descricao).appendTo('#' + ID_ELEMENTO_SELECTPICKER_USUARIO_RESPONSAVEL_PROPOSTA_COMERCIAL_ORDEM);
+                });
+
+                $('#' + ID_ELEMENTO_SELECTPICKER_USUARIO_RESPONSAVEL_PROPOSTA_COMERCIAL_ORDEM).selectpicker('refresh');
+            }
+        },
+        error: function (error) {
+            EncerraLoading();
+        }
+    });
+}
+
+function ObterOrdem(idOrdem) {
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/Ordem/ObterOrdem/" + idOrdem,
+        success: function (response) {
+            if ($(".dados-basicos-ordem-editavel").length > 0) PreencherCamposBasicosOrdemEditaveis(response.ordemViewModel.ordem, response.ordemViewModel.data_aprovacao_ordem);
+            else PreencherCamposBasicosOrdem(response.ordemViewModel.ordem, response.ordemViewModel.dados_basicos_ordem, response.ordemViewModel.data_aprovacao_ordem);
+
+            PreencherDadosOrdem(response.ordemViewModel.dados_ordem, response.ordemViewModel.ordem.aguardando_requisicao_cliente_para_dar_andamento,);
+            PreencherValoresCamposOrdem(response.ordemViewModel.valores_campos);
+            PreencherValoresCamposFotos(response.ordemViewModel.fotos_ordem);
+
+            UpdateSelectPickerMultiplo(ID_ELEMENTO_SELECTPICKER_MODELO_SECOES_ADICIONAIS_PROSPOTA_COMERCIAL_ORDEM, response.ordemViewModel.modelos_secoes_adicionais_proposta_ordem);
+            UpdateSelectPickerMultiplo(ID_ELEMENTO_SELECTPICKER_USUARIO_MODELO_PROPOSTA_COMERCIAL, response.ordemViewModel.escopo_comercial_ordem);
+
+            DesabilitarCheckVeioLigado(21884);
+
+            //ExecutarFuncoesBlurCamposInputs();
+            //ExecutarFuncoesOnChangeCamposCheckbox();
+            CarregarFotosIlimitadas();
+            FinalizarCarregando();
+        }
+    });
+}
+
+function ExecutarFuncoesBlurCamposInputs() {
+    $(".input-valor-campo").blur();
+}
+
+function ExecutarFuncoesOnChangeCamposCheckbox() {
+    $(".check-valor-campo").change();
+}
+
+function ControlarCamposMotorACouDC(idCategoriaEquipamento, idTipoEquipamento) {
+
+    if (idCategoriaEquipamento !== ID_CATEGORIA_EQUIPAMENTO_MOTORES)
+        return;
+
+    var divGrupoFichaMotorAC = $('#groupRow' + ID_GRUPO_FICHA_MOTOR_AC);
+    var tituloGrupoFichaMotorAC = $('#titulo-' + ID_GRUPO_FICHA_MOTOR_AC);
+    var divGrupoFichaMotorDC = $('#groupRow' + ID_GRUPO_FICHA_MOTOR_DC);
+    var tituloGrupoFichaMotorDC = $('#titulo-' + ID_GRUPO_FICHA_MOTOR_DC);
+
+    if (idTipoEquipamento === ID_TIPO_EQUIPAMENTO_MOTOR_AC) {
+        tituloGrupoFichaMotorDC.hide();
+        divGrupoFichaMotorDC.hide();
+    }
+
+    else if (idTipoEquipamento === ID_TIPO_EQUIPAMENTO_MOTOR_DC) {
+        tituloGrupoFichaMotorAC.hide();
+        divGrupoFichaMotorAC.hide();
+    }
+
+    else {
+        tituloGrupoFichaMotorDC.hide();
+        divGrupoFichaMotorDC.hide();
+        tituloGrupoFichaMotorAC.hide();
+        divGrupoFichaMotorAC.hide();
+    }
+}
+
+function PreencherCamposBasicosOrdem(ordem, dadosBasicosOrdem, dataAprovacao) {
+
+    PreencherInput('txtTipoOrdem', 'divTipoOrdem', dadosBasicosOrdem.tipo_ordem);
+
+    PreencherTipoServico(ordem, dadosBasicosOrdem);
+
+    if (ElementoExiste('txtTecnicoAnalise')) $('#txtTecnicoAnalise').text("Técnico Análise: " + dadosBasicosOrdem.tecnico_analise);
+
+    PreencherInput('txtNumeroOrdem', 'divNumeroOrdem', dadosBasicosOrdem.numero_ordem);
+    PreencherInput('txtCliente', 'divCliente', dadosBasicosOrdem.cliente);
+    PreencherInput('txtCategoriaEquipamento', 'divCategoriaEquipamento', dadosBasicosOrdem.categoria_equipamento);
+    PreencherInput('txtDataEntrada', 'divDataEntrada', FormataJsonData(dadosBasicosOrdem.data_entrada));
+    PreencherInput('txtNumeroNota', 'divNumeroNota', dadosBasicosOrdem.numero_nota_saida);
+    PreencherInput('txtFabricante', 'divFabricante', dadosBasicosOrdem.fabricante);
+    PreencherInput('txtTipoEquipamento', 'divTipoEquipamento', dadosBasicosOrdem.equipamento);
+    PreencherInput('txtModelo', 'divModelo', dadosBasicosOrdem.modelo);
+    PreencherInput('txtPotencia', 'divPotencia', ordem.potencia);
+    PreencherInput('txtNumeroPolos', 'divNumeroPolos', ordem.numero_polos);
+    PreencherInput('txtDefeito', 'divDefeito', dadosBasicosOrdem.defeito_alegado);
+    PreencherInput('txtObservacoes', 'divObservacoes', dadosBasicosOrdem.observacao);
+    PreencherInput('txtAnalisePreliminar', 'divAnalisePreliminar', dadosBasicosOrdem.analise_preliminar);
+    PreencherInput('txtNumeroSerie', 'divNumeroSerie', ordem.numero_serie_equipamento);
+    PreencherInput('txtReferenciaCliente', 'divReferenciaCliente', ordem.referencia_cliente);
+    PreencherInput('txtSolicitante', 'divSolicitante', ordem.solicitante);
+    MarcarCheckBox('checkManutencaoCorretiva', ordem.manutencao_corretiva);
+    MarcarCheckBox('checkManutencaoPreventiva', ordem.manutencao_preventiva);
+    MarcarCheckBox('checkManutencaoEmprestimo', ordem.manutencao_emprestimo);
+    MarcarCheckBox('checkManutencaoVenda', ordem.manutencao_venda);
+    PreencherInput('txtDataPrevistaEntrega', 'divDataPrevistaEntrega', FormataJsonData(ordem.data_prevista_de_entrega));
+
+    if (PaginaAtivaEh('FilaAnalise') || PaginaAtivaEh('FilaOrcamento')) $('#divDataAprovacao').hide();
+    else PreencherInput('txtDataAprovacao', 'divDataAprovacao', dataAprovacao);
+
+    PreencherInput('txtModeloMaquina', 'divModeloMaquina', ordem.modelo_maquina);
+    PreencherInput('txtNumeroSerieMaquina', 'divNumeroSerieMaquina', ordem.numero_serie_maquina);
+    PreencherInput('txtUsuarioCadastrouAOrdem', 'divUsuarioCadastrouAOrdem', ordem.usuario_cadastrou_ordem);
+}
+
+function PreencherDadosOrdem(dadosOrdem, aguardandoRequisicaoClienteParaDarAndamento) {
+    var valorOrcamento = ValidarValorOrcamento(dadosOrdem.valor_orcamento);
+    var valorDesconto = ValidarValorOrcamento(dadosOrdem.valor_desconto);
+    var valorTotalCusto = ValidarValorOrcamento(dadosOrdem.valor_total_custo);
+
+    PreencherInput('txtValorTotalCusto', 'divValorTotalCusto', FormatDinheiro(valorTotalCusto));
+    PreencherInput('txtValorOrcamento', 'divValorOrcamento', FormatDinheiro(valorOrcamento));
+    PreencherInput('txtValorDesconto', 'divValorDesconto', FormatDinheiro(valorDesconto));
+    PreencherInput('txtCondicaoPagamento', 'divCondicaoPagamento', dadosOrdem.condicao_pagamento);
+    PreencherInput('txtPrazo', 'divPrazo', dadosOrdem.prazo_entrega);
+    PreencherInput('txtFormaPagamento', 'divFormaPagamento', dadosOrdem.descricao_forma_pagamento);
+    PreencherInput('txtObservacoesOrcamento', 'divObservacoesOrcamento', dadosOrdem.observacoes_orcamento);
+    PreencherInput('txtPorcentagemDesconto', 'divPorcentagemDesconto', dadosOrdem.porcentagem_desconto);
+    MarcarCheckBox('checkFreteIncluso', dadosOrdem.frete_incluso);
+    MarcarCheckBox('checkMostrarPecasOrcamento', dadosOrdem.apresentacao_pecas_orcamento);
+    MarcarCheckBox('checkMostrarValor', dadosOrdem.mostrar_valores_orcamento);
+    MarcarCheckBox('checkMostrarFoto', dadosOrdem.mostrar_foto_peca);
+    MarcarCheckBox('checkRepasseRejeito', dadosOrdem.flag_repasse_rejeito);
+    MarcarCheckBox('checkRepasseRepasse', dadosOrdem.flag_repasse_repasse);
+    MarcarCheckBox('checkAguardandoRequisicaoCliente', aguardandoRequisicaoClienteParaDarAndamento);
+    MarcarCheckBox('checkEmprestimoDevolvidoSemTroca', dadosOrdem.flag_equipmaneto_emprestimo_devolvido_sem_troca);
+    PreencherInput('txtNumeroProposta', 'divNumeroProposta', dadosOrdem.numero_proposta_comercial);
+    PreencherInput('txtNumeroRevisao', 'divNumeroRevisao', dadosOrdem.numero_revisao_proposta_comercial);
+    UpdateSelectPicker('selectFormaDePagamento', dadosOrdem.id_forma_pagamento);
+
+    PreencherInput('txtPorcentagemComissaoVenda', 'divPorcentagemVenda', dadosOrdem.porcentagem_valor_adicional_urgencia);
+    PreencherInput('txtValorComissaoVenda', 'divValorComissaoVenda', dadosOrdem.valor_adicional_urgencia);
+
+    PreencherInput('txtPrazoSugeridoEntrega', 'divPrazoSugeridoEntrega', dadosOrdem.prazo_sugerido_entrega);
+    PreencherInputIdElementoEValor('txtAssuntoPropostaComercial', dadosOrdem.assunto_proposta_comercial);
+    PreencherInput('txtNumeroPedido', 'divNumeroPedido', dadosOrdem.numero_pedido);
+    PreencherInput('txtNumeroPedidoProduto', 'divNumeroPedidoProduto', dadosOrdem.numero_pedido_compra_produto);
+    PreencherInput('txtNumeroPedidoServico', 'divNumeroPedidoServico', dadosOrdem.numero_pedido_compra_servico);
+    PreencherInput('txtNumeroPedidoMisto', 'divNumeroPedidoMisto', dadosOrdem.numero_pedido_compra_misto);
+
+    if (IsNullOrEmpty(dadosOrdem.prazo_garantia)) UpdateSelectPicker('selectGarantia', '3 Meses');
+    else UpdateSelectPicker('selectGarantia', dadosOrdem.prazo_garantia);
+
+    if (IsNullOrEmpty(dadosOrdem.valor_custo_hora_servico)) PreencherInput('txtValorCustoHora', 'divValorCustoHora', '110,00');
+    else PreencherInput('txtValorCustoHora', 'divValorCustoHora', FormatDinheiro(dadosOrdem.valor_custo_hora_servico));
+
+    if (IsNullOrEmpty(dadosOrdem.valor_venda_hora_servico)) PreencherInput('txtValorVendaHora', 'divValorVendaHora', '220,00');
+    else PreencherInput('txtValorVendaHora', 'divValorVendaHora', FormatDinheiro(dadosOrdem.valor_venda_hora_servico));
+
+    $('#txtValorVendaHora').blur();
+
+    UpdateSelectPicker(ID_ELEMENTO_SELECTPICKER_MODELO_PROSPOTA_COMERCIAL_ORDEM, dadosOrdem.id_modelo_proposta_comercial);
+    UpdateSelectPicker(ID_ELEMENTO_SELECTPICKER_USUARIO_RESPONSAVEL_PROPOSTA_COMERCIAL_ORDEM, dadosOrdem.id_usuario_responsavel_proposta_comercial);
+
+    if (IsNullOrEmpty(dadosOrdem.coeficiente_calculo_comissao))
+        PreencherInputIdElementoEValor('txtCoeficienteCalculoComissao', FormatDinheiro(0.92));
+    else
+        PreencherInputIdElementoEValor('txtCoeficienteCalculoComissao', FormatDinheiro(dadosOrdem.coeficiente_calculo_comissao));
+
+    _idDadosOrdem = dadosOrdem.id_dados_ordem;
+
+    if (dadosOrdem.valor_servicos > 0 && dadosOrdem.valor_desconto_servicos) {
+        let valorPorcentagem = (dadosOrdem.valor_desconto_servicos / dadosOrdem.valor_servicos) * 100
+        PreencherInput('txtPorcentagemDescontoServicos', 'divPorcentagemDescontoServicos', FormatPorcentagem(valorPorcentagem));
+    }
+
+    PreencherInput('txtValorTotalServicos', 'divValorTotalServicos', FormatDinheiro(dadosOrdem.valor_servicos));
+    PreencherInput('txtValorDescontoServicos', 'divValorDescontoServicos', FormatDinheiro(dadosOrdem.valor_desconto_servicos));
+    PreencherInput('txtValorFinalComDescontoServicos', 'divValorFinalComDescontoServicos', FormatDinheiro(dadosOrdem.valor_com_desconto_servicos));
+
+    PreencherInput('txtValorTotalProdutos', 'divValorTotalProdutos', FormatDinheiro(dadosOrdem.valor_produtos));
+    PreencherInput('txtValorDescontoProdutos', 'divValorDescontoProdutos', FormatDinheiro(dadosOrdem.valor_desconto_produtos));
+    PreencherInput('txtValorFinalComDescontoProdutos', 'divValorFinalComDescontoProdutos', FormatDinheiro(dadosOrdem.valor_com_desconto_produtos));
+
+    if (dadosOrdem.valor_produtos > 0) {
+        let porcentagemDescontoProdutos = (dadosOrdem.valor_desconto_produtos / dadosOrdem.valor_produtos) * 100;
+        PreencherInput('txtPorcentagemDescontoProdutos', 'divPorcentagemDescontoProdutos', FormatPorcentagem(porcentagemDescontoProdutos));
+    }
+
+    $('#txtValorDescontoProdutos').blur();
+    $('#divValorDescontoServicos').blur();
+
+    // as tabelas de peças/serviços podem ter carregado antes destes dados: com desconto por item,
+    // os totais vêm dos itens e não do valor gravado (que só atualiza quando a ordem é salva)
+    let haDescontoItensServicos = typeof _valorDescontoItensServicos !== 'undefined' && _valorDescontoItensServicos > 0;
+    let haDescontoItensPecas = typeof _valorDescontoItensPecas !== 'undefined' && _valorDescontoItensPecas > 0;
+
+    if (haDescontoItensServicos || haDescontoItensPecas)
+        CalcularValorTotalVenda();
+
+    if (IsNullOrEmpty(dadosOrdem.id_condicao_pagamento)) {
+        ObterCondicaoPagamentoParceiro(dadosOrdem.id_ordem);
+    }
+    else {
+        setTimeout(() => {
+            UpdateSelectPicker('selectCondicaoPagamento', dadosOrdem.id_condicao_pagamento);
+        }, 1000)
+    }
+}
+
+function PreencherCamposBasicosOrdemEditaveis(ordem) {
+
+    PreencherTipoServico(ordem, null);
+
+    UpdateSelectPicker('selectTipoOrdem', ordem.id_tipo_ordem);
+    PreencherInput('txtNumeroOrdem', 'divNumeroOrdem', ordem.numero_ordem);
+    UpdateSelectPicker('selectCategoriaEquipamento', ordem.id_categoria_equipamento);
+    UpdateSelectPicker('selectCliente', ordem.id_cliente_lizy);
+    PreencherInput('txtReferenciaCliente', 'divReferenciaCliente', ordem.referencia_cliente);
+    PreencherInput('txtSolicitante', 'divSolicitante', ordem.solicitante);
+    PreencherInput('txtDataEntrada', 'divDataEntrada', FormataJsonData(ordem.data_entrada));
+    PreencherInput('txtNumeroNota', 'divNumeroNota', ordem.numero_nota_saida);
+    PreencherInput('txtNumeroSerie', 'divNumeroSerie', ordem.numero_serie_equipamento);
+    UpdateSelectPicker('selectFabricante', ordem.id_fabricante);
+    UpdateSelectPicker('selectTipoEquipamento', ordem.id_tipo_equipamento);
+    AtualizarSelectModelosESelecionarOpcao(ordem.id_fabricante, ordem.id_modelo);
+    PreencherInput('txtDefeito', 'divDefeito', ordem.defeito_alegado);
+    PreencherInput('txtAnalisePreliminar', 'divAnalisePreliminar', ordem.analise_preliminar);
+    PreencherInput('txtObservacoes', 'divObservacoes', ordem.observacao);
+    MarcarCheckBox('checkManutencaoCorretiva', ordem.manutencao_corretiva);
+    MarcarCheckBox('checkManutencaoPreventiva', ordem.manutencao_preventiva);
+    MarcarCheckBox('checkManutencaoEmprestimo', ordem.manutencao_emprestimo);
+    MarcarCheckBox('checkManutencaoVenda', ordem.manutencao_venda);
+    PreencherInput('txtModeloMaquina', 'divModeloMaquina', ordem.modelo_maquina);
+    PreencherInput('txtNumeroSerieMaquina', 'divNumeroSerieMaquina', ordem.numero_serie_maquina);
+    PreencherInput('txtUsuarioCadastrouAOrdem', 'divUsuarioCadastrouAOrdem', ordem.usuario_cadastrou_ordem);
+    PreencherInput('txtDataPrevistaEntrega', 'divDataPrevistaEntrega', FormataJsonData(ordem.data_prevista_de_entrega));
+    MarcarCheckBox('checkUrgencia', ordem.urgencia);
+    PreencherInput('txtFabricante', 'divFabricante', ordem.fabricante);
+    PreencherInput('txtTipoEquipamento', 'divTipoEquipamento', ordem.tipo_equipamento);
+    PreencherInput('txtModelo', 'divModelo', ordem.modelo);
+}
+
+function PreencherTipoServico(ordem, dadosBasicosOrdem) {
+    if (ElementoExiste('txtTipoServico')) $('#txtTipoServico').text("Manutenção " + dadosBasicosOrdem.tipo_servico);
+    else if (ElementoExiste('selectTipoServico')) UpdateSelectPicker('selectTipoServico', ordem.id_tipo_servico);
+}
+
+function PreencherConjuntoEquipamentosOrdem(equipamentosOrdem) {
+    MarcarCheckBox('checkConjuntoEquipamentos', true);
+
+    $('#rowDadosEquipamentoOrdem').hide();
+    $('#rowDadosMaquinaOrdem').hide();
+    $('.fotos-ordem-ilimitadas').show();
+    $('.fotos-ordem-limitadas').hide();
+
+    $('#checkConjuntoEquipamentos').trigger('change');
+
+    for (var i = 0; i < equipamentosOrdem.length; i++) {
+        InserirEquipamentoNaTabelaConjuntoComBaseObjeto(equipamentosOrdem[i]);
+    }
+
+    $("." + CLASSE_SLICK_CARROUSEL).slick('resize');
+}
+
+function AlterarOrdem() {
+
+    var idOrdem = $('#txtIdOrdem').val();
+
+    DesabilitarBotao('btnAlterarOrdem', 'Salvando . . .');
+
+    var body = CarregarOrdemEdicaoBody();
+
+    if (!ValidarFotosForamCarregadasCorretamente(body)) {
+        HabilitarBotao('btnAlterarOrdem', 'Salvar');
+        return;
+    }
+
+    $.ajax({
+        url: "/Ordem/Editar/" + idOrdem,
+        type: "PUT",
+        data: JSON.stringify(body),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response.erro) {
+                swal("Ops!", "Houve um erro ao alterar a ordem. Detalhes: " + response.mensagem, "error");
+                HabilitarBotao('btnAlterarOrdem', 'Salvar');
+            }
+            else {
+                swal("Sucesso!", "A ordem foi alterada com sucesso", "success")
+                    .then(okay => {
+                        HabilitarBotao('btnAlterarOrdem', 'Salvar');
+                    });
+            }
+        }
+    });
+}
+
+function CarregarOrdemEdicaoBody() {
+
+    var body = {
+        "ordem": CarregarObjetoJsonOrdem(),
+        "valor_campo_body": ObterValoresCampos(),
+        "valores_pre_grupos": ObterValoresPreGrupos(),
+        "menu_analise_ativo": PaginaAtivaEh('FilaAnalise'),
+        "menu_orcamento_ativo": PaginaAtivaEh('FilaOrcamento'),
+        "menu_aprovados_ativo": PaginaAtivaEh('FilaAprovados'),
+        "analise_preliminar": $('#txtAnalisePreliminar').val(),
+        "aguardando_requisicao_cliente_para_dar_andamento": ObterValorCheckBox('checkAguardandoRequisicaoCliente'),
+        "alterar_informacoes_ordem": $(".dados-basicos-ordem-editavel").length > 0,
+        "caminho_canhoto_assinado": ObterValorInput('txtCaminhoArquivoBackup1'),
+        "prazo_sugerido_entrega": ObterValorInput('txtPrazoSugeridoEntrega'),
+        "descricao_forma_pagamento": ObterValorInput('txtFormaPagamento'),
+        "valor_custo_hora_servico": FormatarDinheiroParaDecimal(ObterValorInput('txtValorCustoHora')),
+        "valor_venda_hora_servico": FormatarDinheiroParaDecimal(ObterValorInput('txtValorVendaHora')),
+        "link_arquivo_backup1": ObterValorInputoOuDefault('txtCaminhoArquivoBackup1'),
+        "link_arquivo_backup2": ObterValorInputoOuDefault('txtCaminhoArquivoBackup2'),
+        "link_arquivo_pedido": ObterValorInputoOuDefault('txtCaminhoArquivoPedido1'),
+    };
+
+    if (ElementoExiste('tabelaServicosExternosDaOrdem'))
+        body["servicos_externos_da_ordem"] = CarregarObjetoJsonServicosExternosDaOrdem();
+
+    if (ElementoExiste('divDadosOrcamentoOrdem')) {
+        body["dados_ordem"] = GerarObjetoDadosOrdem();
+        body["modelo_secoes_adicionais_proposta_ordem"] = ObterValorSelectPickerMultiplo(ID_ELEMENTO_SELECTPICKER_MODELO_SECOES_ADICIONAIS_PROSPOTA_COMERCIAL_ORDEM);
+        body["escopo_comercial_ordem"] = ObterValorSelectPickerMultiplo(ID_ELEMENTO_SELECTPICKER_USUARIO_MODELO_PROPOSTA_COMERCIAL);
+    }
+
+    return body;
+}
+
+function GerarObjetoDadosOrdem() {
+
+    let valorOrcamento = FormatarDinheiroParaDecimal($('#txtValorOrcamento').val());
+
+    let valorDesconto = $('#txtValorDesconto').val();
+
+    if (IsNullOrEmpty(valorDesconto)) valorDesconto = 0;
+
+    let valorTotalCusto = $('#txtValorTotalCusto').val();
+
+    if (IsNullOrEmpty(valorTotalCusto)) valorDesconto = 0;
+
+    let valorServicos = ObterValorDecimalCampoDadosOrdem('#txtValorTotalServicos');
+    let valorDescontoServicos = ObterValorDecimalCampoDadosOrdem('#txtValorDescontoServicos');
+    let valorComDescontoServicos = ObterValorDecimalCampoDadosOrdem('#txtValorFinalComDescontoServicos');
+    let valorProdutos = ObterValorDecimalCampoDadosOrdem('#txtValorTotalProdutos');
+    let valorDescontoProdutos = ObterValorDecimalCampoDadosOrdem('#txtValorDescontoProdutos');
+    let valorComDescontoProdutos = ObterValorDecimalCampoDadosOrdem('#txtValorFinalComDescontoProdutos');
+
+    var dadosOrdem = {
+        "id_dados_ordem": _idDadosOrdem,
+        "valor_total_custo": FormatarDinheiroParaDecimal(valorTotalCusto),
+        "valor_orcamento": FormatarDinheiroParaDecimal(valorOrcamento),
+        "valor_desconto": FormatarDinheiroParaDecimal(valorDesconto),
+        "condicao_pagamento": $('#txtCondicaoPagamento').val(),
+        "prazo_entrega": $('#txtPrazo').val(),
+        "observacoes_orcamento": $('#txtObservacoesOrcamento').val(),
+        "cortesia": EhCortesia(valorOrcamento),
+        "frete_incluso": ObterValorCheckBox('checkFreteIncluso'),
+        "apresentacao_pecas_orcamento": ObterValorCheckBox('checkMostrarPecasOrcamento'),
+        "mostrar_valores_orcamento": ObterValorCheckBox('checkMostrarValor'),
+        "mostrar_foto_peca": ObterValorCheckBox('checkMostrarFoto'),
+        "prazo_garantia": ObterValorSelectPicker('selectGarantia'),
+        "flag_repasse_rejeito": ObterValorCheckBox('checkRepasseRejeito'),
+        "flag_repasse_repasse": ObterValorCheckBox('checkRepasseRepasse'),
+        "flag_equipmaneto_emprestimo_devolvido_sem_troca": ObterValorCheckBox('checkEmprestimoDevolvidoSemTroca'),
+        "numero_proposta_comercial": parseInt($('#txtNumeroProposta').val()),
+        "numero_revisao_proposta_comercial": parseInt($('#txtNumeroRevisao').val()),
+        "descricao_forma_pagamento": ObterDescricaoSelecionadaSelectPicker('selectCondicaoPagamento'),
+        "porcentagem_valor_adicional_urgencia": FormatarDinheiroParaDecimal($('#txtPorcentagemComissaoVenda').val()),
+        "valor_adicional_urgencia": FormatarDinheiroParaDecimal($('#txtValorComissaoVenda').val()),
+        "status_componente_mancal_rolamento": ObterValorInput('txtStatusComponenteMancalRolamento'),
+        "status_compoente_porta_escova": ObterValorInput('txStatusComponentePortaEscova'),
+        "status_compoenente_escovas": ObterValorInput('txtStatusComponenteEscovas'),
+        "id_modelo_proposta_comercial": ObterValorSelectPickerOuDefaultNull(ID_ELEMENTO_SELECTPICKER_MODELO_PROSPOTA_COMERCIAL_ORDEM),
+        "id_usuario_responsavel_proposta_comercial": ObterValorSelectPickerOuDefaultNull(ID_ELEMENTO_SELECTPICKER_USUARIO_RESPONSAVEL_PROPOSTA_COMERCIAL_ORDEM),
+        "assunto_proposta_comercial": ObterValorInput('txtAssuntoPropostaComercial'),
+        "id_condicao_pagamento": ObterValorSelectPicker('selectCondicaoPagamento'),
+        "numero_pedido": ObterValorInput('txtNumeroPedido'),
+        "numero_pedido_compra_produto": ObterValorInput('txtNumeroPedidoProduto'),
+        "numero_pedido_compra_servico": ObterValorInput('txtNumeroPedidoServico'),
+        "numero_pedido_compra_misto": ObterValorInput('txtNumeroPedidoMisto'),
+        "valor_servicos": valorServicos,
+        "valor_desconto_servicos": valorDescontoServicos,
+        "valor_com_desconto_servicos": valorComDescontoServicos,
+        "valor_produtos": valorProdutos,
+        "valor_desconto_produtos": valorDescontoProdutos,
+        "valor_com_desconto_produtos": valorComDescontoProdutos,
+    };
+
+    return dadosOrdem;
+}
+
+function ObterValorDecimalCampoDadosOrdem(idCampo) {
+    let valor = $(idCampo).val();
+
+    if (IsNullOrEmpty(valor)) return 0;
+
+    return FormatarDinheiroParaDecimal(valor)
+}
+
+function EhCortesia(valorOrcamento) {
+    return valorOrcamento === 0 ? true : false;
+}
+
+function CalcularValorTotalCusto() {
+    let custoTotalOrdem = 0;
+    let valorOrcamento = FormatarDinheiroParaDecimal($('#txtValorOrcamento').val());
+    let valorDesconto = FormatarDinheiroParaDecimal($('#txtValorDesconto').val());
+    let porcentagemValorComissao = FormatarDinheiroParaDecimal($('#txtPorcentagemComissaoVenda').val());
+
+    let custoTotalServicosExternos = 0;
+    if (ElementoExiste('tabelaServicosExternosDaOrdem')) {
+        custoTotalServicosExternos = ObterValorTotalServicosExternosOrdem();
+    }
+
+    let custoTotalHorasServico = 0;
+    if (ElementoExiste('tabelaServicosDaOrdem')) {
+        custoTotalHorasServico = ObterValorTotalCustoHorasServico();
+    }
+
+    let valorComissaoVenda = 0;
+    if (valorDesconto) {
+        valorComissaoVenda = (valorDesconto / 100) * porcentagemValorComissao;
+    } else {
+        valorComissaoVenda = (valorOrcamento / 100) * porcentagemValorComissao;
+    }
+
+    custoTotalOrdem += custoTotalServicosExternos + custoTotalHorasServico;
+
+    PreencherInput('txtValorTotalCusto', 'divValorTotalCusto', FormatDinheiro(custoTotalOrdem));
+    PreencherInput('txtValorComissaoVenda', 'divValorComissaoVenda', FormatDinheiro(valorComissaoVenda));
+}
+
+$('#txtValorDesconto, #txtValorOrcamento').change(function () {
+    CalcularValorTotalCusto();
+})
+
+function CalculosTotalCustoOrdem() {
+
+    let custoTotalOrdem = 0;
+
+    let valorOrcamento = FormatarDinheiroParaDecimal($('#txtValorOrcamento').val());
+    let valorDesconto = FormatarDinheiroParaDecimal($('#txtValorDesconto').val());
+    let porcentagemValorComissao = FormatarDinheiroParaDecimal($('#txtPorcentagemComissaoVenda').val());
+
+    let custoTotalPecas = ObterCustoTotalPecas();
+    let custoTotalServicosExternos = ObterValorTotalServicosExternosOrdem();
+    let custoTotalHorasServico = ObterValorTotalCustoHorasServico();
+
+    if (valorDesconto) {
+        var valorComissaoVenda = (valorDesconto / 100) * porcentagemValorComissao;
+    } else {
+        var valorComissaoVenda = (valorOrcamento / 100) * porcentagemValorComissao;
+    }
+
+    custoTotalOrdem += custoTotalPecas + custoTotalServicosExternos + custoTotalHorasServico;
+
+    PreencherInput('txtValorCustoServicos', 'divValorCustoServicos', FormatDinheiro(custoTotalHorasServico));
+    PreencherInput('txtValorCustoServicosExternos', 'divValorCustoServicosExternos', FormatDinheiro(custoTotalServicosExternos));
+    PreencherInput('txtValorCustoPeca', 'divValorCustoPeca', FormatDinheiro(custoTotalPecas));
+    PreencherInput('txtValorTotalCustoModal', 'divValorTotalCustoModal', FormatDinheiro(custoTotalOrdem));
+    PreencherInput('txtPercentualDesconto', 'divPercentualDesconto', FormatDinheiro(valorDesconto));
+    PreencherInput('txtValorComissao', 'divValorComissao', FormatDinheiro(porcentagemValorComissao));
+    PreencherInput('txtValorComissaoVenda', 'divValorComissaoVenda', FormatDinheiro(valorComissaoVenda));
+}
+
+function CalcularValorTotalVenda(recalcularValorDesconto = true) {
+
+    let vendaTotalOrdem = 0;
+
+    let vendaTotalPecas = ObterValorVendaTotalPecas();
+    let vendaTotalServicosExternos = ObterValorTotalVendaServicosExternosOrdem();
+    let vendaTotalHorasServico = ObterValorTotalVendaHorasServico();
+
+    vendaTotalOrdem += vendaTotalPecas + vendaTotalHorasServico + vendaTotalServicosExternos;
+
+    // descontos lançados por item nas tabelas de peças/serviços (os totais das linhas já vêm líquidos)
+    let descontoItensPecas = typeof _valorDescontoItensPecas !== 'undefined' ? _valorDescontoItensPecas : 0;
+    let descontoItensServicos = typeof _valorDescontoItensServicos !== 'undefined' ? _valorDescontoItensServicos : 0;
+
+    // campos que estavam presos ao desconto dos itens e o desconto foi removido: zera o desconto do orçamento
+    let pecasEstavamComDescontoItens = $('#txtValorDescontoProdutos').hasClass('bloqueado-desconto-itens');
+    let servicosEstavamComDescontoItens = $('#txtValorDescontoServicos').hasClass('bloqueado-desconto-itens');
+
+    PreencherInputIdElementoEValor('txtValorTotalProdutos', FormatDinheiro(vendaTotalPecas + descontoItensPecas));
+    PreencherInputIdElementoEValor('txtValorTotalServicos', FormatDinheiro(vendaTotalHorasServico + vendaTotalServicosExternos + descontoItensServicos));
+
+    // com desconto por item, o desconto do orçamento passa a ser a soma dos itens (campos bloqueados para edição manual)
+    BloquearCamposDescontoOrcamento('#txtPorcentagemDescontoProdutos, #txtValorDescontoProdutos, #txtValorFinalComDescontoProdutos', descontoItensPecas > 0);
+    BloquearCamposDescontoOrcamento('#txtPorcentagemDescontoServicos, #txtValorDescontoServicos, #txtValorFinalComDescontoServicos', descontoItensServicos > 0);
+
+    if (descontoItensPecas > 0 || pecasEstavamComDescontoItens)
+        PreencherDescontoDosItensNoOrcamento(vendaTotalPecas, descontoItensPecas, 'txtPorcentagemDescontoProdutos', 'txtValorDescontoProdutos', 'txtValorFinalComDescontoProdutos');
+
+    if (descontoItensServicos > 0 || servicosEstavamComDescontoItens)
+        PreencherDescontoDosItensNoOrcamento(vendaTotalHorasServico + vendaTotalServicosExternos, descontoItensServicos, 'txtPorcentagemDescontoServicos', 'txtValorDescontoServicos', 'txtValorFinalComDescontoServicos');
+
+    let valorPecas = vendaTotalPecas;
+    let valorServicos = vendaTotalHorasServico + vendaTotalServicosExternos;
+
+    let valorDescontoProdutos = ObterValorCampoFormatado('txtValorFinalComDescontoProdutos');
+
+    if (valorDescontoProdutos !== null && !isNaN(valorDescontoProdutos)) {
+        valorPecas = valorDescontoProdutos;
+    }
+
+    let valorDescontoServicos = ObterValorCampoFormatado('txtValorFinalComDescontoServicos');
+
+    if (valorDescontoServicos !== null && !isNaN(valorDescontoServicos)) {
+        valorServicos = valorDescontoServicos;
+    }
+
+    PreencherInputIdElementoEValor('txtValorOrcamento', FormatDinheiro(valorPecas + valorServicos));
+    $('#txtValorOrcamento').change();
+
+    if (recalcularValorDesconto) {
+        $('#txtValorTotalProdutos').change();
+        $('#txtValorTotalServicos').change();
+    }
+}
+
+function BloquearCamposDescontoOrcamento(seletor, bloquear) {
+
+    if (bloquear)
+        $(seletor).prop('disabled', true).addClass('bloqueado-desconto-itens');
+    else
+        $(seletor).filter('.bloqueado-desconto-itens').prop('disabled', false).removeClass('bloqueado-desconto-itens');
+}
+
+function PreencherDescontoDosItensNoOrcamento(valorLiquido, valorDesconto, idCampoPorcentagem, idCampoValorDesconto, idCampoValorFinalComDesconto) {
+
+    let valorBruto = valorLiquido + valorDesconto;
+
+    PreencherInputIdElementoEValor(idCampoValorDesconto, FormatDinheiro(valorDesconto));
+    PreencherInputIdElementoEValor(idCampoValorFinalComDesconto, FormatDinheiro(valorLiquido));
+    PreencherInputIdElementoEValor(idCampoPorcentagem, FormatPorcentagem(valorBruto > 0 ? (valorDesconto / valorBruto) * 100 : 0));
+}
+
+function AbrirModalExplicacaoCalculoValoresOrcamento() {
+    if (IsNullOrEmpty($("#txtValorComissao").val()) || $("#txtValorComissao").val() == 0) {
+        $("#rowDadosComisaso").addClass("d-none");
+    }
+    CalculosValorTotalVendaOrdem();
+    CalculosTotalCustoOrdem();
+    AbrirModal('modal-explicacao-calculo-valor-ordem');
+}
+
+function ObterGrupoAbaFicha(idGrupoAbaFicha) {
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/FilaAnalise/ObterGrupoFichaNaAba/" + idOrdem,
+        success: function (response) {
+        }
+    });
+}
+
+function CalcularValorDescontoPorPorcentagem(idCampoValorTotal, idCampoPorcentagem, idCampoValorDesconto, idCampoValorFinalComDesconto,
+    recalcularValoresVenda = true) {
+
+    const porcentagem = FormatarPorcentagem($('#' + idCampoPorcentagem).val());
+
+    const valorTotal = ObterValorCampoFormatado(idCampoValorTotal);
+
+    if (porcentagem == null || isNaN(porcentagem) || valorTotal < 0) {
+
+        PreencherInputIdElementoEValor(idCampoValorDesconto, 0.00);
+        PreencherInputIdElementoEValor(idCampoValorFinalComDesconto, 0.00);
+        PreencherInputIdElementoEValor(idCampoPorcentagem, 0.00);
+        return;
+    }
+
+    let valorDesconto = valorTotal * porcentagem / 100;
+
+    const valorTotalComDesconto = valorTotal - valorDesconto;
+
+    valorDesconto = FormatDinheiro(valorDesconto);
+
+    PreencherInputIdElementoEValor(idCampoValorDesconto, valorDesconto);
+
+    PreencherInputIdElementoEValor(idCampoValorFinalComDesconto, FormatDinheiro(valorTotalComDesconto));
+
+    CalcularValorTotalVenda(recalcularValoresVenda);
+}
+
+function CalcularValorDescontoPorValor(idCampoValorTotal,
+    idCampoPorcentagem,
+    idCampoValorDesconto,
+    idCampoValorFinalComDesconto,
+    recalcularValoresVenda = false) {
+    // 1) Obter o valor inserido no campo "desconto" (neste caso, é um valor monetário e não porcentagem).
+    let valorDesconto = ObterValorCampoFormatado(idCampoValorDesconto);
+
+    let valorTotal = ObterValorCampoFormatado(idCampoValorTotal);
+
+    if (valorDesconto == null || isNaN(valorDesconto) || valorDesconto < 0) {
+
+        PreencherInputIdElementoEValor(idCampoPorcentagem, 0.00);
+        PreencherInputIdElementoEValor(idCampoValorFinalComDesconto, 0.00);
+        PreencherInputIdElementoEValor(idCampoValorDesconto, 0.00);
+        return;
+    }
+
+    // 3) Calcular o valor final subtraindo o desconto
+    let valorFinalComDesconto = valorTotal - valorDesconto;
+
+    let valorTotalComDesconto = valorTotal - valorFinalComDesconto;
+
+    let valorFinalComDescontoFormatado = FormatDinheiro(valorFinalComDesconto);
+
+    PreencherInputIdElementoEValor(idCampoValorFinalComDesconto, valorFinalComDescontoFormatado);
+
+    // 7) Por fim, calcula a porcentagem de desconto aplicada:
+    let porcentagemDesconto = 0;
+    if (valorTotal > 0) {
+        porcentagemDesconto = (valorTotalComDesconto / valorTotal) * 100;
+    }
+
+    // Formatar a porcentagem. Podemos colocar o símbolo % no final, se desejado.
+    let porcentagemDescontoFormatada = porcentagemDesconto
+        .toFixed(2)
+        .replace('.', ',') + '%';
+
+    // 8) Preencher o campo de porcentagem
+    PreencherInputIdElementoEValor(idCampoPorcentagem, porcentagemDescontoFormatada);
+
+    CalcularValorTotalVenda(recalcularValoresVenda);
+}
+
+function CalcularDescontoBaseadoNoValorTotalDesconto(idCampoValorTotal,
+    idCampoPorcentagem,
+    idCampoValorDesconto,
+    idCampoValorFinalComDesconto) {
+
+    const campoInput = document.getElementById(idCampoValorFinalComDesconto);
+
+    if (campoInput == null || campoInput.value.trim() === '') {
+        return;
+    }
+
+    let valorFinalComDesconto = ObterValorCampoFormatado(idCampoValorFinalComDesconto);
+
+    let valorTotal = ObterValorCampoFormatado(idCampoValorTotal);
+
+    if (valorFinalComDesconto > valorTotal)
+        return;
+
+    let valorDesconto = valorTotal - valorFinalComDesconto;
+
+    PreencherInputIdElementoEValor(idCampoValorDesconto, FormatDinheiro(valorDesconto));
+
+    CalcularValorDescontoPorValor(idCampoValorTotal, idCampoPorcentagem, idCampoValorDesconto, idCampoValorFinalComDesconto);
+
+    CalcularValorTotalVenda(true);
+}
+
+function VerificaCamposPreenchidos() {
+    //$('input[type="text"]').each(function () {
+
+    //    if ($(this).attr('id') !== 'txtFabricante' &&
+    //        $(this).attr('id') !== 'txtTipoEquipamento' &&
+    //        $(this).attr('id') !== 'txtModelo' &&
+    //        $(this).attr('id') !== 'txtAnalisePreliminar' &&
+    //        $(this).attr('id') !== 'txt5429' &&
+    //        $(this).attr('id') !== 'txt5430' &&
+    //        $(this).attr('id') !== 'txt5431' &&
+    //        $(this).attr('id') !== 'txt7253' &&
+    //        $(this).val() !== '') {
+    //        $(this).prop('disabled', true);
+    //    }
+    //}); 
+
+    //$('input[type="checkbox"]').each(function () {
+    //    var marcado = $(this).prop('checked');
+    //    if (marcado) {
+    //        $(this).prop('disabled', true);
+    //    }
+    //});
+
+    //$('.selectpicker').each(function () {
+    //    if ($(this).find('option:selected').length > 0) {
+    //        $(this).prop('disabled', true);
+    //    }
+    //});
+
+    //$('textarea').each(function () {
+    //    if ($(this).val().trim() !== '') {
+    //        $(this).prop('disabled', true);
+    //    }
+    //});
+}
+
+//$(window).bind('beforeunload', function () {
+//    if (VerificaAlteracaoOrdem() && _gravado === false) {
+//        return 'Deseja realmente sair? As informações alteradas serão perdidas';
+//    }
+//});
+
+//function VerificaAlteracaoOrdem() {
+//    var alterado = false;
+
+//    $('input[type=text]').each(function () {
+//        if (this.value !== this.defaultValue) {
+//            alterado = true;
+//        }
+//    });
+//    $('input[type=checkbox]').each(function () {
+//        if (this.checked !== this.defaultChecked) {
+//            alterado = true;
+//        }
+//    });
+
+//    $("textarea").each(function () {
+//        if (this.value !== this.defaultValue) {
+//            alterado = true;
+//        }
+//    });
+
+//    return alterado;
+//}
+
+const ID_CHECKBOX_SERVICOS_MECANICOS = [
+    6683,
+    6686,
+    6688,
+    7218,
+    6684,
+    6687,
+    6689,
+    6696,
+    6685,
+    6695,
+    6691,
+    7215,
+    7213,
+    7106,
+    6692,
+    7216,
+    7217,
+    6690,
+    6693,
+    7211,
+    6666,
+    6667,
+    6668,
+    6669,
+    6670,
+    6673,
+    6672,
+    6674,
+    6832,
+    6675,
+    6833,
+    6676,
+    6677,
+    6678,
+    6679,
+    6680,
+    6681,
+    6838,
+    6839,
+]
+
+function DesabilitarCampos(listaCampos) {
+    for (let i = 0; i < listaCampos.length; i++) {
+        const id = 'check' + listaCampos[i];
+
+        if (ElementoExiste(id))
+            $("#" + id).attr('disabled', true);
+    }
+}
+
+function ObterCondicoesPagamentoCadastradas() {
+
+    if (!ElementoExiste('selectCondicaoPagamento'))
+        return;
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/FilaOrcamento/ObterCondicoesPagamento",
+        success: function (dados) {
+            if (dados.erro === false) {
+                var select = document.getElementById("selectCondicaoPagamento");
+
+                if (IsNullOrEmpty(select)) return;
+
+                select.options.length = 0;
+
+                $(dados.condicoes).each(function (i) {
+                    let id = dados.condicoes[i].id;
+                    let descricao = dados.condicoes[i].descricao;
+
+                    $('<option>').val(id).text(descricao).appendTo('#selectCondicaoPagamento');
+                });
+
+                $('#selectCondicaoPagamento').selectpicker('refresh');
+            }
+        },
+        error: function (error) {
+            EncerraLoading();
+        }
+    });
+}
+
+function ObterCondicaoPagamentoParceiro(idOrdem) {
+
+    if (!ElementoExiste('selectCondicaoPagamento'))
+        return;
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/FilaOrcamento/ObterCondicaoPagamentoParceiro/" + idOrdem,
+        success: function (dados) {
+            if (dados.erro === false && !IsNullOrEmpty(dados.id_condicao_pagamento)) {
+                UpdateSelectPicker('selectCondicaoPagamento', dados.id_condicao_pagamento)
+            }
+        },
+        error: function (error) {
+            EncerraLoading();
+        }
+    });
+}
+
+function EsconderCamposRasgoChaveta() {
+
+    if (ObterValorCheckBox('check13872')) {
+
+        $('#div13693').parent().hide();
+        $('#div13694').parent().hide();
+        $('#div13695').parent().hide();
+    }
+    else {
+
+        $('#div13693').parent().show();
+        $('#div13694').parent().show();
+        $('#div13695').parent().show();
+    }
+}
+
+function AlterarCamposUrgentes() {
+    if (ObterValorCheckBox('checkUrgencia'))
+        $('.campo-urgencia').show();
+    else
+        $('.campo-urgencia').hide();
+}
+
+function HabilitaCampoDeAcordoComCheckBox(idCheck, idInicio, idFim, idGrupoFicha) {
+    var valorCheck = ObterValorCheckBox(idCheck);
+
+    var prefixoID = 'div';
+
+    if (valorCheck) {
+
+        for (var i = idInicio; i <= idFim; i++) {
+            $('#' + prefixoID + i + '-' + idGrupoFicha).hide();
+        }
+    } else {
+
+        for (var i = idInicio; i <= idFim; i++) {
+            $('#' + prefixoID + i + '-' + idGrupoFicha).show();
+        }
+    }
+}
+
+function DesabilitarCamposDoGrupoFicha(idInicio, idFim, idGrupoFicha) {
+
+    var prefixoID = 'div';
+
+    for (var i = idInicio; i <= idFim; i++) {
+        $('#' + prefixoID + i + '-' + idGrupoFicha).addClass('disabled');
+    }
+}
+
+function AlterarCheckboxDeAcordoComAtual(idCheckboxClicado, idCheckbBoxASerAlterado) {
+
+    if (ObterValorCheckBox(idCheckboxClicado.id)) {
+        MarcarCheckBox(idCheckbBoxASerAlterado, idCheckboxClicado.id);
+    }
+    else {
+        DesmarcarCheckBox(idCheckbBoxASerAlterado);
+    }
+}

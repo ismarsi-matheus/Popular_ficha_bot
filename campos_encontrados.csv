@@ -1,0 +1,175 @@
+﻿aba;secao;contexto;rotulo;tipo;valor;nome;rid
+CABEÇALHO / GERAL;-1;Visualização Ordem;person Visualização Ordem;select;1;selectTipoOrdem;r0
+CABEÇALHO / GERAL;-1;Visualização Ordem;Nº da Ordem*;text;177;txtNumeroOrdem;r1
+CABEÇALHO / GERAL;-1;Nº da Ordem*;Nº da Ordem Anterior;text;;txtNumeroOrdemAnterior;r2
+CABEÇALHO / GERAL;-1;Nº da Ordem Anterior;Data Prevista Entrega;text;28/10/2026;txtDataPrevistaEntrega;r3
+CABEÇALHO / GERAL;-1;Data Prevista Entrega;Urgente;checkbox;False;checkUrgencia;r4
+CABEÇALHO / GERAL;-1;Data Prevista Entrega;Plantão;checkbox;False;checkPlantao;r5
+CABEÇALHO / GERAL;-1;Data Prevista Entrega;person Visualização Ordem;select;ba369626-014e-4cbb-82ee-7220349b1fd3;selectCliente;r6
+CABEÇALHO / GERAL;-1;Data Prevista Entrega;Referência do Cliente;text;;txtReferenciaCliente;r7
+CABEÇALHO / GERAL;-1;Referência do Cliente;Solicitante;text;carlos henrique;txtSolicitante;r8
+CABEÇALHO / GERAL;-1;Solicitante;Data de Abertura;text;27/10/2026;txtDataEntrada;r9
+CABEÇALHO / GERAL;-1;Data de Abertura;N° da Nota*;text;;txtNumeroNota;r10
+CABEÇALHO / GERAL;-1;N° da Nota*;N° de Série*;text;weeeg104;txtNumeroSerie;r11
+CABEÇALHO / GERAL;-1;N° de Série*;Fabricante;text;weg;txtFabricante;r12
+CABEÇALHO / GERAL;-1;Fabricante;Equipamento;text;servo motor ;txtTipoEquipamento;r13
+CABEÇALHO / GERAL;-1;Equipamento;Modelo;text;w22 premium;txtModelo;r14
+CABEÇALHO / GERAL;-1;Nº Série Máquina;Defeito Alegado;text;motor soltando fumaça;txtDefeito;r15
+CABEÇALHO / GERAL;-1;Defeito Alegado;Análise Preliminar;text;;txtAnalisePreliminar;r16
+CABEÇALHO / GERAL;-1;Análise Preliminar;Observações Expedição;text;motor antigo e enferrujado ;txtObservacoes;r17
+CABEÇALHO / GERAL;-1;Manutenção:;Corretiva;checkbox;False;checkManutencaoCorretiva;r18
+CABEÇALHO / GERAL;-1;Manutenção:;Preventiva;checkbox;False;checkManutencaoPreventiva;r19
+CABEÇALHO / GERAL;-1;Manutenção:;Empréstimo;checkbox;False;checkManutencaoEmprestimo;r20
+CABEÇALHO / GERAL;-1;Manutenção:;Venda;checkbox;False;checkManutencaoVenda;r21
+CABEÇALHO / GERAL;-1;Entrada do Equipamento;Potência;text;;txt15233;r22
+CABEÇALHO / GERAL;-1;Potência;RPM;text;;txt15234;r23
+CABEÇALHO / GERAL;-1;RPM;Tensão;text;;txt15235;r24
+CABEÇALHO / GERAL;-1;Tensão;Tensão Utilizada no Equipamento;text;;txt15236;r25
+CABEÇALHO / GERAL;-1;Tensão Utilizada no Equipamento;Corrente;text;;txt15237;r26
+CABEÇALHO / GERAL;-1;Corrente;N° da Caixa;text;;txt15238;r27
+CABEÇALHO / GERAL;-1;N° da Caixa;Pállet;text;;txt15239;r28
+INSPEÇÕES INICIAIS;-1;ESTADO INICIAL DO EQUIPAMENTO:;EM CONDIÇÕES NORMAIS;checkbox;False;check24880;r0
+INSPEÇÕES INICIAIS;-1;ESTADO INICIAL DO EQUIPAMENTO:;PEÇAS AUSENTES;checkbox;False;check24881;r1
+INSPEÇÕES INICIAIS;-1;ESTADO INICIAL DO EQUIPAMENTO:;CARCAÇA AVARIADA;checkbox;False;check24882;r2
+INSPEÇÕES INICIAIS;-1;ESTADO INICIAL DO EQUIPAMENTO:;EQUIPAMENTO DESMONTADO;checkbox;False;check24883;r3
+INSPEÇÕES INICIAIS;-1;ESTADO INICIAL DO EQUIPAMENTO:;OBS:;text;;txt24884;r4
+INSPEÇÕES INICIAIS;-1;EXCESSO DE PÓ/SUJEIRA:;SIM;checkbox;False;check24886;r5
+INSPEÇÕES INICIAIS;-1;EXCESSO DE PÓ/SUJEIRA:;NÃO;checkbox;False;check24887;r6
+INSPEÇÕES INICIAIS;-1;CONTAMINAÇÃO POR ÓLEO/GRAXA:;SIM;checkbox;False;check24889;r7
+INSPEÇÕES INICIAIS;-1;CONTAMINAÇÃO POR ÓLEO/GRAXA:;NÃO;checkbox;False;check24890;r8
+INSPEÇÕES INICIAIS;-1;UMIDADE:;SIM;checkbox;False;check24892;r9
+INSPEÇÕES INICIAIS;-1;UMIDADE:;NÃO;checkbox;False;check24893;r10
+INSPEÇÕES INICIAIS;-1;SINAIS DE INTERVENÇÃO TÉCNICA:;SIM;checkbox;False;check24926;r11
+INSPEÇÕES INICIAIS;-1;SINAIS DE INTERVENÇÃO TÉCNICA:;NÃO;checkbox;False;check24927;r12
+INSPEÇÕES INICIAIS;-1;POLIA/ACOMPLAMENTO:;SIM;checkbox;False;check24906;r13
+INSPEÇÕES INICIAIS;-1;POLIA/ACOMPLAMENTO:;NÃO;checkbox;False;check24907;r14
+INSPEÇÕES INICIAIS;-1;POLIA/ACOMPLAMENTO:;OBS:;text;;txt24908;r15
+INSPEÇÕES INICIAIS;-1;REDUTOR:;SIM;checkbox;False;check24910;r16
+INSPEÇÕES INICIAIS;-1;REDUTOR:;NÃO;checkbox;False;check24911;r17
+INSPEÇÕES INICIAIS;-1;REDUTOR:;OBS:;text;;txt24912;r18
+INSPEÇÕES INICIAIS;-1;CABOS DE SINAIS:;SIM;checkbox;False;check24914;r19
+INSPEÇÕES INICIAIS;-1;CABOS DE SINAIS:;NÃO;checkbox;False;check24915;r20
+INSPEÇÕES INICIAIS;-1;CABOS DE SINAIS:;OBS:;text;;txt24916;r21
+INSPEÇÕES INICIAIS;-1;CABOS DE POTÊNCIA:;SIM;checkbox;False;check24918;r22
+INSPEÇÕES INICIAIS;-1;CABOS DE POTÊNCIA:;NÃO;checkbox;False;check24919;r23
+INSPEÇÕES INICIAIS;-1;CABOS DE POTÊNCIA:;OBS:;text;;txt24920;r24
+INSPEÇÕES INICIAIS;-1;ENCODER AUXILIAR;SIM;checkbox;False;check24922;r25
+INSPEÇÕES INICIAIS;-1;ENCODER AUXILIAR;NÃO;checkbox;False;check24923;r26
+INSPEÇÕES INICIAIS;-1;ENCODER AUXILIAR;OBS:;text;;txt24924;r27
+ENSAIOS PRELIMINARES;-1;U->V:;Ω;text;;txt24934;r0
+ENSAIOS PRELIMINARES;-1;30s:;Ω;text;;txt24936;r1
+ENSAIOS PRELIMINARES;-1;1000 RPM:;V;text;;txt24938;r2
+ENSAIOS PRELIMINARES;-1;V->W:;Ω;text;;txt24940;r3
+ENSAIOS PRELIMINARES;-1;60s:;Ω;text;;txt24942;r4
+ENSAIOS PRELIMINARES;-1;IA:;TENSÃO INDUZIDA;text;;txt24944;r5
+ENSAIOS PRELIMINARES;-1;W->U:;Ω;text;;txt24946;r6
+ENSAIOS PRELIMINARES;-1;600s:;Ω;text;;txt24948;r7
+ENSAIOS PRELIMINARES;-1;IP:;txt24950;text;;txt24950;r8
+ENSAIOS PRELIMINARES;-1;SURGE TEST;POSITIVO;checkbox;False;check24953;r9
+ENSAIOS PRELIMINARES;-1;SURGE TEST;NEGATIVO;checkbox;False;check24954;r10
+ENSAIOS PRELIMINARES;-1;SURGE TEST;APROVADO;checkbox;False;check24955;r11
+ENSAIOS PRELIMINARES;-1;SURGE TEST;REPROVADO;checkbox;False;check24956;r12
+ENSAIOS PRELIMINARES;-1;SURGE TEST;OBS:;textarea;;txt24958;r13
+ENSAIOS PRELIMINARES;-1;MODELO DO TERMISTOR:;TERMISTOR;text;;txt24961;r14
+ENSAIOS PRELIMINARES;-1;TERMISTOR :;Ω;text;;txt24965;r15
+ENSAIOS PRELIMINARES;-1;VALOR MEDIDO:;Ω;text;;txt24967;r16
+ENSAIOS PRELIMINARES;-1;VALOR MEDIDO:;OBS:;textarea;;txt24968;r17
+ENSAIOS PRELIMINARES;-1;MODELO DO FREIO:;FREIO;text;;txt24972;r18
+ENSAIOS PRELIMINARES;-1;FREIO :;Ω;text;;txt24978;r19
+ENSAIOS PRELIMINARES;-1;30s:;Ω;text;;txt24980;r20
+ENSAIOS PRELIMINARES;-1;TORQUE NECESSARIO:;Nm;text;;txt24982;r21
+ENSAIOS PRELIMINARES;-1;60s;Ω;text;;txt24985;r22
+ENSAIOS PRELIMINARES;-1;TORQUE ADQUIRIDO:;Nm;text;;txt24987;r23
+ENSAIOS PRELIMINARES;-1;TORQUE ADQUIRIDO:;APROVADO;checkbox;False;check24988;r24
+ENSAIOS PRELIMINARES;-1;TORQUE ADQUIRIDO:;REPROVADO;checkbox;False;check24989;r25
+ENSAIOS PRELIMINARES;-1;600s:;Ω;text;;txt24991;r26
+ENSAIOS PRELIMINARES;-1;FOLGA MECÂNICA:;MM;text;;txt24993;r27
+ENSAIOS PRELIMINARES;-1;MODELO DO TRANDUTOR :;TRANSDUTOR;text;;txt24998;r28
+ENSAIOS PRELIMINARES;-1;TRANSDUTOR:;Ω;text;;txt25004;r29
+ENSAIOS PRELIMINARES;-1;Snr:;ID;text;;txt25006;r30
+ENSAIOS PRELIMINARES;-1;SINAIS:;AJUSTES;text;;txt25008;r31
+ENSAIOS PRELIMINARES;-1;SINAIS:;RESISTÊNCIA ÔHMICA;text;;txt25010;r32
+ENSAIOS PRELIMINARES;-1;IDNR:;ID;text;;txt25012;r33
+ENSAIOS PRELIMINARES;-1;AJUSTES:;AJUSTES;text;;txt25014;r34
+ENSAIOS PRELIMINARES;-1;AJUSTES:;OBS:;textarea;;txt25015;r35
+INSPEÇÃO MECÂNICA;-1;Rolamentos;mm;text;;txt25021;r0
+INSPEÇÃO MECÂNICA;-1;Mancais;Rolamentos;text;;txt25023;r1
+INSPEÇÃO MECÂNICA;-1;LOA;mm;text;;txt25025;r2
+INSPEÇÃO MECÂNICA;-1;LOA;Rolamentos;text;;txt25027;r3
+INSPEÇÃO MECÂNICA;-1;LOA;txt25030;text;;txt25030;r4
+INSPEÇÃO MECÂNICA;-1;LOA;LA;checkbox;False;check25031;r5
+INSPEÇÃO MECÂNICA;-1;Recuperar?;LOA;checkbox;False;check25032;r6
+INSPEÇÃO MECÂNICA;-1;Encosto;txt25034;text;;txt25034;r7
+INSPEÇÃO MECÂNICA;-1;Colo LA;mm;text;;txt25038;r8
+INSPEÇÃO MECÂNICA;-1;Caixa de Ligação;OK;checkbox;False;check25040;r9
+INSPEÇÃO MECÂNICA;-1;Caixa de Ligação;Avariado;checkbox;False;check25148;r10
+INSPEÇÃO MECÂNICA;-1;Colo LOA;mm;text;;txt25042;r11
+INSPEÇÃO MECÂNICA;-1;Borne de Ligação;OK;checkbox;False;check25044;r12
+INSPEÇÃO MECÂNICA;-1;Borne de Ligação;Avariado;checkbox;False;check25149;r13
+INSPEÇÃO MECÂNICA;-1;Concentricidade;txt25046;text;;txt25046;r14
+INSPEÇÃO MECÂNICA;-1;Potência;txt25048;text;;txt25048;r15
+INSPEÇÃO MECÂNICA;-1;Imãs;txt25050;text;;txt25050;r16
+INSPEÇÃO MECÂNICA;-1;Chaveta;txt25052;text;;txt25052;r17
+INSPEÇÃO MECÂNICA;-1;Bandagem;txt25054;text;;txt25054;r18
+INSPEÇÃO MECÂNICA;-1;Polia;txt25056;text;;txt25056;r19
+INSPEÇÃO MECÂNICA;-1;Acoplamento;txt25059;text;;txt25059;r20
+INSPEÇÃO MECÂNICA;-1;Acoplamento;LA;checkbox;False;check25060;r21
+INSPEÇÃO MECÂNICA;-1;Acoplamento;LOA;checkbox;False;check25061;r22
+ENSAIOS FINAIS;-1;U -> V;Ω;text;;txt25068;r0
+ENSAIOS FINAIS;-1;30s;Ω;text;;txt25070;r1
+ENSAIOS FINAIS;-1;V -> W;Ω;text;;txt25072;r2
+ENSAIOS FINAIS;-1;60s;Ω;text;;txt25074;r3
+ENSAIOS FINAIS;-1;W -> U;Ω;text;;txt25076;r4
+ENSAIOS FINAIS;-1;600s;Ω;text;;txt25078;r5
+ENSAIOS FINAIS;-1;Sequência de Fase;Positivo;checkbox;False;check25080;r6
+ENSAIOS FINAIS;-1;Sequência de Fase;Negativo;checkbox;False;check25081;r7
+ENSAIOS FINAIS;-1;Termistor;Ω;text;;txt25086;r8
+ENSAIOS FINAIS;-1;Valor Medido;Ω;text;;txt25088;r9
+ENSAIOS FINAIS;-1;Freio;Ω;text;;txt25092;r10
+ENSAIOS FINAIS;-1;30s;Ω;text;;txt25094;r11
+ENSAIOS FINAIS;-1;Torq. Necessario;Nm;text;;txt25143;r12
+ENSAIOS FINAIS;-1;60s;Ω;text;;txt25097;r13
+ENSAIOS FINAIS;-1;Torq. Adquirido;Nm;text;;txt25099;r14
+ENSAIOS FINAIS;-1;Torq. Adquirido;Aprovado;checkbox;False;check25100;r15
+ENSAIOS FINAIS;-1;Torq. Adquirido;Reprovado;checkbox;False;check25101;r16
+ENSAIOS FINAIS;-1;600s;Ω;text;;txt25103;r17
+ENSAIOS FINAIS;-1;Folga Mecânica;mm;text;;txt25105;r18
+ENSAIOS FINAIS;-1;Transdutor;Ω;text;;txt25111;r19
+ENSAIOS FINAIS;-1;Snr;ID;text;;txt25113;r20
+ENSAIOS FINAIS;-1;Sinais;Ajustes;text;;txt25115;r21
+ENSAIOS FINAIS;-1;Sinais;Resistência ôhmica;text;;txt25117;r22
+ENSAIOS FINAIS;-1;Idnr;ID;text;;txt25119;r23
+ENSAIOS FINAIS;-1;Ajuste;Ajustes;text;;txt25121;r24
+ENSAIOS FINAIS;-1;Mancal LA;Horizontal;text;;txt25127;r25
+ENSAIOS FINAIS;-1;Mancal LA;Vertical;text;;txt25128;r26
+ENSAIOS FINAIS;-1;Mancal LA;Axial;text;;txt25129;r27
+ENSAIOS FINAIS;-1;Mancal LOA;Horizontal;text;;txt25131;r28
+ENSAIOS FINAIS;-1;Mancal LOA;Vertical;text;;txt25132;r29
+ENSAIOS FINAIS;-1;Mancal LOA;Axial;text;;txt25133;r30
+ENSAIOS FINAIS;-1;Encoder;txt25135;text;;txt25135;r31
+ENSAIOS FINAIS;-1;Encoder;txt25136;text;;txt25136;r32
+ENSAIOS FINAIS;-1;Encoder;txt25137;text;;txt25137;r33
+OBSERVAÇÕES GERAIS;-1;;Defeitos Encontrados;textarea;;txt23488;r0
+OBSERVAÇÕES GERAIS;-1;Tipo de Defeitos;CONSTANTE;checkbox;False;check23490;r1
+OBSERVAÇÕES GERAIS;-1;Tipo de Defeitos;INTERMITENTE;checkbox;False;check23491;r2
+OBSERVAÇÕES GERAIS;-1;Tipo de Defeitos;SEM DEFEITO;checkbox;False;check23492;r3
+OBSERVAÇÕES GERAIS;-1;Tipo de Defeitos;Outros?;text;;txt23493;r4
+OBSERVAÇÕES GERAIS;-1;Outros?;Causas Prováveis;textarea;;txt23495;r5
+OBSERVAÇÕES GERAIS;-1;Causas Prováveis;Observações Gerais;textarea;;txt23497;r6
+OBSERVAÇÕES GERAIS;-1;Limpeza realizada?;Sim;checkbox;False;check23503;r7
+OBSERVAÇÕES GERAIS;-1;Limpeza realizada?;Não;checkbox;False;check23504;r8
+OBSERVAÇÕES GERAIS;-1;Limpeza realizada?;Concluido (descrição);text;;txt23505;r9
+OBSERVAÇÕES GERAIS;-1;Limpeza realizada?;Falta fazer (descrição);text;;txt23506;r10
+OBSERVAÇÕES GERAIS;-1;Equipamento ja reparado?;Sim;checkbox;False;check23508;r11
+OBSERVAÇÕES GERAIS;-1;Equipamento ja reparado?;Não;checkbox;False;check23509;r12
+OBSERVAÇÕES GERAIS;-1;Equipamento ja reparado?;Concluido (descrição);text;;txt23510;r13
+OBSERVAÇÕES GERAIS;-1;Equipamento ja reparado?;Falta fazer (descrição);text;;txt23511;r14
+OBSERVAÇÕES GERAIS;-1;Caso reprove, retirar peça?;Sim;checkbox;False;check23513;r15
+OBSERVAÇÕES GERAIS;-1;Caso reprove, retirar peça?;Não;checkbox;False;check23514;r16
+OBSERVAÇÕES GERAIS;-1;Caso reprove, retirar peça?;txt23515;text;;txt23515;r17
+OBSERVAÇÕES GERAIS;-1;Caso reprove, retirar peça?;txt23516;text;;txt23516;r18
+OBSERVAÇÕES GERAIS;-1;Ja foi realizado ajuste?;Sim;checkbox;False;check23518;r19
+OBSERVAÇÕES GERAIS;-1;Ja foi realizado ajuste?;Não;checkbox;False;check23519;r20
+OBSERVAÇÕES GERAIS;-1;Ja foi realizado ajuste?;txt23520;text;;txt23520;r21
+OBSERVAÇÕES GERAIS;-1;Ja foi realizado ajuste?;txt23521;text;;txt23521;r22
+OBSERVAÇÕES GERAIS;-1;Ja foi realizado ajuste?;Observações Internas;textarea;;txt23523;r23

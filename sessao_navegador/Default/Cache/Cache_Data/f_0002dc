@@ -1,0 +1,1570 @@
+﻿function enterVerify(e) {
+    var charCode = (typeof e.which === "number") ? e.which : e.keyCode;
+
+    var enterKey = 13;
+
+    if (charCode === enterKey) {
+        document.activeElement.blur();
+    }
+}
+
+function DeviceAtualEhMobile() {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        return true;
+    }
+
+    return false;
+}
+
+function FormataTextoNulo(text) {
+    if (IsNullOrEmpty(text)) {
+        return "";
+    }
+    return text;
+}
+
+function ValidarValorOrcamento(valor) {
+    if (valor < 99999) return valor;
+
+    return valor / 100;
+}
+
+function FormatDinheiro(numero) {
+    //Verifica se o valor não está nulo, caso esteja retorna 0,00
+    if (numero !== null && numero !== undefined) {
+        numero = numero.toFixed(2).split('.');
+        numero[0] = numero[0].split(/(?=(?:...)*$)/).join('.');
+        return numero.join(',');
+    }
+    else {
+        return "0,00";
+    }
+}
+
+function FormatPorcentagem(numero) {
+    // Se for null, undefined ou 0, retorna "0,00%"
+    if (!numero) {
+        return "0,00";
+    }
+    return numero.toFixed(2).replace('.', ',') + "%"; // Formata corretamente
+}
+
+function IsNullOrEmpty(value) {
+    var result = false;
+
+    if (!value || value == undefined || value == "" || value.length == 0 || value == "0" || value === "null" || value === null || value == " ") {
+        result = true;
+    }
+
+    return result;
+}
+
+function HabilitarBotao(nomeBotao, labelBotao) {
+
+    $('#' + nomeBotao).html(labelBotao);
+    $('#' + nomeBotao).prop('disabled', false);
+}
+
+function DesabilitarBotao(nomeBotao, labelBotao) {
+
+    $('#' + nomeBotao).html(labelBotao);
+    $('#' + nomeBotao).attr("disabled", "disabled");
+}
+
+
+function DesabilitarElemento(idElemento) {
+
+    $('#' + idElemento).attr("disabled", "disabled");
+}
+
+
+function ObterNomeMesPorData(data) {
+
+    var dataFormatada = new Date(data);
+
+    var mes = dataFormatada.getMonth();
+
+    switch (mes) {
+        case 0:
+            return 'Janeiro';
+        case 1:
+            return 'Fevereiro';
+        case 2:
+            return 'Março';
+        case 3:
+            return 'Abril';
+        case 4:
+            return 'Maio';
+        case 5:
+            return 'Junho';
+        case 6:
+            return 'Julho';
+        case 7:
+            return 'Agosto';
+        case 8:
+            return 'Setembro';
+        case 9:
+            return 'Outubro';
+        case 10:
+            return 'Novembro';
+        case 11:
+            return 'Dezembro';
+        default:
+            return 'Mês não existe';
+    }
+}
+
+function RemoverCaracteresEspeciaisString(elemento) {
+
+    return elemento.replace(/[^\w\s]/gi, '');
+}
+
+function RemoverEspacosString(elemento) {
+
+    return elemento.replace(/\s/g, '');
+}
+
+function ObterValorCampoFormatado(nomeCampo) {
+    var valor = 0;
+    if (!IsNullOrEmpty($('#' + nomeCampo).val())) {
+        valor = $('#' + nomeCampo).val();
+        valor = parseFloat(valor.replace('.', '').replace(',', '.'));
+    }
+    return valor;
+}
+
+function FormatarDinheiroParaDecimal(numero) {
+    var valor = 0;
+
+    if (IsNullOrEmpty(numero)) return 0;
+    if (!IsNullOrEmpty(numero) && VariavelEhString(numero)) {
+        numero = FormataStringParaFloatRemovendoCaracteresInvalidos(numero);
+        valor = parseFloat(numero.replace('.', '').replace(',', '.'));
+    }
+    else valor = parseFloat(numero);
+
+    return valor;
+}
+
+function FormataStringParaFloatRemovendoCaracteresInvalidos(str) {
+    return str.replace(/[^-0-9.,]+/, '');
+}
+
+function VariavelEhString(variavel) {
+    return typeof variavel === "string";
+}
+
+function MostrarModalErroComMensagemPersonalizada(mensagem, nomeCampo) {
+
+    swal("Atenção", mensagem, "warning");
+    $('#' + nomeCampo).focus();
+    return false;
+}
+
+function MostrarModalErro(nomeDoCampoNaMensagem, nomeCampo) {
+
+    swal("Atenção", 'É necessário preencher o campo ' + nomeDoCampoNaMensagem, "warning");
+    $('#' + nomeCampo).focus();
+    return false;
+}
+
+function MostrarModalErroInput(nomeDoCampoNaMensagem, nomeCampo) {
+
+    swal("Atenção", 'É necessário preencher o campo ' + nomeDoCampoNaMensagem, "warning");
+    $('#' + nomeCampo).focus();
+    return false;
+}
+
+function MostrarModalErroSelect(nomeDoCampoNaMensagem, nomeCampo) {
+
+    swal("Atenção", 'É necessário selecionar uma opção do campo ' + nomeDoCampoNaMensagem, "warning");
+    $('#' + nomeCampo).focus();
+    return false;
+}
+
+function MostrarModalErroPersonalizado(titulo, mensagem, idElementFocus) {
+    swal(titulo, mensagem, "warning");
+    $('#' + idElementFocus).focus();
+    return false;
+}
+
+function IsString(value) {
+    return typeof value === 'string' || value instanceof String;
+}
+
+/******** MÉTODOS DE VALIDACAO ********/
+
+function ValidarDataInicioMenorDataFim(dataInicio, dataFim) {
+
+    var dataInicioEhMenorDataFim = moment(dataInicio).isBefore(dataFim);
+
+    return dataInicioEhMenorDataFim;
+}
+
+function ValidarDataInicioIgualDataFim(dataInicio, dataFim) {
+
+    var dataInicioEhIgualDataFim = moment(dataInicio).isSame(dataFim);
+
+    return dataInicioEhIgualDataFim;
+}
+
+function ValidarDataInicioMenorOuIgualDataFim(dataInicio, dataFim) {
+
+    var dataInicioFormatada = moment(dataInicio, 'DD/MM/YYYY').format('YYYY-MM-DD');
+    var dataFimFormatada = moment(dataFim, 'DD/MM/YYYY').format('YYYY-MM-DD');
+
+    var dataInicioEhMenorDataFim = moment(dataInicioFormatada).isBefore(dataFimFormatada);
+
+    if (!dataInicioEhMenorDataFim) {
+        var dataInicioEhIgualDataFim = moment(dataInicioFormatada).isSame(dataFimFormatada);
+        return dataInicioEhIgualDataFim;
+    }
+
+    return dataInicioEhMenorDataFim;
+}
+
+function ValidarMes(mes) {
+
+    return mes <= 0 || mes > 12 ? false : true;
+}
+
+function VerificarDiaEhValido(dia, numeroDiasMes) {
+
+    return dia <= numeroDiasMes ? true : false;
+}
+
+function ValidarDiaMes(dia, mes) {
+
+    switch (mes) {
+        case 1:
+            return VerificarDiaEhValido(dia, 31);
+        case 2:
+            return VerificarDiaEhValido(dia, 28);
+        case 3:
+            return VerificarDiaEhValido(dia, 31);
+        case 4:
+            return VerificarDiaEhValido(dia, 30);
+        case 5:
+            return VerificarDiaEhValido(dia, 31);
+        case 6:
+            return VerificarDiaEhValido(dia, 30);
+        case 7:
+            return VerificarDiaEhValido(dia, 31);
+        case 8:
+            return VerificarDiaEhValido(dia, 31);
+        case 9:
+            return VerificarDiaEhValido(dia, 30);
+        case 10:
+            return VerificarDiaEhValido(dia, 31);
+        case 11:
+            return VerificarDiaEhValido(dia, 30);
+        case 12:
+            return VerificarDiaEhValido(dia, 31);
+        default:
+            false;
+    }
+}
+
+function ValidarAno(ano) {
+
+    return ano <= 1990 || ano > 2100 ? false : true;
+}
+
+function ValidarData(nomeCampo) {
+
+    var data = $('#' + nomeCampo).val();
+
+    if (IsNullOrEmpty(data))
+        return MostrarModalErroComMensagemPersonalizada("É necessário que o campo data seja preenchido!", nomeCampo);
+    else if (data.length < 10)
+        return MostrarModalErroComMensagemPersonalizada("A data é inválida!", nomeCampo);
+    else if (!ValidarDiaMes(parseInt(data.substring(0, 2)), parseInt(data.substring(3, 5))))
+        return MostrarModalErroComMensagemPersonalizada("A data é inválida!", nomeCampo);
+    else if (!ValidarAno(parseInt(data.substring(6))))
+        return MostrarModalErroComMensagemPersonalizada("O ano da data é inválido!", nomeCampo);
+
+    return true;
+}
+
+function ValidarDataMesAno(nomeCampoData) {
+
+    var data = $('#' + nomeCampoData).val();
+
+    if (IsNullOrEmpty(data))
+        return MostrarModalErroComMensagemPersonalizada("É necessário que o campo data seja preenchida!", nomeCampoData);
+    else if (data.length < 7)
+        return MostrarModalErroComMensagemPersonalizada("A data é inválida!", nomeCampoData);
+    else if (!ValidarMes(parseInt(data.substring(0, 2))))
+        return MostrarModalErroComMensagemPersonalizada("O mês da data é inválido!", nomeCampoData);
+    else if (!ValidarAno(parseInt(data.substring(3))))
+        return MostrarModalErroComMensagemPersonalizada("O ano da data é inválido!", nomeCampoData);
+
+    return true;
+}
+
+function ValidarDataInicioEDataFim(nomeCampoDataInicio, nomeCampoDataFim) {
+
+    if (!ValidarData(nomeCampoDataInicio)) return;
+    else if (!ValidarData(nomeCampoDataFim)) return;
+    else if (!ValidarDataInicioMenorOuIgualDataFim($('#' + nomeCampoDataInicio).val(), $('#' + nomeCampoDataFim).val()))
+        return MostrarModalErroComMensagemPersonalizada("A data inicial precisa ser menor que a data final!", nomeCampoDataInicio);
+
+    return true;
+}
+
+function ValidarDataInicioEDataFimDiaMes(nomeCampoDataInicio, nomeCampoDataFim) {
+
+    var dataInicio = $('#' + nomeCampoDataInicio).val();
+    var dataFim = $('#' + nomeCampoDataFim).val();
+
+    if (IsNullOrEmpty(dataInicio))
+        return MostrarModalErroComMensagemPersonalizada("É necessário que o campo data inicial seja preenchido!", nomeCampoDataInicio);
+    else if (dataInicio.length < 5)
+        return MostrarModalErroComMensagemPersonalizada("A data inicial é inválida!", nomeCampoDataInicio);
+    else if (IsNullOrEmpty(dataFim))
+        return MostrarModalErroComMensagemPersonalizada("É necessário que o campo data final seja preenchida!", nomeCampoDataFim);
+    else if (dataFim.length < 5)
+        return MostrarModalErroComMensagemPersonalizada("A data final é inválida!", nomeCampoDataFim);
+    else if (!ValidarDiaMes(parseInt(dataInicio.substring(0, 2)), parseInt(dataInicio.substring(3))))
+        return MostrarModalErroComMensagemPersonalizada("Data inicial é inválida!", nomeCampoDataInicio);
+    else if (!ValidarDiaMes(parseInt(dataFim.substring(0, 2)), parseInt(dataFim.substring(3))))
+        return MostrarModalErroComMensagemPersonalizada("Data final é inválida!", nomeCampoDataFim);
+    else if (!ValidarDataInicioMenorOuIgualDataFim(FormatarDataDiaMesParaDataCompleta(dataInicio), FormatarDataDiaMesParaDataCompleta(dataFim)))
+        return MostrarModalErroComMensagemPersonalizada("A data inicial precisa ser menor que a data final!", nomeCampoDataInicio);
+
+    return true;
+}
+
+function ValidarDataInicioEDataFimMesAno(nomeCampoDataInicio, nomeCampoDataFim) {
+
+    if (!ValidarDataMesAno(nomeCampoDataInicio)) return false;
+    else if (!ValidarDataMesAno(nomeCampoDataFim)) return false;
+    else if (!ValidarDataInicioMenorOuIgualDataFim(FormatarDataMesAno($('#' + nomeCampoDataInicio).val()), FormatarDataMesAno($('#' + nomeCampoDataFim).val())))
+        return MostrarModalErroComMensagemPersonalizada("A data inicial precisa ser menor que a data final!", nomeCampoDataInicio);
+
+    return true;
+}
+
+function IsEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
+function ResetSelectPicker(nomeSelectPicker) {
+    $('#' + nomeSelectPicker).val($('#' + nomeSelectPicker + ' option:first').val());
+    $('#' + nomeSelectPicker).selectpicker('refresh');
+}
+
+function LimparInput(nomeInput, nomeDivInput) {
+    if (!ElementoExiste(nomeInput)) return;
+
+    $('#' + nomeInput).val('');
+
+    if (!ElementoExiste(nomeDivInput)) return;
+
+    $('#' + nomeDivInput).removeClass('is-filled');
+}
+
+function UpdateSelectPicker(nomeSelect, novoValor) {
+    if (IsNullOrEmpty(novoValor))
+        novoValor = 0;
+
+    $('select[name=' + nomeSelect + ']').val(novoValor);
+    $('#' + nomeSelect).selectpicker('refresh');
+
+    $('select[name=' + nomeSelect + ']').trigger('changed');
+
+}
+
+function UpdateSelectPickerMultiplo(nomeSelect, novoValor) {
+    if (IsNullOrEmpty(novoValor))
+        return
+
+    $('select[name=' + nomeSelect + ']').val(novoValor);
+    $('#' + nomeSelect).selectpicker('refresh');
+
+    $('select[name=' + nomeSelect + ']').trigger('changed');
+}
+
+function UpdateAndDisableSelectPicker(nomeSelect, novoValor) {
+    $('select[name=' + nomeSelect + ']').val(novoValor);
+    $('#' + nomeSelect).selectpicker('refresh');
+    $("#" + nomeSelect).attr('disabled', true);
+}
+
+function LimparTabela(nomeTabela) {
+    nomeTabela.clear();
+}
+
+function PreencherInputIdElementoEValor(nomeInput, valor) {
+
+    if (!ElementoExiste(nomeInput)) return;
+
+    $('#' + nomeInput).val(valor);
+
+    let nomeDivPadrao = nomeInput.replace('txt', 'div');
+
+    if (!ElementoExiste(nomeDivPadrao)) return;
+
+    $('#' + nomeDivPadrao).addClass('is-filled');
+}
+
+
+function PreencherInput(nomeInput, nomeDivInput, valor, trocarCorLabel = false) {
+
+    if (!ElementoExiste(nomeInput)) return;
+
+    $('#' + nomeInput).val(valor);
+
+    if (!ElementoExiste(nomeDivInput)) return;
+
+    $('#' + nomeDivInput).addClass('is-filled');
+
+    if (trocarCorLabel) {
+        $('#' + nomeDivInput).find('.bmd-label-floating').addClass('input-preenchido')
+        $('#' + nomeDivInput).find('.bmd-label-static').addClass('input-preenchido')
+    }
+}
+
+function PreencherEDesabilitarInput(nomeInput, nomeDivInput, valor) {
+    $('#' + nomeInput).val(valor);
+    $('#' + nomeDivInput).addClass('is-filled');
+    $("#" + nomeInput).attr('disabled', true);
+
+}
+
+function isFloat(n) {
+    return Number(n) === n && n % 1 !== 0;
+}
+
+function CalcularEFormatarTempoRestante(dataLimite) {
+
+    var dadosTempoRestante = {
+        diferenca_horas: "",
+        diferenca_formatada: ""
+    };
+
+    if (!IsNullOrEmpty(dataLimite) && dataLimite !== '0001-01-01T00:00:00') {
+        dadosTempoRestante = CalcularTempoRestante(dataLimite);
+    }
+    return dadosTempoRestante;
+}
+
+function CalcularTempoRestante(dataLimite) {
+
+    var dataAtual = moment();
+    var dataLimiteFormatada = moment(dataLimite);
+
+    var duracao = moment.duration(dataLimiteFormatada.diff(dataAtual));
+
+    var horasDias = duracao._data.days * 24;
+
+    if (horasDias < 0)
+        horasDias = horasDias * -1;
+
+    var horasRestantes = duracao._data.hours + horasDias;
+    var minutosRestantes = duracao._data.minutes;
+
+    if (minutosRestantes < 0)
+        minutosRestantes = minutosRestantes * -1;
+
+    if (duracao._data.days < 0)
+        horasRestantes = horasRestantes * -1;
+
+    minutosRestantes = FormataMinutosEHoras(minutosRestantes);
+    horasRestantes = FormataMinutosEHoras(horasRestantes);
+
+    return CarregarObjetoTempoRestante(horasRestantes, horasRestantes + ":" + minutosRestantes);
+}
+
+
+function CalcularRestanteEmDias(dataLimite) {
+    let dataAtualDias = new Date();
+
+    let diasRestantes = moment(dataLimite).diff(moment(dataAtualDias));
+    let dias = moment.duration(diasRestantes).asDays();
+
+    let diasRestantesFormatada = Math.round(dias);
+
+    return diasRestantesFormatada;
+}
+
+function CalcularTempoSetor(dataInicio) {
+
+    if (IsNullOrEmpty(dataInicio)) {
+        return '';
+    }
+
+    var dataAtual = moment();
+    var dataInicioFormatada = moment(dataInicio);
+
+    var duracao = moment.duration(dataAtual.diff(dataInicioFormatada));
+
+    var horasDias = duracao._data.days * 24;
+
+    if (horasDias < 0)
+        horasDias = horasDias * -1;
+
+    var horasRestantes = duracao._data.hours + horasDias;
+    var minutosRestantes = duracao._data.minutes;
+
+    if (minutosRestantes < 0) {
+        minutosRestantes = minutosRestantes * -1;
+    }
+
+    if (duracao._data.days < 0)
+        horasRestantes = horasRestantes * -1;
+
+    minutosRestantes = FormataMinutosEHoras(minutosRestantes);
+    horasRestantes = FormataMinutosEHoras(horasRestantes);
+
+    return horasRestantes + ":" + minutosRestantes;
+}
+
+function RetornaClasseTempoOperacaoPlanejado(horasMinutosTrabalhados, horasMinutosPlanejadas) {
+
+    if (IsNullOrEmpty(horasMinutosTrabalhados) && !IsNullOrEmpty(horasMinutosPlanejadas)) {
+        return 'green-row';
+    }
+
+    if (IsNullOrEmpty(horasMinutosPlanejadas) && !IsNullOrEmpty(horasMinutosTrabalhados)) {
+        return 'red-row';
+    }
+
+    if (IsNullOrEmpty(horasMinutosPlanejadas) && IsNullOrEmpty(horasMinutosTrabalhados)) {
+        return "";
+    }
+
+    var trabalhados = horasMinutosTrabalhados.split(':');
+    var planejados = horasMinutosPlanejadas.split(':');
+
+    var horasTrabalhadas = parseInt(trabalhados[0]);
+    var horasPlanejadas = parseInt(planejados[0]);
+
+    var totalMinutosTrabalhados = (horasTrabalhadas * 60) + parseInt(trabalhados[1]);
+    var totalMinutosPlanejados = (horasPlanejadas * 60) + parseInt(planejados[1]);
+
+    if (totalMinutosTrabalhados >= totalMinutosPlanejados) {
+        return 'red-row';
+    }
+    else {
+        return 'green-row';
+    }
+}
+
+var _corVermelha = '#F00';
+var _corVerde = '#4caf50';
+var _corAmarela = '#ffa726';
+function RetornarCorTempoOperacaoPlanejado(horasMinutosTrabalhados, horasMinutosPlanejadas) {
+
+    if (IsNullOrEmpty(horasMinutosTrabalhados) && !IsNullOrEmpty(horasMinutosPlanejadas)) {
+        return _corVerde;
+    }
+
+    if (IsNullOrEmpty(horasMinutosPlanejadas) && !IsNullOrEmpty(horasMinutosTrabalhados)) {
+        return _corVermelha;
+    }
+
+    if (IsNullOrEmpty(horasMinutosPlanejadas) && IsNullOrEmpty(horasMinutosTrabalhados)) {
+        return "";
+    }
+
+    let trabalhados = horasMinutosTrabalhados.split(':');
+    let planejados = horasMinutosPlanejadas.split(':');
+
+    let horasTrabalhadas = parseInt(trabalhados[0]);
+    let horasPlanejadas = parseInt(planejados[0]);
+
+    let totalMinutosTrabalhados = (horasTrabalhadas * 60) + parseInt(trabalhados[1]);
+    let totalMinutosPlanejados = (horasPlanejadas * 60) + parseInt(planejados[1]);
+
+    if (totalMinutosTrabalhados >= totalMinutosPlanejados) {
+        return _corVermelha;
+    }
+    else {
+        return _corVerde;
+    }
+}
+
+function FormatarDataParaCSharp(data) {
+
+    if (IsNullOrEmpty(data)) return null;
+
+    let dataFormatada = moment(data, 'DD/MM/YYYY').format('YYYY-MM-DD');
+    let dataHoraFormatada = dataFormatada + " 00:00:00";
+
+    return dataHoraFormatada;
+}
+
+function FormatarDataHoraParaCSharp(data) {
+
+    if (IsNullOrEmpty(data)) return null;
+
+    return moment(data, 'DD/MM/YYYY HH:mm').format('YYYY-MM-DD HH:mm:ss');
+}
+
+
+function RetornarCorTempoOrdem(diferenca_horas) {
+    if (diferenca_horas <= 0)
+        return _corVermelha;
+    else if (diferenca_horas < 36)
+        return _corAmarela;
+    else
+        return _corVerde;
+}
+
+function FormatarDataLimite(dataLimite) {
+    let dataLimiteFormatada = moment(dataLimite);
+
+    let data = dataLimiteFormatada.format('DD/MM/YYYY');
+    let hora = dataLimiteFormatada.format('HH:mm');
+
+    return data + ' ' + hora;
+}
+
+function FormataMinutosEHoras(horasMinutos) {
+    var numeroNegativo = false;
+
+    if (horasMinutos < 0) {
+        numeroNegativo = true;
+        horasMinutos = horasMinutos * -1;
+    }
+
+    if (horasMinutos.toString().length < 2) {
+        horasMinutos = "0" + horasMinutos;
+    }
+
+    if (numeroNegativo) {
+        horasMinutos = "-" + horasMinutos;
+    }
+
+    return horasMinutos;
+}
+
+function CarregarObjetoTempoRestante(diferencaEmHoras, diferencaFormatada) {
+
+    var dadosTempoRestante = {
+
+        diferenca_horas: diferencaEmHoras,
+        diferenca_formatada: diferencaFormatada
+    };
+
+    return dadosTempoRestante;
+}
+
+function ObterValorCheckBox(nomeCheckBox) {
+    if ($("#" + nomeCheckBox).length === 0) return false;
+
+    return document.getElementById(nomeCheckBox).checked ? true : false;
+}
+
+function ObterSeOrdemEBeta() {
+    if ($("#txtOrdemFlagBeta").length === 0) {
+        return false;
+    }
+
+    return $('#txtOrdemFlagBeta').val() === "1" ? true : false;
+}
+
+function FormatarCodigoDeBarras(valorCodigoBarras) {
+    valorCodigoBarras = valorCodigoBarras.replace('{', '');
+    valorCodigoBarras = valorCodigoBarras.substring(1, 7);
+    return valorCodigoBarras.replace(/^0+/, '');
+}
+
+function AtualizarSelectPicker(lista, nomeSelectPicker, nomeId) {
+    if (!ElementoExiste(nomeSelectPicker)) return;
+
+    var select = document.getElementById(nomeSelectPicker);
+    select.options.length = 0;
+
+    for (var i = 0; i < lista.length; i++)
+        select.options[select.options.length] = new Option(lista[i].descricao, lista[i][nomeId]);
+
+    $('#' + nomeSelectPicker).selectpicker('refresh');
+}
+
+function RemoverOpcoesSelectPicker(nomeSelectPicker) {
+
+    var select = document.getElementById(nomeSelectPicker);
+    select.options.length = 0;
+
+    $('#' + nomeSelectPicker).selectpicker('refresh');
+}
+
+function FormatarData(data) {
+    return AddZero(data.getDate()) + '/' + AddZero((data.getMonth() + 1)) + '/' + data.getFullYear();
+}
+
+function AddZero(i) {
+
+    if (i < 10) i = "0" + i;
+
+    return i;
+}
+
+function FormataJsonData(dataHora) {
+
+    if (IsNullOrEmpty(dataHora)) return "";
+
+
+    var currentTime = new Date(dataHora);
+    var month = AddZero(currentTime.getMonth() + 1);
+    var day = AddZero(currentTime.getDate());
+    var year = currentTime.getFullYear();
+    var dateFMT = day + "/" + month + "/" + year;
+
+    return dateFMT;
+}
+
+function FormatarJsonHora(dataHora) {
+    var currentTime = new Date(dataHora);
+    var hour = AddZero(currentTime.getHours());
+    var minute = AddZero(currentTime.getMinutes());
+
+    return hour + ":" + minute;
+}
+
+function FormataJsonDataHora(dataHora) {
+    if (IsNullOrEmpty(dataHora)) return "";
+
+    var currentTime = new Date(dataHora);
+    var month = AddZero(currentTime.getMonth() + 1);
+    var day = AddZero(currentTime.getDate());
+    var year = currentTime.getFullYear();
+    var dateFMT = day + "/" + month + "/" + year;
+
+    var hour = AddZero(currentTime.getHours());
+    var minute = AddZero(currentTime.getMinutes());
+
+    return dateFMT + " " + hour + ":" + minute;
+}
+
+function AtualizarTextoElementoHtml(idElemento, textoElemento) {
+    $('#' + idElemento).text(textoElemento);
+}
+
+function RetornarHtmlNumeroOrdemFlagBeta(numeroOrdem, flagBeta) {
+    if (!flagBeta)
+        return numeroOrdem;
+    else {
+        return numeroOrdem + ' <small>(Beta)</small>';
+    }
+}
+
+function RetornarTipoOrdem(idTipoOrdem) {
+    if (idTipoOrdem === 1)
+        return "Serviço";
+    else if (idTipoOrdem === 2)
+        return "Garantia";
+    else if (idTipoOrdem === 3)
+        return "Teste";
+}
+
+function RetornarHtmlStatusOrdemNaoAprovada(status, flagNaoAprovado) {
+    if (!flagNaoAprovado)
+        return status;
+    else {
+        return status + '<br/> <small>(Não Aprovado)</small>';
+    }
+}
+
+function AddInputObservacoes(elememento, idOrdem, idTipoFila) {
+    if (elememento.getElementsByTagName('input').length > 0) return;
+
+    _valorAntesEdicao = elememento.innerHTML;
+    elememento.innerHTML = '';
+
+    var input = document.createElement('input');
+    input.setAttribute('type', 'text');
+    input.setAttribute('id', 'inputEditando');
+    input.setAttribute('class', 'editando');
+    input.setAttribute('style', 'width:100%');
+    input.setAttribute('onBlur', 'CloseInputObservacoes(this,' + idOrdem + ',' + idTipoFila + ')');
+    input.setAttribute('onkeyup', 'enterVerify(event)');
+    elememento.appendChild(input);
+    input.focus();
+
+    $('#inputEditando').val(_valorAntesEdicao);
+}
+
+function CloseInputObservacoes(elmemento, idOrdem, idTipoFila) {
+    var td = elmemento.parentNode;
+    var value = elmemento.value;
+    td.removeChild(elmemento);
+    if (_valorAntesEdicao !== value) {
+        td.innerHTML = value;
+
+        if (IsNullOrEmpty(value)) {
+            value = "null";
+        }
+
+        $.ajax({
+            url: "/Fila/AlterarObservacaoFila/" + idOrdem + "/" + idTipoFila + "/" + value,
+            type: "PUT",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
+
+    }
+    else td.innerHTML = _valorAntesEdicao;
+
+    _valorAntesEdicao = '';
+}
+
+function AddInputPrioridade(elememento, idOrdem, idTipoFila) {
+    if (elememento.getElementsByTagName('input').length > 0) return;
+
+    _valorAntesEdicao = elememento.innerHTML;
+    elememento.innerHTML = '';
+
+    var input = document.createElement('input');
+    input.setAttribute('type', 'text');
+    input.setAttribute('id', 'inputEditando');
+    input.setAttribute('class', 'editando');
+    input.setAttribute('style', 'width:100%');
+    input.setAttribute('onBlur', 'CloseInputPrioridade(this,' + idOrdem + ',' + idTipoFila + ')');
+    input.setAttribute('onkeyup', 'enterVerify(event)');
+
+    elememento.appendChild(input);
+    input.focus();
+
+    $('#inputEditando').mask('000');
+
+    $('#inputEditando').val(_valorAntesEdicao);
+}
+
+function CloseInputPrioridade(elmemento, idOrdem, idTipoFila) {
+    var td = elmemento.parentNode;
+    var value = elmemento.value;
+    td.removeChild(elmemento);
+    if (_valorAntesEdicao !== value) {
+        td.innerHTML = value;
+
+        if (IsNullOrEmpty(value)) {
+            value = "null";
+        }
+
+        $.ajax({
+            url: "/Fila/AlterarPrioridadeFila/" + idOrdem + "/" + idTipoFila + "/" + value,
+            type: "PUT",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
+
+    }
+    else td.innerHTML = _valorAntesEdicao;
+
+    _valorAntesEdicao = '';
+}
+
+function InicializarDatePicker(nomeDatePicker) {
+
+    if (!ElementoExiste(nomeDatePicker)) return;
+
+    $('#' + nomeDatePicker).datepicker({
+        todayButton: new Date(),
+        autoClose: true
+    });
+
+    var datePicker = $('#' + nomeDatePicker).datepicker().data('datepicker');
+    datePicker.selectDate(new Date());
+}
+
+function InicializarDatePickerComData(nomeDatePicker) {
+
+    var data = FormatarDataParaCSharp($('#' + nomeDatePicker).val());
+
+    $('#' + nomeDatePicker).datepicker({
+        todayButton: new Date(),
+        autoClose: true
+    });
+
+    var datePickerDataInicialGastoPecas = $('#' + nomeDatePicker).datepicker().data('datepicker');
+    datePickerDataInicialGastoPecas.selectDate(new Date(data));
+}
+
+function InicializarDatePickerSemSelecionarData(nomeDatePicker) {
+
+    $('#' + nomeDatePicker).datepicker({
+        todayButton: new Date(),
+        autoClose: true
+    });
+}
+
+function VerificarOrdemEstaAtrasada(horasMinutosTrabalhados, horasMinutosPlanejados) {
+
+    if (IsNullOrEmpty(horasMinutosTrabalhados)) return false;
+
+    var tempoTrabalhado = parseFloat(horasMinutosTrabalhados.replace(':', '.'));
+    var tempoPlanejado = parseFloat(horasMinutosPlanejados.replace(':', '.'));
+
+    return tempoTrabalhado > tempoPlanejado ? true : false;
+}
+
+function TrocarClasse(idElemento, nomeClasseRemover, nomeClasseAdicionar) {
+    $('#' + idElemento).removeClass(nomeClasseRemover);
+    $('#' + idElemento).addClass(nomeClasseAdicionar);
+}
+
+function EsconderDivELimparInput(idDivEsconder, idInput, idDivinput) {
+    $('#' + idInput).val('');
+    $('#' + idDivinput).removeClass('is-filled');
+    $('#' + idDivEsconder).hide();
+}
+
+function LimparCheckBox(checkboxId) {
+
+    $('#' + checkboxId).prop('checked', false);
+}
+
+function DesmarcarCheckBox(checkboxId) {
+
+    $('#' + checkboxId).prop('checked', false);
+}
+
+function ObterBoolDeStringSimOuNao(valor) {
+
+    return valor === 'sim' || valor === 'Sim' ? true : false;
+}
+
+function ObterSimSeCheckBoxEstiverMarcado(checkBoxId) {
+
+    var valor = ObterValorCheckBox(checkBoxId);
+
+    return valor === true ? 'Sim' : 'Não';
+}
+
+function ObterDescricaoLaboratorio(idLaboratorio) {
+
+    if (idLaboratorio === 1) return 'Toyota';
+    else if (idLaboratorio === 2) return 'Lab 1';
+    else if (idLaboratorio === 3) return 'Lab 2';
+    else return 'Outros';
+}
+
+function ConverterDateTimeParaJsDate(data) {
+
+    if (IsNullOrEmpty(data)) return null;
+
+    return moment(data).toDate();
+}
+
+function AtualizarDataDatePicker(dataJs, idElemento, idDiv) {
+
+    var datePicker = $('#' + idElemento).datepicker().data('datepicker');
+    datePicker.selectDate(dataJs);
+    $('#' + idDiv).addClass('is-filled');
+}
+
+function AtualizarHoraTimePicker(hora, idElemento, idDiv) {
+    var horaSelecionada = new Date();
+    horaSelecionada.setHours(hora.split(':')[0]);
+    horaSelecionada.setMinutes(hora.split(':')[1]);
+
+    var datePicker = $('#' + idElemento).datepicker().data('datepicker');
+    datePicker.selectDate(horaSelecionada);
+    $('#' + idDiv).addClass('is-filled');
+}
+
+function TrocarVirgulaPorPonto(numero) {
+    var valor = 0;
+    if (!IsNullOrEmpty(numero)) valor = parseFloat(numero.replace('.', '').replace(',', '.'));
+
+    return valor;
+}
+
+function FormatarPorcentagem(desconto) {
+
+    if (IsNullOrEmpty(desconto)) return 0;
+
+    desconto = desconto.replace(',', '.');
+    desconto = desconto.replace('%', '');
+
+    return desconto;
+}
+
+function RemoverTodosEspacosPalavra(str) {
+    return str.replace(/\s+/g, '');
+}
+
+function FormatarDescricaoMomentoFoto(momentoFoto) {
+    return RemoverTodosEspacosPalavra(momentoFoto.toLowerCase());
+}
+
+function FormatarIdCampoFotos(descricaoMomentoFotoFormatada, countImage) {
+    return descricaoMomentoFotoFormatada + countImage;
+}
+
+function ElementoExiste(idElemento) {
+    return document.getElementById(idElemento);
+}
+
+function AlterarSourceImage(idElementoImagem, novoSourceImagem) {
+
+    if (!ElementoExiste(idElementoImagem)) return;
+
+    $('#' + idElementoImagem).attr("src", novoSourceImagem);
+}
+
+function FormatarSourceImagemMin(sourceImage) {
+    if (sourceImage == "/img/loading/loading.gif") return "/img/image_placeholder.jpg";
+    else if (sourceImage == "/img/image_placeholder.jpg") return sourceImage;
+    else if (IsNullOrEmpty(sourceImage)) return "/img/image_placeholder.jpg";
+
+    return sourceImage;
+}
+
+function AlterarDataAttribute(idElemento, dataKey, dataValue) {
+
+    if (!ElementoExiste(idElemento)) return;
+
+    $('#' + idElemento).data(dataKey, dataValue);
+}
+function AlterarHref(idElemento, hrefValue) {
+
+    if (!ElementoExiste(idElemento)) return;
+
+    $("#" + idElemento).prop("href", hrefValue);
+}
+
+function FormatarStrng(valor) {
+
+    if (IsNullOrEmpty(valor)) return '';
+
+    return valor;
+}
+
+function CarregarValorSelectDefaultZero(nomeSelect) {
+
+    var valorSelect = $('#' + nomeSelect + ' option:selected').val();
+
+    return !IsNullOrEmpty(valorSelect) ? valorSelect : 0;
+}
+
+function MarcarCheckBox(checkboxId, condicao) {
+
+    if (condicao) {
+        $('#' + checkboxId).prop('checked', true);
+        $('#' + checkboxId).trigger("change");
+    }
+}
+
+function ObterValorSelectPicker(nomeSelectPicker) {
+    var id = $("#" + nomeSelectPicker + " option:selected").val();
+
+    return id > 0 ? id : 0;
+}
+
+function ObterValorSelectPickerOuDefaultNull(nomeSelectPicker) {
+    var id = $("#" + nomeSelectPicker + " option:selected").val();
+
+    return id > 0 ? id : null;
+}
+
+function ObterValorSelectPickerMultiplo(idSelectPicker) {
+    var id = $("#" + idSelectPicker).val();
+
+    return id;
+}
+function ObterTextoSelectPicker(idSelectPicker) {
+
+    if (!ElementoExiste(idSelectPicker)) return "";
+
+    return $("#" + idSelectPicker + " option:selected").text();
+}
+
+function AtualizarSelectPickerSelecionandoIdDescricaoDaLista(lista, nomeSelectPicker, nomeId, nomeDescricao) {
+
+    var select = document.getElementById(nomeSelectPicker);
+    select.options.length = 0;
+
+    for (var i = 0; i < lista.length; i++)
+        select.options[select.options.length] = new Option(lista[i][nomeDescricao], lista[i][nomeId]);
+
+    $('#' + nomeSelectPicker).selectpicker('refresh');
+}
+
+function ObterStringValorSelectPicker(nomeSelectPicker) {
+
+    var id = $("#" + nomeSelectPicker + " option:selected").val();
+
+    return id;
+}
+
+function ArmazenarUltimaPaginaSelecionadaTabela(tabelaAtiva) {
+    if (tabelaAtiva.rows().count() > 0)
+        SetarValorLocalStorage(ObterKeyUltimaPaginaSelecionadaDatatable(tabelaAtiva), tabelaAtiva.page.info().page);
+}
+
+function ArmazenarUltimaOpcaoFiltroLaboratorioSelecionado(tabelaAtiva, valueSelectPicker) {
+    if (tabelaAtiva.rows().count() > 0)
+        SetarValorLocalStorage(ObterKeyUltimoFiltroSelecionado(tabelaAtiva), valueSelectPicker);
+}
+
+function RenderizarDatatable(tabelaAtiva) {
+    var indexUltimaPaginaAtiva = ObterValorLocalStorage(ObterKeyUltimaPaginaSelecionadaDatatable(tabelaAtiva));
+
+    tabelaAtiva.draw();
+
+    SelecionarUltimaPaginaSelecionadaTabela(indexUltimaPaginaAtiva, tabelaAtiva);
+}
+
+function SelecionarUltimaPaginaSelecionadaTabela(indexUltimaPaginaAtiva, tabelaAtiva) {
+    if (indexUltimaPaginaAtiva === "0" || IsNullOrEmpty(indexUltimaPaginaAtiva)) return;
+
+    var infoTabelaAtiva = tabelaAtiva.page.info();
+
+    if (infoTabelaAtiva.pages >= indexUltimaPaginaAtiva) {
+        tabelaAtiva.page(ToInt(indexUltimaPaginaAtiva)).draw('page');
+    }
+}
+
+function ToInt(string) {
+    return parseInt(string);
+}
+
+function ValorCampoDinheiroZerado(valor) {
+    if (valor === "0,00" || valor === 0 || valor === "0.00" || valor === "0" || valor === "NaN" || IsNullOrEmpty(valor)) return true;
+
+    return false;
+}
+
+function SharedMonitorEstaAtivo() {
+    if (ElementoExiste('txtMonitorAtivo')) {
+        if ($('#txtMonitorAtivo').val() == 1) return true;
+
+        return false;
+    }
+
+    return false;
+}
+
+function ObterLinkMonitorAtivo() {
+    var monitorAtivo = ObterValorLocalStorage('Monitorativo');
+
+    return '/Monitores/' + monitorAtivo;
+}
+
+function AlterarTextoElemento(idElemento, texto) {
+
+    $('#' + idElemento).text(texto);
+}
+
+function EhDataValida(data) {
+
+    var dataFormatada = new Date(data);
+
+    return dataFormatada.getFullYear() > 1900 ? true : false;
+}
+
+function CalcularDiferencaEntreDatasEFormatarEmHorasMinutos(data1, data2) {
+
+    var diferencaDatas = CriarObjetoDiferencaDatas();
+
+    var duracao = moment.duration(data1.diff(data2));
+
+    if (duracao < 0) diferencaDatas.negativo = true;
+
+    var horasDiasDuracao = duracao._data.days * 24;
+    var horasDuracao = duracao._data.hours;
+
+    if (horasDiasDuracao < 0) horasDiasDuracao = horasDiasDuracao * -1;
+    if (horasDuracao < 0) horasDuracao = horasDuracao * -1;
+
+    var horasRestantes = horasDuracao + horasDiasDuracao;
+    var minutosRestantes = duracao._data.minutes;
+
+    if (minutosRestantes < 0) minutosRestantes = minutosRestantes * -1;
+
+    minutosRestantes = FormataMinutosEHoras(minutosRestantes);
+    horasRestantes = FormataMinutosEHoras(horasRestantes);
+
+    diferencaDatas.horasMinutosRestantes = horasRestantes + ":" + minutosRestantes;
+
+    return diferencaDatas;
+}
+
+function CriarObjetoDiferencaDatas() {
+
+    return {
+        "negativo": false,
+        "horasMinutosRestantes": null
+    }
+}
+
+function ObterClasseLinhaTarefasVendedor(dataTarefa) {
+
+    if (IsNullOrEmpty(dataTarefa)) return 'black-row';
+
+    var dataAtual = new Date();
+    var dataUltimaTarefa = new Date(dataTarefa);
+
+    var rowClass = 'yellow-row';
+
+    if (moment(dataUltimaTarefa).isBefore(dataAtual, 'day')) {
+        rowClass = "red-row";
+    }
+    else if (moment(dataUltimaTarefa).isAfter(dataAtual, 'day')) {
+        rowClass = "green-row";
+    }
+
+    return rowClass;
+}
+
+function ObterClasseBotaoCardCliente(dataTarefa) {
+
+    if (IsNullOrEmpty(dataTarefa)) return 'black-background';
+
+    var dataAtual = new Date();
+    var dataUltimaTarefa = new Date(dataTarefa);
+
+    var classeBotao = 'yellow-background';
+
+    if (moment(dataUltimaTarefa).isBefore(dataAtual, 'day'))
+        classeBotao = "red-background";
+
+    else if (moment(dataUltimaTarefa).isAfter(dataAtual, 'day'))
+        classeBotao = "green-background";
+
+    return classeBotao;
+}
+
+function LimparFiltrosTabela(tabela) {
+    tabela.search("").columns().search('');
+}
+
+function AbrirModal(idModal) {
+    $("#" + idModal).modal("show");
+    $("#" + idModal).appendTo("body");
+}
+
+function EhPaginaAnalise() {
+    return $("#menuitem-FilaAnalise").hasClass("active");
+}
+
+function OrdemFoiEnviadaParaTesteExterno(statusAnalise) {
+    if (statusAnalise === 'Enviado para Teste Externo') return true;
+    else return false;
+}
+
+function PaginaAtivaEh(nomePagina) {
+    return window.location.href.includes(nomePagina);
+}
+
+function FormatarNumeroOrdem(numeroOrdem, tipoOrdem, urgencia, ordemNaoAprovada = false, caminhoImagemPrimeiraFoto = '') {
+
+    let descricaoOrdemFormatada = numeroOrdem;
+
+    if (tipoOrdem == "Garantia") descricaoOrdemFormatada += ' <small>(Garantia)</small>';
+
+    if (urgencia) descricaoOrdemFormatada += ' <small>(Urgente)</small>';
+
+    if (ordemNaoAprovada) descricaoOrdemFormatada += ' <small>(Não Aprovada)</small>';
+
+    let htmlImagem = '';
+
+    if (!IsNullOrEmpty(caminhoImagemPrimeiraFoto)) {
+        htmlImagem = `<img src="${caminhoImagemPrimeiraFoto}" alt="Imagem do equipamento" style="width: 150px; height: auto;">`;
+    }
+
+    return "<div class='text-center'>" + descricaoOrdemFormatada + " " + htmlImagem +"</div>";
+}
+
+
+function FormatarNomeCliente(nomeCliente, ultimoDiaMesParaFaturar) {
+
+    let descricaoFormatada = nomeCliente;
+
+    if (!IsNullOrEmpty(ultimoDiaMesParaFaturar)) descricaoFormatada += '<br/><small>Fatura até dia: ' + ultimoDiaMesParaFaturar + '</small>';
+
+    return descricaoFormatada;
+}
+
+
+function FunctionExiste(nomeFunction) {
+    return eval("typeof " + nomeFunction) === "function";
+}
+
+function ControlarVisibilidadeValorOrcamento(tabelaAtiva, indexColunaValorOrcamento) {
+
+    ValidarPermissaoOrcamentosLizy(() => {
+        tabelaAtiva.column(indexColunaValorOrcamento).visible(false);
+    });
+}
+
+function ObterValorOrcamentoDaOrdem(ordem) {
+    return IsNullOrEmpty(ordem.valor_desconto) ? ordem.valor_orcamento : ordem.valor_desconto;
+}
+
+function IsNull(value) {
+    var result = false;
+
+    if (!value || value == undefined || value == "" || value === "null" || value === null || value == " ") {
+        result = true;
+    }
+
+    return result;
+}
+
+function ObterValorInput(idInput) {
+
+    if (!ElementoExiste(idInput)) return '';
+
+    return $('#' + idInput).val();
+}
+
+
+function ControlarVisibilidadeNomeCliente(tabelaAtiva, indexColunaNomeCliente) {
+
+    $.get('/Permissao/VerificarSeUsuarioTemPermissaoVerNomeCliente', function (response) {
+        if (!response.liberado)
+            tabelaAtiva.column(indexColunaNomeCliente).visible(false);
+    });
+}
+
+function InicializarDatePicker(nomeDatePicker, dataSelecionado = "") {
+
+    if (!ElementoExiste(nomeDatePicker)) return;
+
+    $('#' + nomeDatePicker).datepicker({
+        todayButton: new Date(),
+        autoClose: true
+    });
+
+    var datePicker = $('#' + nomeDatePicker).datepicker().data('datepicker');
+
+    if (!IsNullOrEmpty(dataSelecionado))
+        datePicker.selectDate(dataSelecionado);
+    else
+        datePicker.selectDate(new Date());
+}
+
+function InicializarDatePickerComFuncao(nomeDatePicker, callBackFunctionAoSelecionarData, data = null) {
+
+    if (!ElementoExiste(nomeDatePicker)) return;
+
+    $('#' + nomeDatePicker).datepicker({
+        todayButton: new Date(),
+        autoClose: true,
+        onSelect: function (fd, d, inst) {
+            callBackFunctionAoSelecionarData();
+        }
+    });
+
+    var datePicker = $('#' + nomeDatePicker).datepicker().data('datepicker');
+
+    if (IsNullOrEmpty(data))
+        datePicker.selectDate(new Date());
+    else
+        datePicker.selectDate(data);
+}
+
+function InicializarDatePickerComData(nomeDatePicker) {
+
+    if (!ElementoExiste(nomeDatePicker)) return;
+
+    var data = FormatarDataParaCSharp($('#' + nomeDatePicker).val());
+
+    $('#' + nomeDatePicker).datepicker({
+        todayButton: new Date(),
+        autoClose: true
+    });
+
+    var datePickerDataInicialGastoPecas = $('#' + nomeDatePicker).datepicker().data('datepicker');
+    datePickerDataInicialGastoPecas.selectDate(new Date(data));
+}
+
+function InicializarDatePickerSemSelecionarData(nomeDatePicker) {
+
+    if (!ElementoExiste(nomeDatePicker)) return;
+
+    $('#' + nomeDatePicker).datepicker({
+        todayButton: new Date(),
+        autoClose: true
+    });
+}
+
+function CriarFuncaoAguardandoCliente(idFila, callBackFunctionSucesso) {
+
+    return '';
+
+    return '<a data-toggle="tooltip" title="Aguardando Cliente" style="font-size:21px;" href="javascript:void(0);"' +
+        'onclick="AlterarStatusAguardandoCliente(' + idFila + ',' + callBackFunctionSucesso + '); "' +
+        'class="btn btn-link btn-info btn-just-icon like" > ' +
+        '<i class="fas fa-business-time"></i>' +
+        '</a>'
+}
+
+
+function AlterarStatusAguardandoCliente(idFila, callBackFunctionSucesso) {
+    $.ajax({
+        dataType: "json",
+        data: {
+            idFila: idFila,
+        },
+        type: "PUT",
+        url: "/Fila/AlterarFilaAguardandoCliente/" + idFila,
+        success: function (response) {
+            if (!response.erro) {
+                callBackFunctionSucesso();
+            }
+            else swal("Erro", "Houve um erro ao alterar status: " + response.mensagem, "error");
+        }
+    });
+}
+
+function ObterLinkDownloadFormatado(linkArquivo) {
+    if (linkArquivo.includes("empowcdn.blob.core.windows.net"))
+        return linkArquivo;
+
+    var caminhoCDN = linkArquivo.split("/Arquivos")[0];
+
+    var nomeArquivo = linkArquivo.split('/')[linkArquivo.split('/').length - 1];
+
+    if (!IsNullOrEmpty(caminhoCDN) && !IsNullOrEmpty(nomeArquivo))
+        return caminhoCDN + "/api/DownloadArquivo?nomeArquivo=" + nomeArquivo;
+    else
+        return "";
+}
+
+function ObterApenasNumeroDaString(string) {
+    var valor = 0;
+    if (IsNullOrEmpty(string)) return 0;
+    if (!IsNullOrEmpty(string) && VariavelEhString(string)) {
+        let numsStr = string.replace(/[^0-9]/g, '');
+        valor = parseFloat(numsStr);
+    }
+    else valor = parseFloat(string);
+    return valor;
+}
+
+
+function CarregarClasseCampoAlterado(idInput) {
+
+
+    $('.input-valor-campo').change(function () {
+        $(this).addClass('valor-alterado-inputjs');
+    });
+
+    $('.check-valor-campo').change(function () {
+        $(this).addClass('valor-alterado-checkjs');
+    });
+        
+}
+
+function EsconderGrupoDaPagina(idGrupoFicha) {
+
+    $("#titulo-" + idGrupoFicha).hide();
+    $("#btnImprimirGrupoFicha_" + idGrupoFicha).hide();
+    $("#groupRow" + idGrupoFicha).hide();
+}
+
+function formatarApenasData(data) {
+    if (!data) return '';
+    var dataFollow = new Date(data);
+    return dataFollow.toLocaleDateString('pt-BR');
+}
+
+
+
+
+function AddInputDataPrevistaEntrega(elemento, idOrdem, dataFim) {
+    if (elemento.getElementsByTagName('input').length > 0) return;
+
+    _valorAntesEdicao = dataFim;
+    elemento.innerHTML = '';
+
+    var input = document.createElement('input');
+    input.setAttribute('type', 'text');
+    input.setAttribute('id', 'inputEditando');
+    input.setAttribute('class', 'editando');
+    input.setAttribute('style', 'width:100%');
+    input.setAttribute('onBlur', 'CloseInputDataPrevistaEntrega(this,' + idOrdem + ')');
+    input.setAttribute('onkeyup', 'enterVerify(event)');
+    elemento.appendChild(input);
+    input.focus();
+    $('#inputEditando').mask('00/00/0000');
+
+    $('#inputEditando').val(_valorAntesEdicao);
+}
+
+var novaDataEntrega = '';
+var idOrdemAlterandoDataEntrega = '';
+var justificativaObter = '';
+function AbrirModalJustificativa(dataEntrega, idOrdem) {
+    $('#justificationModal').modal('show');
+    LimparInput('txtjustificationInput');
+
+    novaDataEntrega = dataEntrega;
+    idOrdemAlterandoDataENtrega = idOrdem;
+
+}
+
+
+function ValorDataEhValido(valorHora) {
+    return moment(valorHora, "DD/MM/YYYY", true).isValid()
+}
+
+
+
+
+function AlterarDataEntregaRequest() {
+    let idOrdem = idOrdemAlterandoDataENtrega;
+    let data = { data_prevista: novaDataEntrega, observacao: '' };
+
+
+    $.ajax({
+        data: JSON.stringify(data),
+        url: "/Tarefa/AlterarDataPrevistaEntrega/" + idOrdem,
+        type: "PUT",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+
+        success: function (response) {
+
+            AtualizarDadosPagina();
+
+        }
+    });
+}
+
+
+function CloseInputDataPrevistaEntrega(elemento, idOrdem) {
+    var td = elemento.parentNode;
+    var value = elemento.value;
+    td.removeChild(elemento);
+    if (_valorAntesEdicao !== value) {
+        td.innerHTML = value;
+
+        if (IsNullOrEmpty(value)) {
+
+            AtualizarDadosPagina();
+            return;
+        }
+
+        if (!ValorDataEhValido(value)) {
+
+            AtualizarDadosPagina();
+            return;
+        }
+
+        value = FormatarDataParaCSharp(value);
+
+        novaDataEntrega = value;
+        idOrdemAlterandoDataENtrega = idOrdem;
+        AlterarDataEntregaRequest();
+    }
+    else
+        AtualizarDadosPagina();
+
+    _valorAntesEdicao = '';
+}
+
+function ObterValorCheckBoxOuDefault(nomeCheckBox) {
+
+    if ($("#" + nomeCheckBox).length === 0)
+        return false;
+
+    return document.getElementById(nomeCheckBox).checked ? true : false;
+}

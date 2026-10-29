@@ -1,0 +1,564 @@
+﻿$(document).ready(function () {
+
+    tabelaServicosDaOrdem = $('#tabelaServicosDaOrdem').DataTable({
+        "language": {
+            "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+        },
+        "columnDefs": [
+            {
+                className: "editavel", targets: [INDEX_QUANTIDADE_TABELA_SERVICO_ORDEM,
+                    INDEX_DESCRICAO_SERVICO_TABELA_SERVICO_ORDEM,
+                    INDEX_OBSERVACAO_TABELA_SERVICO_ORDEM,
+                    INDEX_VALOR_VENDA_TABELA_SERVICO_ORDEM]
+            },
+            {
+                visible: false, "targets": [INDEX_ID_SETOR_REALIZA_SERVICO_TABELA_SERVICO_ORDEM,
+                    INDEX_ID_COMPONENTE_EQUIPAMENTO_SERA_REALIZADO_SERVICO_TABELA_SERVICO_ORDEM]
+            },
+            { "width": "90px", "targets": [INDEX_FUNCOES_TABELA_SERVICO_ORDEM] }
+        ],
+
+        responsive: true,
+        infoCallback: function (settings) {
+            ArmazenarUltimaPaginaSelecionadaTabela(tabelaServicosDaOrdem);
+        },
+        paging: false,
+    });
+
+    if (MenuOrcamentoAtivo() || PaginaAtivaEh('Analise')) {
+        tabelaServicosDaOrdem.column(INDEX_DATA_INICIO_TABELA_SERVICO_ORDEM).visible(false);
+        tabelaServicosDaOrdem.column(INDEX_DATA_FIM_TABELA_SERVICO_ORDEM).visible(false);
+    }
+
+    tabelaServicosDaOrdem.column(INDEX_DESCRICAO_COMPONENTE_EQUIPAMENTO_SERA_REALIZADO_SERVICO_TABELA_SERVICO_ORDEM).visible(false);
+
+    ObterServicosDaOrdem();
+    ObterListaServicosPadroes();
+
+    $('#txtDescricaoServicoDaOrdemAdicionarTabela').flexdatalist({
+        "noResultsText": "Nenhum item encontrado",
+        searchDelay: 0,
+        minLength: 0,
+        searchContain: true,
+        maxShownResults: 2000
+    });
+
+    $("#txtDescricaoServicoDaOrdemAdicionarTabela-flexdatalist").on("blur", function () {
+        ObterServicosPadroesComBaseDescricao();
+    });
+    $('input.flexdatalist').on('select:flexdatalist', function (event, set, options) {
+        ObterServicosPadroesComBaseDescricao();
+    });
+
+    //ValidarPermissaoOrcamentosLizy(() => {
+    //    tabelaServicosDaOrdem.column(INDEX_VALOR_VENDA_TABELA_SERVICO_ORDEM).visible(false);
+    //    $('#divValorServicoDaOrdemAdicionarTabela').hide();
+    //    $('#colDivValorServicoDaOrdemAdicionarTabela').hide();
+    //});
+});
+
+$('#buscaTabelaServicosDaOrdem').keyup(function () {
+    tabelaServicosDaOrdem.search($(this).val()).draw();
+});
+
+$('#tabelaServicosDaOrdem tbody').on('dblclick', 'tr', function () {
+
+    AbrirModalAlterarServicoOrdem(this.id);
+});
+
+var IndexColunaEditandoServicoOrdem = 0;
+var IDServicoOrdemEditandoNaTabela = 0;
+
+$('#tabelaServicosDaOrdem tbody').on('click', 'td.editavel', function () {
+    IndexColunaEditandoServicoOrdem = this.cellIndex;
+
+    let colunaEhCampoHora = IndexColunaEditandoServicoOrdem === INDEX_QUANTIDADE_HORAS_TABELA_SERVICO_ORDEM;
+    let colunaEhCampoValor = IndexColunaEditandoServicoOrdem === INDEX_VALOR_VENDA_TABELA_SERVICO_ORDEM;
+    let colunaEhQuantidade = IndexColunaEditandoServicoOrdem === INDEX_QUANTIDADE_TABELA_SERVICO_ORDEM;
+
+    IDServicoOrdemEditandoNaTabela = $(this).closest('tr').attr("id");
+
+    AddInputServicoOrdem(this, colunaEhCampoHora, colunaEhCampoValor, colunaEhQuantidade);
+});
+
+const INDEX_QUANTIDADE_TABELA_SERVICO_ORDEM = 0;
+const INDEX_DESCRICAO_SERVICO_TABELA_SERVICO_ORDEM = 1;
+const INDEX_DESCRICAO_SETOR_REALIZA_SERVICO_TABELA_SERVICO_ORDEM = 2;
+const INDEX_VALOR_VENDA_TABELA_SERVICO_ORDEM = 3;
+const INDEX_DESCRICAO_COMPONENTE_EQUIPAMENTO_SERA_REALIZADO_SERVICO_TABELA_SERVICO_ORDEM = 5;
+const INDEX_OBSERVACAO_TABELA_SERVICO_ORDEM = 6;
+const INDEX_DATA_INICIO_TABELA_SERVICO_ORDEM = 7;
+const INDEX_DATA_FIM_TABELA_SERVICO_ORDEM = 8;
+const INDEX_FUNCOES_TABELA_SERVICO_ORDEM = 9;
+const INDEX_ID_SETOR_REALIZA_SERVICO_TABELA_SERVICO_ORDEM = 10;
+const INDEX_ID_COMPONENTE_EQUIPAMENTO_SERA_REALIZADO_SERVICO_TABELA_SERVICO_ORDEM = 11;
+const INDEX_QUANTIDADE_HORAS_TABELA_SERVICO_ORDEM = 999;
+
+const ID_ELEMENTO_DESCRICAO_SERVICO_DA_ORDEM_ORDEM_EDITAR = 'txtDescricaoServicoDaOrdemAdicionarTabela';
+const ID_ELEMENTO_VALOR_SERVICO_DA_ORDEM_EDITAR = 'txtValorServicoDaOrdemAdicionarTabela';
+const ID_ELEMENTO_QUANTIDADE_SERVICO_DA_ORDEM_EDITAR = 'txtQuantidadeServico';
+const ID_ELEMENTO_QUANTIDADE_HORAS_SERVICO_ORDEM_EDITAR = 'txtQuantidadeHorasServicoDaOrdemAdicionarTabela';
+const ID_ELEMENTO_OBSERVACAO_SERVICO_DA_ORDEM_ORDEM_EDITAR = 'txtObservacoesServicoDaOrdemAdicionarTabela';
+const ID_ELEMENTO_SETOR_REALIZA_SERVICO_ORDEM_EDITAR = 'selectSetorQueRealizaServicoServicoDaOrdemAdicionarTabela';
+const ID_ELEMENTO_SELECTPICKER_COMPONENTE_EQUIPAMENTO_QUE_SERA_REALIZADO_SERVICO_ORDEM_ADICIONAR_TABELA = 'selectEquipamentoSeraRealizadoServicoServicoDaOrdemAdicionarTabela';
+const ID_ELEMENTO_LABEL_QUANTIDADE_TOTAL_HORAS_SERVICOS_ORDEM = 'lblQuantidadeTotalHorasServicosOrdem';
+const ID_ELEMENTO_LABEL_QUANTIDADE_TOTAL_DIAS_SERVICOS_ORDEM = 'lblQuantidadeTotalDiasServicosOrdem';
+const ID_ELEMENTO_INPUT_VALOR_CUSTO_HORA_SERVICOS_ORDEM = 'txtValorCustoHora';
+const ID_ELEMENTO_INPUT_VALOR_VENDA_HORA_SERVICOS_ORDEM = 'txtValorVendaHora';
+const ID_ELEMENTO_LABEL_VALOR_TOTAL_CUSTO_HORA_SERVICOS_ORDEM = 'lblValorTotalCustoHora';
+const ID_ELEMENTO_LABEL_VALOR_TOTAL_VENDA_HORA_SERVICOS_ORDEM = 'lblValorTotalVendaHora';
+const ID_ELEMENTO_VALOR_TOTAL = 'txtValorTotalServicoDaOrdemAdicionarTabela';
+const ID_ORDEM = 'txtIdOrdem';
+
+function ValidarCamposObrigatoriosServicosDaOrdem() {
+    if (IsNull($('#txtDescricaoServicoDaOrdem').val())) return MostrarModalErroInput('descrição', ID_ELEMENTO_DESCRICAO_SERVICO_DA_ORDEM_ORDEM_EDITAR);
+    return true;
+}
+
+function LimparCamposAdicionarServicosDaOrdem() {
+
+    LimparInput(ID_ELEMENTO_QUANTIDADE_SERVICO_DA_ORDEM_EDITAR, 'divQuantidadeServico');
+    LimparInput(ID_ELEMENTO_DESCRICAO_SERVICO_DA_ORDEM_ORDEM_EDITAR, 'divDescricaoServicoDaOrdemAdicionarTabela');
+    LimparInput(ID_ELEMENTO_VALOR_SERVICO_DA_ORDEM_EDITAR, 'divValorServicoDaOrdemAdicionarTabela');
+    LimparInput(ID_ELEMENTO_OBSERVACAO_SERVICO_DA_ORDEM_ORDEM_EDITAR, 'divObservacoesServicoDaOrdemAdicionarTabela');
+    LimparInput(ID_ELEMENTO_VALOR_TOTAL, 'divValorTotalServicoDaOrdemAdicionarTabela');
+    ResetSelectPicker(ID_ELEMENTO_SETOR_REALIZA_SERVICO_ORDEM_EDITAR);
+    ResetSelectPicker(ID_ELEMENTO_SELECTPICKER_COMPONENTE_EQUIPAMENTO_QUE_SERA_REALIZADO_SERVICO_ORDEM_ADICIONAR_TABELA);
+    HabilitarBotao('btnAdicionarServicosExternosDaOrdem', 'Adicionar');
+}
+
+var _quantidadeHorasTodosOsServicosinternosOrdem = "";
+
+function ObterServicosDaOrdem() {
+    let idOrdem = $('#txtIdOrdem').val();
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/ServicosDaOrdem/ObterServicosDaOrdem/" + idOrdem,
+        cache: false,
+        success: function (response) {
+
+            LimparTabela(tabelaServicosDaOrdem);
+
+            for (let i = 0; i < response.servico_ordem.length; i++) {
+
+                if (IsNullOrEmpty(response.servico_ordem[i].valor_custo))
+                    response.servico_ordem[i].quantidade = 1;
+
+                tabelaServicosDaOrdem.row.add([
+                    parseInt(response.servico_ordem[i].quantidade),
+                    response.servico_ordem[i].descricao,
+                    response.servico_ordem[i].setor_descricao,
+                    "R$ " + FormatDinheiro(response.servico_ordem[i].valor_custo),
+                    "R$ " + FormatDinheiro(response.servico_ordem[i].valor_venda),
+                    response.servico_ordem[i].componente_equipamento_descricao,
+                    response.servico_ordem[i].observacao,
+                    FormataJsonDataHora(response.servico_ordem[i].data_inicio_trabalho),
+                    FormataJsonDataHora(response.servico_ordem[i].data_fim_trabalho),
+                    CriarFuncoesTabelaServicosDaOrdem(response.servico_ordem[i].id_servico_da_ordem),
+                    response.servico_ordem[i].id_setor_realiza_servico,
+                    response.servico_ordem[i].id_componente_equipamento_vai_ser_realizado_servico,
+                ]).node().id = response.servico_ordem[i].id_servico_da_ordem;
+            }
+
+            let horasPrevistas = response.servico_ordem.map(a => a.quantidade_horas_previstas);
+
+            let totalHoras = horasPrevistas.reduce((acc, time) => acc.add(moment.duration(time)), moment.duration());
+            let quantidadeHoras = Math.floor(totalHoras.asHours());
+
+            _quantidadeHorasTodosOsServicosinternosOrdem = [quantidadeHoras, AddZero(totalHoras.minutes())].join(':');
+
+            $('#' + ID_ELEMENTO_LABEL_QUANTIDADE_TOTAL_HORAS_SERVICOS_ORDEM).text(_quantidadeHorasTodosOsServicosinternosOrdem);
+
+            $('#' + ID_ELEMENTO_LABEL_QUANTIDADE_TOTAL_DIAS_SERVICOS_ORDEM).text(CalcularQuantidadeDiasDeTrabalho(quantidadeHoras));
+
+            CalcularValorTotalHorasCustoEVenda();
+
+            RenderizarDatatable(tabelaServicosDaOrdem);
+        }
+    });
+}
+
+function CalcularValorTotalHorasCustoEVenda() {
+
+    if (IsNullOrEmpty(_quantidadeHorasTodosOsServicosinternosOrdem)) return;
+
+    let valorTotalCustoHoras = ObterValorTotalCustoHorasServico();
+    let valorTotalVendaHoras = ObterValorTotalVendaHorasServico();
+
+    $('#' + ID_ELEMENTO_LABEL_VALOR_TOTAL_CUSTO_HORA_SERVICOS_ORDEM).text('R$ ' + FormatDinheiro(valorTotalCustoHoras));
+    $('#' + ID_ELEMENTO_LABEL_VALOR_TOTAL_VENDA_HORA_SERVICOS_ORDEM).text('R$ ' + FormatDinheiro(valorTotalVendaHoras));
+
+    CalcularValorTotalCusto();
+    CalcularValorTotalVenda();
+
+    if (PaginaAtivaEh('FilaOrcamento')) {
+        CalcularValorTotalVenda();
+    }
+}
+
+function ObterValorTotalCustoHorasServico() {
+
+    if (IsNullOrEmpty(_quantidadeHorasTodosOsServicosinternosOrdem)) return;
+
+    let valorCustoHora = FormatarDinheiroParaDecimal(ObterValorInput(ID_ELEMENTO_INPUT_VALOR_CUSTO_HORA_SERVICOS_ORDEM));
+
+    let quantidadeHoras = FormatarDinheiroParaDecimal(_quantidadeHorasTodosOsServicosinternosOrdem.split(':')[0]);
+    let quantidadeMinutos = FormatarDinheiroParaDecimal(_quantidadeHorasTodosOsServicosinternosOrdem.split(':')[1]);
+
+    let valorTotalCustoHoras = quantidadeHoras * valorCustoHora;
+
+    valorTotalCustoHoras += (((quantidadeMinutos * 100) / 60) / 100) * valorCustoHora;
+
+    return valorTotalCustoHoras;
+}
+
+function ObterValorTotalVendaHorasServico() {
+
+    if (!$.fn.DataTable.isDataTable('#tabelaServicosDaOrdem')) return;
+
+    let rowsData = tabelaServicosDaOrdem.rows().data();
+
+    let valorTotalVenda = 0;
+
+    for (let i = 0; i < rowsData.length; i++) {
+
+        valorTotalVenda += FormatarDinheiroParaDecimal(rowsData[i][4]);
+    }
+
+    return valorTotalVenda;
+
+    //let valorVendaHora = FormatarDinheiroParaDecimal(ObterValorInput(ID_ELEMENTO_INPUT_VALOR_VENDA_HORA_SERVICOS_ORDEM));
+
+    //let quantidadeHoras = FormatarDinheiroParaDecimal(_quantidadeHorasTodosOsServicosinternosOrdem.split(':')[0]);
+    //let quantidadeMinutos = FormatarDinheiroParaDecimal(_quantidadeHorasTodosOsServicosinternosOrdem.split(':')[1]);
+
+    //let valorTotalVendaHoras = quantidadeHoras * valorVendaHora;
+
+    //valorTotalVendaHoras += (((quantidadeMinutos * 100) / 60) / 100) * valorVendaHora;
+
+    //return valorTotalVendaHoras;
+}
+
+function CalcularQuantidadeDiasDeTrabalho(totalHoras) {
+    const QUANTIDADE_HORAS_CCONSIDERADAS = 8;
+
+    return Math.ceil(totalHoras / QUANTIDADE_HORAS_CCONSIDERADAS);
+}
+
+function AdicionarServicoASerRealizadoSetor() {
+
+    if (ValidarCampos()) {
+        return;
+    }
+
+    let objeto = GerarObjetoServicoOrdemASerRealizadoNoSetor(
+        FormatarDinheiroParaDecimal(ObterValorInput(ID_ELEMENTO_QUANTIDADE_SERVICO_DA_ORDEM_EDITAR)),
+        ObterValorInput(ID_ELEMENTO_DESCRICAO_SERVICO_DA_ORDEM_ORDEM_EDITAR),
+        ObterValorSelectPicker(ID_ELEMENTO_SETOR_REALIZA_SERVICO_ORDEM_EDITAR),
+        ObterValorInput(ID_ELEMENTO_OBSERVACAO_SERVICO_DA_ORDEM_ORDEM_EDITAR),
+        ObterValorInput(ID_ORDEM),
+        ObterValorSelectPicker(ID_ELEMENTO_SELECTPICKER_COMPONENTE_EQUIPAMENTO_QUE_SERA_REALIZADO_SERVICO_ORDEM_ADICIONAR_TABELA),
+        ObterValorInput(ID_ELEMENTO_VALOR_SERVICO_DA_ORDEM_EDITAR),
+        ObterValorInput(ID_ELEMENTO_VALOR_TOTAL),
+    );
+
+    RequestAdicionarServicoASerRealizadoSetor(objeto);
+}
+
+function ValidarCampos() {
+
+    let quantidade = Number($('#txtQuantidadeServico').val().trim());
+
+    if (!quantidade) {
+        swal("Atenção!", "É necessário preencher o campo: Quantidade do Serviço!", "warning");
+        return true;
+    }
+
+    let descricao = $('#txtDescricaoServicoDaOrdemAdicionarTabela').val();
+
+    if (IsNullOrEmpty(descricao)) {
+        swal("Atenção!", "É necessario preencher o campo: Descrição do Serviço!", "warning");
+        return true;
+    }
+
+    let setor = ObterValorSelectPicker(ID_ELEMENTO_SETOR_REALIZA_SERVICO_ORDEM_EDITAR);
+
+    if (IsNullOrEmpty(setor)) {
+        swal("Atenção!", "É necessario selecionar um setor!", "warning");
+        return true;
+    }
+
+    return false;
+}
+
+function RequestAdicionarServicoASerRealizadoSetor(objeto, buscarServicosDaOrdem = true) {
+
+    $.ajax({
+        data: JSON.stringify(objeto),
+        type: "POST",
+        url: "/ServicosDaOrdem/AdicionarServicoDaOrdem",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response.erro)
+                swal("Ops!", response.mensagem, "warning");
+            else {
+                if (buscarServicosDaOrdem) {
+                    swal("Sucesso", "Adicionado com sucesso", "success");
+
+                    LimparCamposAdicionarServicosDaOrdem();
+                    ObterServicosDaOrdem();
+                }
+            }
+        }
+    });
+}
+
+function GerarObjetoServicoOrdemASerRealizadoNoSetor(quantidade, descricao, idSetorRealizaServico, observacao, idOrdem,
+    idComponenteEquipamentoVaiSerRealizadoServico, valorUnitario, valorTotal) {
+    return {
+        "quantidade": quantidade,
+        "descricao": descricao,
+        "id_setor_realiza_servico": idSetorRealizaServico,
+        "observacao": observacao,
+        "id_servico_da_ordem": 0,
+        "id_ordem": idOrdem,
+        "data_inicio_trabalho": null,
+        "data_fim_trabalho": null,
+        "criado_pelo_sistema": 0,
+        "prioridade": null,
+        "excluido": 0,
+        "id_componente_equipamento_vai_ser_realizado_servico": idComponenteEquipamentoVaiSerRealizadoServico,
+        "valor_custo": FormatarDinheiroParaDecimal(valorUnitario),
+        "valor_venda": FormatarDinheiroParaDecimal(valorTotal)
+    };
+}
+
+function ExcluirServicoDaOrdem(idServico) {
+    swal({
+        title: "Você tem certeza que deseja excluir esse Serviço da Ordem?",
+        text: "O mesmo possui informações vinculadas e você poderá perdê-las!",
+        icon: "warning",
+        buttons: true
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: "/ServicosDaOrdem/ExcluirServicoDaOrdem/" + idServico,
+                    type: "PUT",
+                    success: function (response) {
+
+                        if (response.erro) {
+                            swal("Ops!", "Houve um erro ao alterar o cliente. Detalhes: " + response.mensagem, "error");
+                            HabilitarBotao('btnAlterarCliente', 'Alterar');
+                        }
+                        else {
+                            swal("Sucesso!", "O Serviço da Ordem foi excluído com sucesso!", "success");
+                            ObterServicosDaOrdem();
+                        }
+                    }
+                })
+            }
+            else swal("Cancelado!", "Exclusão cancelada!", "error");
+        });
+}
+
+function CriarFuncoesTabelaServicosDaOrdem(idServico) {
+    let htmlFuncoes = `
+    <div class="dropdown">
+        <button class="btnFuncoes btn-link btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-ellipsis-h"></i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" style="width:230px;">`;
+
+    htmlFuncoes += `<a class="dropdown-item" title="Alterar Serviço" href="javascript:void(0);" onclick="AbrirModalAlterarServicoOrdem(${idServico})">
+        Alterar Serviço
+        </a>`
+
+    htmlFuncoes += `<a class="dropdown-item text-red" title="Excluir Serviço" href="javascript:void(0);" onclick="ExcluirServicoDaOrdem(${idServico})">
+        Excluir Serviço
+        </a>`
+    htmlFuncoes += `</div></div>`;
+    return htmlFuncoes;
+}
+
+function GerarServicosDaOrdemBaseadoNosTrabalhosSelecionados() {
+
+    let idOrdem = $('#txtIdOrdem').val();
+
+    let body = CarregarOrdemEdicaoBody();
+
+    $('#labelServicosSendoGerados').show();
+    $('#labelGerarServicos').hide();
+
+    $.ajax({
+        url: "/ServicosDaOrdem/AlterarServicoDaOrdem/" + idOrdem,
+        type: "PUT",
+        data: JSON.stringify(body),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response.erro) {
+                swal("Ops!", "Houve um erro ao alterar a ordem. Detalhes: " + response.mensagem, "error");
+            }
+            else {
+                ObterServicosDaOrdem();
+                swal("Sucesso!", "Serviços gerados com sucesso!", "success");
+            }
+
+            $('#labelServicosSendoGerados').hide();
+            $('#labelGerarServicos').show();
+        }
+    });
+}
+
+function ObterListaServicosPadroes() {
+    $.ajax({
+        url: "/EscopoDoServico/ObterServicosPadroes",
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+
+            if (!response.erro) {
+                $.each(response.servicos_padroes, function (i, item) {
+                    $("#datalistServicosPadroes").append($("<option>").attr('value', item).text(item));
+                });
+            }
+        }
+    });
+}
+
+function ObterServicosPadroesComBaseDescricao() {
+    if (IsNullOrEmpty($('#txtDescricaoServicoDaOrdemAdicionarTabela').val()))
+        return;
+
+    $.ajax({
+        url: "/EscopoDoServico/ObterServicosPadroesComBaseDescricao",
+        type: "GET",
+        data: {
+            descricao: $('#txtDescricaoServicoDaOrdemAdicionarTabela').val()
+        },
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (!response.erro) {
+
+                if (IsNullOrEmpty(response.servico)) return;
+
+                PreencherInputIdElementoEValor(ID_ELEMENTO_VALOR_SERVICO_DA_ORDEM_EDITAR, FormatDinheiro(response.servico.valor));
+
+                CalcularValorTotalServicoAdicionar();
+
+                if (!IsNullOrEmpty(response.servico.id_setor_responsavel_servico_da_ordem_ao_aprovar))
+                    UpdateSelectPicker(ID_ELEMENTO_SETOR_REALIZA_SERVICO_ORDEM_EDITAR, response.servico.id_setor_responsavel_servico_da_ordem_ao_aprovar);
+
+                if (!IsNullOrEmpty(response.servico.id_componente_vai_realizar_servico))
+                    UpdateSelectPicker(ID_ELEMENTO_SELECTPICKER_COMPONENTE_EQUIPAMENTO_QUE_SERA_REALIZADO_SERVICO_ORDEM_ADICIONAR_TABELA, response.servico.id_componente_vai_realizar_servico);
+            }
+        }
+    });
+}
+
+function AddInputServicoOrdem(elmemento, campoEhHoras, campoEhValor, colunaEhQuantidade) {
+    if (elmemento.getElementsByTagName('input').length > 0) return;
+
+    _valorAntesEdicao = elmemento.innerHTML;
+    elmemento.innerHTML = '';
+
+    var input = document.createElement('input');
+    input.setAttribute('type', 'text');
+    input.setAttribute('id', 'inputEditando');
+    input.setAttribute('class', 'editando');
+    input.setAttribute('style', 'width:100%');
+    input.setAttribute('onBlur', 'CloseInputServicoOrdem(this,' + campoEhHoras + ', ' + campoEhValor + ',' + colunaEhQuantidade + ')');
+    input.setAttribute('onkeyup', 'enterVerify(event)');
+    elmemento.appendChild(input);
+    input.focus();
+    if (campoEhHoras) $('#inputEditando').mask('000:00', { reverse: true });
+    else if (campoEhValor) $('#inputEditando').mask('000.000.000.000.000,00', { reverse: true });
+    else if (colunaEhQuantidade) $('#inputEditando').mask('0000000000');
+
+    $('#inputEditando').val('');
+}
+
+function CloseInputServicoOrdem(elmemento, campoEhHoras, campoEhValor, colunaEhQuantidades) {
+    var td = elmemento.parentNode;
+    var value = elmemento.value;
+    td.removeChild(elmemento);
+    if (_valorAntesEdicao !== value && value !== "") {
+
+        td.innerHTML = 'Alterando...';
+
+        if (campoEhHoras)
+            value = ValidarValorHora(value)
+
+        AlterarServicoDaOrdemPelaTabela(value, td, _valorAntesEdicao);
+    }
+
+    else td.innerHTML = _valorAntesEdicao;
+
+    _valorAntesEdicao = '';
+}
+
+function ValidarValorHora(valorHora) {
+    if (valorHora === '' || valorHora === '' || valorHora === null || valorHora === 'NaN') {
+        return '';
+    }
+    else {
+        if (!/:/.test(valorHora)) {
+            valorHora += ':00';
+        }
+        //Caso esteja como 14:
+        else if (valorHora.length === 3) {
+            valorHora += '00';
+        }
+
+        return valorHora = valorHora.replace(/^\d{1}:/, '0$&').replace(/:\d{1}$/, '$&0');
+    }
+}
+
+function AlterarServicoDaOrdemPelaTabela(novoValor, tdTabela, valorSeDerErro) {
+
+    let requestURL = '/ServicosDaOrdem/AlterarObservacaoServicoOrdem';
+
+    if (IndexColunaEditandoServicoOrdem == INDEX_DESCRICAO_SERVICO_TABELA_SERVICO_ORDEM)
+        requestURL = '/ServicosDaOrdem/AlterarDescricaoServicoDaOrdem';
+    else if (IndexColunaEditandoServicoOrdem == INDEX_VALOR_VENDA_TABELA_SERVICO_ORDEM) {
+        requestURL = '/ServicosDaOrdem/AlterarValorVendaServico';
+        novoValor = FormatarDinheiroParaDecimal(novoValor);
+    }
+    else if (IndexColunaEditandoServicoOrdem == INDEX_QUANTIDADE_TABELA_SERVICO_ORDEM) {
+        requestURL = '/ServicosDaOrdem/AlterarQuantidadeServicoDaOrdem';
+        novoValor = FormatarDinheiroParaDecimal(novoValor);
+    }
+
+    $.ajax({
+        data: JSON.stringify(novoValor),
+        type: "PUT",
+        url: requestURL + '/' + IDServicoOrdemEditandoNaTabela,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response.erro) {
+                swal("Ops!", response.mensagem, "warning");
+
+                tdTabela.innerHTML = valorSeDerErro;
+            }
+            else {
+                ObterServicosDaOrdem();
+            }
+        }
+    });
+}
+
+function CalcularValorTotalServicoAdicionar() {
+
+    let quantidade = FormatarDinheiroParaDecimal(ObterValorInput(ID_ELEMENTO_QUANTIDADE_SERVICO_DA_ORDEM_EDITAR))
+    let valor = FormatarDinheiroParaDecimal(ObterValorInput(ID_ELEMENTO_VALOR_SERVICO_DA_ORDEM_EDITAR))
+
+    if (quantidade > 0 && valor > 0) {
+        PreencherInputIdElementoEValor(ID_ELEMENTO_VALOR_TOTAL, "R$ " + FormatDinheiro(quantidade * valor));
+    }
+}

@@ -1,0 +1,371 @@
+﻿$(document).ready(function () {
+
+    $(document).on('input', '#' + ID_ELEMENTO_INPUT_QUANTIDADE_PECA_DA_ORDEM, AtualizarValoresPecaOrdemDinamicamente);
+    $(document).on('input', '#' + ID_ELEMENTO_INPUT_VALOR_UNITARIO_PECA_DA_ORDEM, AtualizarValoresPecaOrdemDinamicamente);
+    $(document).on('input', '#' + ID_ELEMENTO_INPUT_VALOR_TOTAL_PECA_DA_ORDEM, AtualizarValoresPecaOrdemDinamicamente);
+
+    $('#' + ID_ELEMENTO_PORCENTAGEM_IPI_PECA_DA_ORDEM).mask('##0,00%', { reverse: true });
+    $('#' + ID_ELEMENTO_PORCENTAGEM_ICMS_PECA_DA_ORDEM).mask('##0,00%', { reverse: true });
+
+    ValidarPermissaoOrcamentosLizy(() => {
+        _displayValor = false;
+        $('#divValorUnitarioPecaDaOrdem').addClass('d-none');
+        $('#divValorTotalPecaDaOrdem').addClass('d-none');
+        $('#divPorcentagemIpiPecaDaOrdem').addClass('d-none');
+        $('#divPorcentagemIcmsPecaDaOrdem').addClass('d-none');
+        $('#divSelectDiscriminarItensPecaDaOrdem').addClass('d-none');
+
+        tabelaPecas.column(ID_ELEMENTO_INPUT_VALOR_UNITARIO_PECA_DA_ORDEM).visible(false);
+        tabelaPecas.column(ID_ELEMENTO_INPUT_VALOR_TOTAL_PECA_DA_ORDEM).visible(false);
+        tabelaPecas.column(ID_ELEMENTO_PORCENTAGEM_IPI_PECA_DA_ORDEM).visible(false);
+        tabelaPecas.column(ID_ELEMENTO_PORCENTAGEM_ICMS_PECA_DA_ORDEM).visible(false);
+    }, () => {
+        _displayValor = true;
+        tabelaPecas.column(ID_ELEMENTO_INPUT_VALOR_UNITARIO_PECA_DA_ORDEM).visible(true);
+        tabelaPecas.column(ID_ELEMENTO_INPUT_VALOR_TOTAL_PECA_DA_ORDEM).visible(true);
+        tabelaPecas.column(ID_ELEMENTO_PORCENTAGEM_IPI_PECA_DA_ORDEM).visible(true);
+        tabelaPecas.column(ID_ELEMENTO_PORCENTAGEM_ICMS_PECA_DA_ORDEM).visible(true);
+    });
+});
+
+const ID_MODAL_ALTERAR_PECA_DA_ORDEM = 'modal-alterar-peca-da-ordem';
+const ID_ELEMENTO_BOTAO_ALTERAR_PECA_DA_ORDEM = 'btnSalvarAlteracaoPecaDaOrdem';
+
+const ID_ELEMENTO_INPUT_DESCRICAO_PECA_DA_ORDEM = 'txtDescricaoPecaDaOrdem';
+const ID_ELEMENTO_INPUT_QUANTIDADE_PECA_DA_ORDEM = 'txtQuantidadePecaDaOrdem';
+const ID_ELEMENTO_INPUT_VALOR_UNITARIO_PECA_DA_ORDEM = 'txtValorUnitarioPecaDaOrdem';
+const ID_ELEMENTO_INPUT_VALOR_TOTAL_PECA_DA_ORDEM = 'txtValorTotalPecaDaOrdem';
+const ID_ELEMENTO_INPUT_DESCRICAO_ORCAMENTO_PECA_DA_ORDEM = 'txtDescricaoOrcamentoPecaDaOrdem';
+const ID_ELEMENTO_INPUT_UNIDADE_MEDIDA_PECA_DA_ORDEM = 'txtUnidadeMedidaPecaDaOrdem';
+const ID_ELEMENTO_INPUT_ID_PECA_DA_ORDEM = 'txtIdPecaOrdemASerAlterada';
+
+const ID_ELEMENTO_PORCENTAGEM_IPI_PECA_DA_ORDEM = 'txtPorcentagemIpiPecaDaOrdem';
+const ID_ELEMENTO_PORCENTAGEM_ICMS_PECA_DA_ORDEM = 'txtPorcentagemIcmsPecaDaOrdem';
+const ID_ELEMENTO_OBSERVACAO_PECA_DA_ORDEM = 'txtObservacaoPecaDaOrdem';
+
+const ID_CHECKBOX_REUTILIZAR_PECA_MODAL = 'checkReutilizarPecaModal';
+const ID_CHECKBOX_CLIENTE_FORNECE_MODAL = 'checkClienteForneceModal';
+
+const ID_SELECTPICKER_DISCRIMINAR_ITENS_PECA_DA_ORDEM = 'selectDiscriminarItensPecaDaOrdem';
+const DIV_SELECTPICKER_DISCRIMINAR_ITENS_PECA_DA_ORDEM = 'divSelectDiscriminarItensPecaDaOrdem';
+
+let ehKit = false;
+let idKitVinculado = null;
+
+var valorUnitarioOriginal = null;
+var valorTotalOriginal = null;
+
+
+$(document).on('input', '.dinheiro', function () {
+    this.value = this.value.replace(/[^\d.,]/g, '');
+});
+
+
+$(document).on('hide.bs.modal', '#' + ID_MODAL_ALTERAR_PECA_DA_ORDEM, function () {
+    LimparInput(ID_ELEMENTO_INPUT_DESCRICAO_PECA_DA_ORDEM);
+    LimparInput(ID_ELEMENTO_INPUT_QUANTIDADE_PECA_DA_ORDEM);
+    LimparInput(ID_ELEMENTO_INPUT_VALOR_UNITARIO_PECA_DA_ORDEM);
+    LimparInput(ID_ELEMENTO_INPUT_VALOR_TOTAL_PECA_DA_ORDEM);
+    LimparInput(ID_ELEMENTO_INPUT_DESCRICAO_ORCAMENTO_PECA_DA_ORDEM);
+    LimparInput(ID_ELEMENTO_INPUT_UNIDADE_MEDIDA_PECA_DA_ORDEM);
+    LimparInput(ID_ELEMENTO_PORCENTAGEM_IPI_PECA_DA_ORDEM);
+    LimparInput(ID_ELEMENTO_PORCENTAGEM_ICMS_PECA_DA_ORDEM);
+    LimparInput(ID_ELEMENTO_OBSERVACAO_PECA_DA_ORDEM);
+    LimparCheckBox(ID_CHECKBOX_REUTILIZAR_PECA_MODAL);
+    LimparCheckBox(ID_CHECKBOX_CLIENTE_FORNECE_MODAL);
+    ResetSelectPicker(ID_SELECTPICKER_DISCRIMINAR_ITENS_PECA_DA_ORDEM);
+    ehKit = false;
+    idKitVinculado = null;
+
+    HabilitarBotao(ID_ELEMENTO_BOTAO_ALTERAR_PECA_DA_ORDEM, 'Salvar');
+    $('.modal').css('overflow-y', 'auto');
+});
+
+function AbrirModalAlterarPecadaOrdem(idPecaOrdem, discriminarItens = false) {
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/PecasOrdem/ObterPecaDaOrdem/" + idPecaOrdem,
+        success: function (response) {
+
+            if (response.erro) {
+                swal("Ops!", response.mensagem, "warning");
+            } else {
+                if (response.pecas_ordem && response.pecas_ordem.length > 0) {
+
+                    const peca = response.pecas_ordem[0];
+
+                    $("#" + ID_ELEMENTO_INPUT_ID_PECA_DA_ORDEM).val(idPecaOrdem);
+                    AbrirModal(ID_MODAL_ALTERAR_PECA_DA_ORDEM);
+
+                    PreencherInput('txtDescricaoPecaDaOrdem', 'divDescricaoPecaDaOrdem', peca.descricao);
+                    PreencherInput('txtQuantidadePecaDaOrdem', 'divQuantidadePecaDaOrdem', peca.quantidade);
+                    PreencherInput('txtValorUnitarioPecaDaOrdem', 'divValorUnitarioPecaDaOrdem', FormatDinheiro(peca.valor_unitario));
+                    PreencherInput('txtValorTotalPecaDaOrdem', 'divValorTotalPecaDaOrdem', FormatDinheiro(peca.valor_total));
+                    PreencherInput('txtDescricaoOrcamentoPecaDaOrdem', 'divDescricaoOrcamentoPecaDaOrdem', peca.descricao_orcamento);
+                    PreencherInput('txtUnidadeMedidaPecaDaOrdem', 'divUnidadeMedidaPecaDaOrdem', peca.unidade_de_medida);
+                    PreencherInput('txtObservacaoPecaDaOrdem', 'divObservacaoPecaDaOrdem', peca.observacao);
+                    PreencherInput('txtPorcentagemIpiPecaDaOrdem', 'divPorcentagemIpiPecaDaOrdem', FormatDinheiro(peca.porcentagem_ipi) + '%');
+                    PreencherInput('txtPorcentagemIcmsPecaDaOrdem', 'divPorcentagemIcmsPecaDaOrdem', FormatDinheiro(peca.porcentagem_icms) + '%');
+                    $('#selectDiscriminarItensPecaDaOrdem').val(peca.discriminar_itens_no_faturamento ? "1" : "0").selectpicker('refresh');
+                     
+                    ehKit = peca.eh_kit;
+                    idKitVinculado = peca.id_kit_vinculado;
+
+                    ValidacoesVisualizacaoValoresESelectModal(peca.discriminar_itens_no_faturamento);
+                    ValidacaoVisualizacaoDiscriminarModal(discriminarItens, peca.discriminar_itens_no_faturamento);
+                    ValidacaoVisualizacaoCheckboxesModal(peca.reutilizar_peca, peca.cliente_fornece);
+
+                }
+                else {
+                    swal("Atenção!", "Nenhuma peça encontrada para a Ordem.", "warning");
+                }
+            }
+        },
+        error: function (error) {
+            swal("Erro!", "Houve um erro ao buscar a peça. Detalhes: " + error.responseText, "error");
+        }
+    });
+}
+
+function ValidacaoVisualizacaoCheckboxesModal(reutilizar, fornece) {
+    const checkReutilizar = $('#checkReutilizarPecaModal').closest('.form-check');
+    const checkClienteFornece = $('#checkClienteForneceModal').closest('.form-check');
+
+    if (ehKit || idKitVinculado != null) {
+        checkReutilizar.hide();
+        checkClienteFornece.hide();
+    }
+    else {
+        checkReutilizar.show();
+        checkClienteFornece.show();
+
+        $('#checkReutilizarPecaModal').prop('checked', reutilizar === true);
+        $('#checkClienteForneceModal').prop('checked', fornece === true);
+    }
+}
+
+function ValidacaoVisualizacaoDiscriminarModal(discriminarItensPai, discriminarItens) {
+
+    $('#txtEhKit').val(ehKit);
+
+    if (ehKit) {
+        if (!idKitVinculado && discriminarItens) {
+            $('#txtPorcentagemIpiPecaDaOrdem').prop('disabled', true);
+            $('#txtPorcentagemIcmsPecaDaOrdem').prop('disabled', true);
+        }
+        else if (idKitVinculado && !discriminarItens) {
+            $('#txtPorcentagemIpiPecaDaOrdem').prop('disabled', true);
+            $('#txtPorcentagemIcmsPecaDaOrdem').prop('disabled', true);
+        }
+        else {
+            $('#txtPorcentagemIpiPecaDaOrdem').prop('disabled', false);
+            $('#txtPorcentagemIcmsPecaDaOrdem').prop('disabled', false);
+        }
+    }
+    else {
+        if (!discriminarItensPai && !ehKit && idKitVinculado != null) {
+            $('#txtPorcentagemIpiPecaDaOrdem').prop('disabled', true);
+            $('#txtPorcentagemIcmsPecaDaOrdem').prop('disabled', true);
+        }
+        else {
+            $('#txtPorcentagemIpiPecaDaOrdem').prop('disabled', false);
+            $('#txtPorcentagemIcmsPecaDaOrdem').prop('disabled', false);
+        }
+    }
+}
+
+function ValidacoesVisualizacaoValoresESelectModal(discriminarItens) {
+    if (ehKit) {
+        $('#txtValorUnitarioPecaDaOrdem').prop('disabled', true);
+        $('#txtValorTotalPecaDaOrdem').prop('disabled', true);
+
+        if (idKitVinculado == null || idKitVinculado == '') {
+            const valorSelect = discriminarItens ? 1 : 0;
+            $('#' + DIV_SELECTPICKER_DISCRIMINAR_ITENS_PECA_DA_ORDEM).show();
+        }
+        else {
+            $('#' + DIV_SELECTPICKER_DISCRIMINAR_ITENS_PECA_DA_ORDEM).hide();
+        }
+    }
+    else {
+        $('#' + DIV_SELECTPICKER_DISCRIMINAR_ITENS_PECA_DA_ORDEM).hide();
+        $('#txtValorUnitarioPecaDaOrdem').prop('disabled', false);
+        $('#txtValorTotalPecaDaOrdem').prop('disabled', false);
+    }
+}
+
+function AlterarPecaDaOrdem() {
+    DesabilitarBotao(ID_ELEMENTO_BOTAO_ALTERAR_PECA_DA_ORDEM, 'Alterando...');
+
+    var body = GerarObjetoJsonAlterarPecaDaOrdem();
+
+    if (body.quantidade <= 0) {
+
+        HabilitarBotao(ID_ELEMENTO_BOTAO_ALTERAR_PECA_DA_ORDEM, 'Salvar');
+
+        return swal("Ops!", "Selecione uma quantidade válida", "warning");
+    }
+
+    $.ajax({
+        dataType: "json",
+        data: JSON.stringify(body),
+        type: "PUT",
+        url: "/PecasOrdem/AlterarPecaDaOrdem",
+        contentType: "application/json; charset=utf-8",
+        success: function (response) {
+            if (response.erro)
+                swal("Ops!", response.mensagem, "warning");
+            else {
+                ObterPecasDaOrdem();
+                swal("Sucesso!", "Peça alterada com sucesso", "success");
+                $('#' + ID_MODAL_ALTERAR_PECA_DA_ORDEM).modal('toggle');
+            }
+
+            HabilitarBotao(ID_ELEMENTO_BOTAO_ALTERAR_PECA_DA_ORDEM, 'Salvar');
+        }
+    });
+}
+
+function GerarObjetoJsonAlterarPecaDaOrdem() {
+    const reutilizar = ObterValorCheckBox('checkReutilizarPecaModal');
+    const clienteFornece = ObterValorCheckBox('checkClienteForneceModal');
+
+    let valorUnitario = FormatarDinheiroParaDecimal(ObterValorInput(ID_ELEMENTO_INPUT_VALOR_UNITARIO_PECA_DA_ORDEM));
+    let valorTotal = FormatarDinheiroParaDecimal(ObterValorInput(ID_ELEMENTO_INPUT_VALOR_TOTAL_PECA_DA_ORDEM));
+    let porcentagemIpi = FormatarDinheiroParaDecimal(
+        ObterValorInput(ID_ELEMENTO_PORCENTAGEM_IPI_PECA_DA_ORDEM).replace('%', '')
+    );
+
+    let porcentagemIcms = FormatarDinheiroParaDecimal(
+        ObterValorInput(ID_ELEMENTO_PORCENTAGEM_ICMS_PECA_DA_ORDEM).replace('%', '')
+    );
+
+    if (reutilizar || clienteFornece) {
+        valorUnitario = 0;
+        valorTotal = 0;
+    }
+
+    const discriminarItens = $("#selectDiscriminarItensPecaDaOrdem").val() === "1";
+
+    return {
+        "id_peca_ordem": $("#" + ID_ELEMENTO_INPUT_ID_PECA_DA_ORDEM).val(),
+        "descricao": ObterValorInput(ID_ELEMENTO_INPUT_DESCRICAO_PECA_DA_ORDEM),
+        "quantidade": FormatarDinheiroParaDecimal(ObterValorInput(ID_ELEMENTO_INPUT_QUANTIDADE_PECA_DA_ORDEM)),
+        "valor_unitario": valorUnitario,
+        "valor_total": valorTotal,
+        "descricao_orcamento": ObterValorInput(ID_ELEMENTO_INPUT_DESCRICAO_ORCAMENTO_PECA_DA_ORDEM),
+        "unidade_medida": ObterValorInput(ID_ELEMENTO_INPUT_UNIDADE_MEDIDA_PECA_DA_ORDEM),
+        "observacao": ObterValorInput(ID_ELEMENTO_OBSERVACAO_PECA_DA_ORDEM),
+        "porcentagem_ipi": porcentagemIpi,
+        "porcentagem_icms": porcentagemIcms,
+        "reutilizar_peca": reutilizar,
+        "cliente_fornece": clienteFornece,
+        eh_kit: ehKit,
+        id_kit_vinculado: idKitVinculado,
+        "discriminar_itens_no_faturamento": discriminarItens
+    };
+}
+
+function AtualizarValoresPecaOrdemDinamicamente() {
+    const quantidade = FormatarDinheiroParaDecimal(ObterValorInput(ID_ELEMENTO_INPUT_QUANTIDADE_PECA_DA_ORDEM));
+    const valorUnitario = FormatarDinheiroParaDecimal(ObterValorInput(ID_ELEMENTO_INPUT_VALOR_UNITARIO_PECA_DA_ORDEM));
+    const valorTotal = FormatarDinheiroParaDecimal(ObterValorInput(ID_ELEMENTO_INPUT_VALOR_TOTAL_PECA_DA_ORDEM));
+
+    const campoAlterado = $(this).attr('id');
+
+    if (campoAlterado === ID_ELEMENTO_INPUT_QUANTIDADE_PECA_DA_ORDEM || campoAlterado === ID_ELEMENTO_INPUT_VALOR_UNITARIO_PECA_DA_ORDEM) {
+        const novoTotal = quantidade * valorUnitario;
+        PreencherInput(ID_ELEMENTO_INPUT_VALOR_TOTAL_PECA_DA_ORDEM, 'divValorTotalPecaDaOrdem', FormatDinheiro(novoTotal));
+    }
+    else if (campoAlterado === ID_ELEMENTO_INPUT_VALOR_TOTAL_PECA_DA_ORDEM) {
+        const novoUnitario = quantidade > 0 ? valorTotal / quantidade : 0;
+        PreencherInput(ID_ELEMENTO_INPUT_VALOR_UNITARIO_PECA_DA_ORDEM, 'divValorUnitarioPecaDaOrdem', FormatDinheiro(novoUnitario));
+    }
+}
+
+function CheckReutilizarMarcado() {
+    const isChecked = $('#' + ID_CHECKBOX_REUTILIZAR_PECA_MODAL).is(':checked');
+
+    if (isChecked) {
+        swal({
+            title: "Atenção!",
+            text: "Ao salvar, o valor unitário e total da peça serão zerados por causa da reutilização.\nDeseja continuar?",
+            icon: "warning",
+            buttons: ["Cancelar", "Sim"],
+            dangerMode: true,
+        }).then((willProceed) => {
+            if (willProceed) {
+                ArmazenarValoresOriginais();
+                ZerarValoresPeca();
+            } else {
+                $('#' + ID_CHECKBOX_REUTILIZAR_PECA_MODAL).prop('checked', false);
+            }
+        });
+    } else {
+        RestaurarValoresOriginais();
+    }
+}
+
+function CheckClienteForneceMarcado() {
+    const isChecked = $('#' + ID_CHECKBOX_CLIENTE_FORNECE_MODAL).is(':checked');
+
+    if (isChecked) {
+        swal({
+            title: "Atenção!",
+            text: "Ao salvar, o valor unitário e total da peça serão zerados pois o cliente fornece a peça.\nDeseja continuar?",
+            icon: "warning",
+            buttons: ["Cancelar", "Sim"],
+            dangerMode: true,
+        }).then((willProceed) => {
+            if (willProceed) {
+                ArmazenarValoresOriginais();
+                ZerarValoresPeca();
+            } else {
+                $('#' + ID_CHECKBOX_CLIENTE_FORNECE_MODAL).prop('checked', false);
+            }
+        });
+    } else {
+        RestaurarValoresOriginais();
+    }
+}
+
+function ArmazenarValoresOriginais() {
+    if (valorUnitarioOriginal === null) {
+        valorUnitarioOriginal = ObterValorInput(ID_ELEMENTO_INPUT_VALOR_UNITARIO_PECA_DA_ORDEM);
+    }
+    if (valorTotalOriginal === null) {
+        valorTotalOriginal = ObterValorInput(ID_ELEMENTO_INPUT_VALOR_TOTAL_PECA_DA_ORDEM);
+    }
+}
+
+function ZerarValoresPeca() {
+    PreencherInput(ID_ELEMENTO_INPUT_VALOR_UNITARIO_PECA_DA_ORDEM, 'divValorUnitarioPecaDaOrdem', FormatDinheiro(0));
+    PreencherInput(ID_ELEMENTO_INPUT_VALOR_TOTAL_PECA_DA_ORDEM, 'divValorTotalPecaDaOrdem', FormatDinheiro(0));
+}
+
+function RestaurarValoresOriginais() {
+    if (valorUnitarioOriginal !== null) {
+        PreencherInput(ID_ELEMENTO_INPUT_VALOR_UNITARIO_PECA_DA_ORDEM, 'divValorUnitarioPecaDaOrdem', valorUnitarioOriginal);
+    }
+    if (valorTotalOriginal !== null) {
+        PreencherInput(ID_ELEMENTO_INPUT_VALOR_TOTAL_PECA_DA_ORDEM, 'divValorTotalPecaDaOrdem', valorTotalOriginal);
+    }
+
+    valorUnitarioOriginal = null;
+    valorTotalOriginal = null;
+}
+
+function DiscriminacaoDeItensAlterada() {
+
+    var discriminarItens = ObterValorSelectPicker(ID_SELECTPICKER_DISCRIMINAR_ITENS_PECA_DA_ORDEM);
+
+    if (discriminarItens == 1) {
+        $('#txtPorcentagemIpiPecaDaOrdem').prop('disabled', true);
+        $('#txtPorcentagemIcmsPecaDaOrdem').prop('disabled', true);
+    } else {
+        $('#txtPorcentagemIpiPecaDaOrdem').prop('disabled', false);
+        $('#txtPorcentagemIcmsPecaDaOrdem').prop('disabled', false);
+    }
+}
+

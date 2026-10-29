@@ -1,0 +1,584 @@
+﻿function MostraLoading() {
+    $('#loader').show();
+}
+
+function EncerraLoading() {
+    $('#loader').show().delay(500).fadeOut();
+}
+
+$(document).ready(function () {
+
+    "use strict";
+
+    $.fn.dataTableExt.oSort["prioridade-desc"] = function (x, y) {
+
+        if (IsNullOrEmpty(x)) {
+            return -1;
+        }
+
+        x = parseInt(x);
+        y = parseInt(y);
+
+        if (x > y) {
+            return -1;
+        }
+
+        return 1;
+
+    };
+
+    $.fn.dataTableExt.oSort["prioridade-asc"] = function (x, y) {
+
+        if (IsNullOrEmpty(x)) {
+            return 1;
+        }
+
+        x = parseInt(x);
+        y = parseInt(y);
+
+        if (x > y) {
+            return 1;
+        }
+
+        return -1;
+    }
+
+    $.fn.dataTableExt.oSort["dias-restantes-desc"] = function (x, y) {
+
+        if (IsNullOrEmpty(x) || x == "S/DT") {
+            return -1;
+        }
+
+        x = ObterApenasNumeroDaString(x);
+        y = ObterApenasNumeroDaString(y);
+
+        if (x > y) {
+            return -1;
+        }
+
+        return 1;
+
+    };
+
+    $.fn.dataTableExt.oSort["dias-restantes-asc"] = function (x, y) {
+
+        if (IsNullOrEmpty(x) || x == "S/DT") {
+            return 1;
+        }
+
+        x = ObterApenasNumeroDaString(x);
+        y = ObterApenasNumeroDaString(y);
+
+        if (x > y) {
+            return 1;
+        }
+
+        return -1;
+    }
+
+
+    /* 
+   ------------------------------------------------
+   mascaras
+   ------------------------------------------------*/
+    $(".valor").blur(function () {
+        if (this.value === '' || this.value === ',' || this.value === null || this.value === 'NaN') {
+            this.value = '0,00';
+        }
+        else {
+            this.value = this.value.replace('.', '').replace(',', '.');
+            this.value = parseFloat(this.value).toFixed(2).replace('.', ',');
+        }
+    });
+
+    $(".time").blur(function () {
+        if (this.value === '' || this.value === '' || this.value === null || this.value === 'NaN') {
+            return;
+        }
+        else {
+            if (!/:/.test(this.value)) {
+                this.value += ':00';
+            }
+            //Caso esteja como 14:
+            else if (this.value.length === 3) {
+                this.value += '00';
+            }
+
+            this.value = this.value.replace(/^\d{1}:/, '0$&').replace(/:\d{1}$/, '$&0');
+        }
+    });
+
+    $(".hora-sem-limite").blur(function () {
+        if (this.value === '' || this.value === '' || this.value === null || this.value === 'NaN') {
+            return;
+        }
+        else {
+            if (!/:/.test(this.value)) {
+                this.value += ':00';
+            }
+            //Caso esteja como 14:
+            else if (this.value.length === 3) {
+                this.value += '00';
+            }
+
+            this.value = this.value.replace(/^\d{1}:/, '0$&').replace(/:\d{1}$/, '$&0');
+        }
+    });
+
+    $(".code").blur(function () {
+        if (this.value === '' || this.value === '' || this.value === null || this.value === 'NaN') {
+            return;
+        }
+        else {
+            this.value = PadLeft(this.value, 6);
+        }
+    });
+
+    $('.apenas-numero').mask('0000000000');
+    $('.code').mask('000000');
+    $('.counting').mask('00000');
+    $('.year').mask('0000');
+    $('.date').mask('00/00/0000');
+    $('.date-month-year').mask('00/0000');
+    $('.date-day-month').mask('00/00');
+    $('.time').mask('00:00');
+    $('.hora-sem-limite').mask('000:00', { reverse: true });
+    $('.date_time').mask('00/00/0000 00:00:00');
+    $('.date_time_hora_minuto').mask('00/00/0000 00:00');
+    $('.cep').mask('00000-000');
+    $('.phone').mask('0000-0000');
+    $('.phone_with_ddd').mask('(00) 0000-0000');
+    $('.cel_with_ddd').mask('(00) 0000-00000');
+    $('.phone_us').mask('(000) 000-0000');
+    $('.mixed').mask('AAA 000-S0S');
+    $('.cpf').mask('000.000.000-00', { reverse: true });
+    $('.cnpj').mask('00.000.000/0000-00', { reverse: true });
+    $('.money').mask('000.000.000.000.000,00', { reverse: true });
+    $('.money2').mask("###0,00", { reverse: true });
+    $('.ip_address').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
+        translation: {
+            'Z': {
+                pattern: /[0-9]/, optional: true
+            }
+        }
+    });
+    $('.milhar').mask('000.000.000.000.000', { reverse: true });
+    $('.ip_address').mask('099.099.099.099');
+    $('.percent').mask('##0,00%', { reverse: true });
+    $('.clear-if-not-match').mask("00/00/0000", { clearIfNotMatch: true });
+    $('.placeholder').mask("00/00/0000", { placeholder: "__/__/____" });
+    $('.fallback').mask("00r00r0000", {
+        translation: {
+            'r': {
+                pattern: /[\/]/,
+                fallback: '/'
+            },
+            placeholder: "__/__/____"
+        }
+    });
+    $('.selectonfocus').mask("00/00/0000", { selectOnFocus: true });
+
+    if ($('#dropDownListaNotificacoes').length > 0) {
+        BuscarNotificacoes();
+    }
+
+    //if ($('#txtLocalizarOrdem').length > 0) {
+    //    txtLocalizarOrdem.addEventListener("keydown", function (e) {
+    //        if (e.keyCode === 13) LocalizarOrdem();
+    //    });
+    //}
+
+    $('.only-time').datepicker({
+        dateFormat: ' ',
+        timepicker: true,
+        onlyTimepicker: true
+    });
+
+    ManterUsuarioLogado();
+});
+
+$(document).on('click', '.goback', function (sender) {
+    window.history.back();
+});
+
+function HabilitarVoltar() {
+    if ($(window).width() <= 991) {
+        $('#navbarGoBackMinimize').css("display", "unset");
+    }
+    //Caso não esteja com menu lateral direito (Minimizado)
+    else {
+        $('#navbarGoBackFull').css("display", "unset");
+    }
+}
+
+//Funcoes de busca do CEP
+var _idLogradouro = '';
+var _idBairro = '';
+var _idEstado = '';
+var _idCidade = '';
+
+function BuscarCep(valor, idLogradouro, idBairro, idEstado, idCidade) {
+    //Nova variável "cep" somente com dígitos.
+    var cep = valor.replace(/\D/g, '');
+
+    //Verifica se campo cep possui valor informado.
+    if (cep !== "") {
+        //Expressão regular para validar o CEP.
+        var validacep = /^[0-9]{8}$/;
+
+        //Valida o formato do CEP.
+        if (validacep.test(cep)) {
+            MostraLoading();
+
+            _idLogradouro = idLogradouro;
+            _idBairro = idBairro;
+            _idEstado = idEstado;
+            _idCidade = idCidade;
+
+            //Cria um elemento javascript.
+            var script = document.createElement('script');
+
+            //Sincroniza com o callback.
+            script.src = 'https://viacep.com.br/ws/' + cep + '/json/?callback=CallBackCep';
+
+            //Insere script no documento e carrega o conteúdo.
+            document.body.appendChild(script);
+        }
+        else {
+            swal("Aviso!", "CEP Invalido.", "warning");
+        }
+    }
+}
+
+function CallBackCep(conteudo) {
+    if (!("erro" in conteudo)) {
+        $(_idLogradouro).val(conteudo.logradouro.toUpperCase());
+        $(_idBairro).val(conteudo.bairro.toUpperCase());
+        $(_idEstado).val(conteudo.uf.toUpperCase());
+        $(_idCidade).val(conteudo.localidade.toUpperCase());
+
+        $(_idLogradouro).closest("div").addClass("is-filled");
+        $(_idBairro).closest("div").addClass("is-filled");
+        $(_idEstado).closest("div").addClass("is-filled");
+        $(_idCidade).closest("div").addClass("is-filled");
+
+    }
+    else {
+        swal("Aviso!", "CEP não encontrado.", "error");
+        LimpaCamposBuscaCep(true);
+    }
+
+    EncerraLoading();
+}
+
+function LimpaCamposBuscaCep(limparInputs) {
+
+    if (limparInputs) {
+        $(_idLogradouro).val('');
+        $(_idBairro).val('');
+        $(_idLogradouro).closest("div").removeClass("is-filled");
+        $(_idBairro).closest("div").removeClass("is-filled");
+
+        $(_idEstado).selectpicker('val', -1);
+        $(_idCidade).selectpicker('val', -1);
+    }
+
+    _idLogradouro = '';
+    _idBairro = '';
+    _idEstado = '';
+    _idCidade = '';
+}
+
+function CarregarCidadePorEstado() {
+    var idEstado = $('#estado option:selected').val();
+    $.ajax({
+        url: "/CEP/CidadePorEstado/" + idEstado,
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        error: function (response) {
+            swal("Ops!", "Houve um erro ao carregar as cidades. Tente novamente em instantes.", "error");
+        },
+        success: function (response) {
+
+            if (response.erro) {
+                swal("Ops!", "Houve um erro ao carregar as cidades. Tente novamente em instantes.", "error");
+
+            }
+            else {
+                var select = document.getElementById("cidade");
+                select.options.length = 0;
+
+                for (var i = 0; i < response.cidades.length; i++) {
+                    select.options[select.options.length] = new Option(response.cidades[i].nome_cidade, response.cidades[i].id_cidade);
+                }
+
+                $('#cidade').selectpicker('refresh');
+            }
+        }
+    });
+}
+
+function ValidTime(value) {
+    var isValid = moment(value.split(':')[1], "mm", true).isValid();
+
+    return isValid;
+}
+
+function ManterUsuarioLogado() {
+    VerificarSeExisteUsuarioLogado();
+    setTimeout(ManterUsuarioLogado, 60000);
+}
+
+function VerificarSeExisteUsuarioLogado() {
+
+    //$.ajax({
+    //    dataType: "json",
+    //    type: "GET",
+    //    data: {
+    //        idMaquina: ObterIdMaquina()
+    //    },
+    //    url: "/Usuario/VerificarUsuarioLogado",
+    //    success: function (response) {
+    //        if (!response.usuarioLogado) {
+    //            swal("Atenção!", "É necessário realizar o login novamente", "info")
+    //                .then(okay => {
+    //                    window.location.href = "/";
+    //                });
+    //        }
+    //    }
+    //});
+}
+
+
+function AbrirMenuAtalhosDaOrdem() {
+    document.getElementById("menuOrdemServico").style.width = "250px";
+}
+
+function FecharMenuAtalhosDaOrdem() {
+    document.getElementById("menuOrdemServico").style.width = "0";
+}
+
+
+function AdicionarMenuAtivoServicosAprovados(idMenu) {
+    $("#pagesServicosAprovados").collapse();
+    $("#" + idMenu).addClass("active");
+}
+
+
+function AbrirModalImpressaoEtiqueta() {
+    LimparInput('txtNumeroOrdemEtiqueta', 'txtNumeroOrdemEtiqueta');
+    AbrirModal('modal-impressao-etiqueta');
+}
+
+
+function BuscarOrdemParaPreencherEtiqueta() {
+
+    let numeroOrdem = ObterValorInput('txtNumeroOrdemEtiqueta');
+
+    var idTipoOrdem = $('#selectTipoOrdemEtiqueta option:selected').val();
+
+    if (IsNullOrEmpty(idTipoOrdem)) idTipoOrdem = 0;
+
+    $.ajax({
+        dataType: "json",
+        data: {
+            numeroOrdem: numeroOrdem,
+            idTipoOrdem: idTipoOrdem
+        },
+        type: "GET",
+        url: "/Ordem/ObterOrdemImpressaoEtiqueta",
+        success: function (response) {
+
+            if (response.erro) swal('Atenção', response.mensagem, 'error');
+            else if (response.ordem.id_ordem > 0) _idOrdemImpressaoEtiqueta = response.ordem.id_ordem;
+        }
+    });
+}
+
+
+function MostrarMensagemPreencherTipoOrdem() {
+
+    swal('Atenção', 'Escolha o tipo da ordem', 'info');
+    $('#selectTipoOrdemEtiqueta').focus();
+    EncerraLoading();
+}
+
+function PreencherCamposModalImprimirEtiquetas(ordem) {
+
+    UpdateSelectPicker('selectTipoOrdemEtiqueta', ordem.id_tipo_ordem);
+    UpdateSelectPicker('selectClienteNovaOrdemEtiqueta', ordem.id_cliente);
+    UpdateSelectPicker('selectFabricanteEtiqueta', ordem.id_fabricante);
+    UpdateSelectPicker('selectModeloEtiqueta', ordem.id_modelo);
+    _idOrdemImpressaoEtiqueta = ordem.id_ordem;
+}
+
+function HabilitarCamposModalImprimirEtiquetas() {
+
+    $("#selectClienteNovaOrdemEtiqueta").attr('disabled', false);
+    $("#selectFabricanteEtiqueta").attr('disabled', false);
+    $("#selectModeloEtiqueta").attr('disabled', false);
+    LimparCamposModalImprimirEtiquetas();
+}
+
+function LimparCamposModalImprimirEtiquetas() {
+
+    ResetSelectPicker('selectTipoOrdemEtiqueta');
+    ResetSelectPicker('selectClienteNovaOrdemEtiqueta');
+    ResetSelectPicker('selectFabricanteEtiqueta');
+    ResetSelectPicker('selectModeloEtiqueta');
+    _idOrdemImpressaoEtiqueta = 0;
+}
+
+function GerarObjetoEtiqueta() {
+
+    var etiqueta = {
+
+        id_ordem: _idOrdemImpressaoEtiqueta,
+        id_tipo_ordem: $('#selectTipoOrdemEtiqueta option:selected').val(),
+        numero_ordem: $('#txtNumeroOrdemEtiqueta').val(),
+        descricao_cliente: $('#selectClienteNovaOrdemEtiqueta option:selected').text(),
+        id_cliente: $('#selectClienteNovaOrdemEtiqueta option:selected').val(),
+        fabricante: $('#selectFabricanteEtiqueta option:selected').text(),
+        modelo: $('#selectModeloEtiqueta option:selected').text()
+    };
+
+    return etiqueta;
+}
+
+function ObterIdMaquina() {
+    let machineId = localStorage.getItem('MachineId');
+
+    if (!machineId) {
+        machineId = GerarIdUnicoMaquina();
+        localStorage.setItem('MachineId', machineId);
+    }
+
+    return machineId;
+}
+
+function GerarIdUnicoMaquina() {
+    var navigator_info = window.navigator;
+    var screen_info = window.screen;
+    var uid = navigator_info.mimeTypes.length;
+    uid += navigator_info.userAgent.replace(/\D+/g, '');
+    uid += navigator_info.plugins.length;
+    uid += screen_info.height || '';
+    uid += screen_info.width || '';
+    uid += screen_info.pixelDepth || '';
+
+    return uid;
+}
+
+var contadorTentavasGerarEtiqueta = 0;
+
+//function ImprimirEtiquetaModalShared() {
+
+//    console.log(_idOrdemImpressaoEtiqueta);
+
+//    if (IsNullOrEmpty(_idOrdemImpressaoEtiqueta)) {
+//        contadorTentavasGerarEtiqueta++;
+
+//        if (contadorTentavasGerarEtiqueta > 3) {
+//            contadorTentavasGerarEtiqueta = 0;
+//            return;
+//        }
+
+//        setTimeout(() => {
+//            ImprimirEtiquetaModalShared();
+//        }, 500);
+//        return;
+//    }
+
+//    window.open("/Relatorio/GerarEtiqueta/" + _idOrdemImpressaoEtiqueta, '_blank')
+//}
+
+function ImprimirEtiquetaModalShared() {
+    var numeroOrdemSemFormatar = $('#txtNumeroOrdemEtiqueta').val();
+    var idTipoOrdem = $('#selectTipoOrdemEtiqueta option:selected').val();
+    var numeroOrdem = numeroOrdemSemFormatar.trim();
+
+    console.log(numeroOrdem)
+
+    if (IsNullOrEmpty(numeroOrdem)) {
+        swal('Atenção', "O campo Nº ordem está vazio!", 'warning');
+        return;
+    }
+    if (IsNullOrEmpty(idTipoOrdem)) idTipoOrdem = 0;
+    $.ajax({
+        dataType: "json",
+        data: {
+            numeroOrdem: numeroOrdem,
+            idTipoOrdem: idTipoOrdem
+        },
+        type: "GET",
+        url: "/Ordem/ObterOrdemImpressaoEtiqueta",
+        success: function (response) {
+            if (response.ordem.id_ordem == 0)
+                swal('Atenção', 'Ordem não encontrada', 'error');
+            else if (response.erro) swal('Atenção', response.mensagem, 'error');
+            else if (response.ordem.id_ordem > 0) {
+                _idOrdemImpressaoEtiqueta = response.ordem.id_ordem;
+                window.open("/Relatorio/GerarEtiqueta/" + _idOrdemImpressaoEtiqueta, '_blank')
+            }
+        }
+    });
+}
+
+
+window.addEventListener('message', function (event) {
+
+    if (IsNullOrEmpty(event.data))
+        return;
+
+    const mensagem = JSON.parse(event.data);
+
+    if (mensagem.tipo === 'loginlizy') {
+        this.LoginLizy(mensagem.id, mensagem.id_lizy, mensagem.email, mensagem.permissoes)
+    }
+});
+
+function LoginLizy(idUsuarioMPM, idLizy, email, permissoes) {
+
+
+    localStorage.setItem("idUsuario", idUsuarioMPM);
+    localStorage.setItem("idLizy", idLizy);
+    localStorage.setItem("email", email);
+    localStorage.setItem("permissoesLizy", permissoes);
+
+}
+
+var tentativasLizyPermissao = 0;
+
+function ValidarPermissaoOrcamentosLizy(callBackSemPermissao, callBackComPermissao = null) {
+
+    if (tentativasLizyPermissao >= 10) {
+        callBackSemPermissao();
+        return;
+    }
+
+    let permissoes = localStorage.getItem('permissoesLizy');
+
+    if (permissoes == null) {
+
+        setTimeout(() => {
+            tentativasLizyPermissao += 1;
+            ValidarPermissaoOrcamentosLizy(callBackSemPermissao);
+        }, 100);
+
+        return;
+    }
+
+    let permissoesArray = permissoes.split(',');
+
+    let possuiPermissaoOrcamentos = permissoesArray.find(valor => valor === "menu_comercial_orcamentos");
+
+
+    if (!possuiPermissaoOrcamentos) {
+        callBackSemPermissao();
+    }
+    else {
+        if (callBackComPermissao != null)
+            callBackComPermissao();
+    }
+}

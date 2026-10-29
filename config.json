@@ -1,0 +1,29 @@
+{
+  "_ajuda": "Troque 'url' para usar outra tela. {ordem} é substituído pelo número da ordem.",
+  "url": "https://localhost:50390/FilaFinalizados/VisualizacaoOrdem/{ordem}?idUsuario=1", 
+  "ordem_padrao":8824,
+
+  "_ajuda_abas": "\"auto\" = descobre sozinho as abas de ficha de qualquer equipamento (pula abas com 'Adicionar' ou envio de arquivo). Ou liste os nomes: [\"PERITAGEM INICIAL\", ...]",
+  "abas": "auto",
+
+  "_ajuda_abas_ignorar": "Abas que nunca devem ser preenchidas (basta parte do nome).",
+  "abas_ignorar": [],
+
+  "_ajuda_salvar": "Textos do botão de salvar, na ordem de preferência.",
+  "textos_salvar": ["Salvar Dados", "Salvar"],
+
+  "_ajuda_nao_possui": "Chance (0 a 1) de deixar uma seção como 'Não possui'. 0 = desmarca todas e preenche tudo.",
+  "chance_nao_possui": 0.0,
+
+  "_ajuda_manter": "true = campo que já tem valor fica como está; false = sobrescreve tudo.",
+  "manter_preenchidos": false,
+
+  "_ajuda_manual": "Link aberto pelo --manual. Você loga, abre a ficha e aperta ENTER no terminal.",
+  "url_manual": "https://app.lizy.com.br/servicos/workflow-etapa/019df825-a9b1-70c3-b0ff-3a76ed6c19e5/79415b94-8431-462b-9061-d7694a48a5fb",
+
+  "_ajuda_manter_manual": "No --manual: true = não mexe nos campos que já têm valor.",
+  "manter_preenchidos_manual": true,
+
+  "pasta_sessao": "sessao_navegador"
+}
+                                                                                                                               

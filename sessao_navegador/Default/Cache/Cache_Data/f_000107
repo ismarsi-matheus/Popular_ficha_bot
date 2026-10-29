@@ -1,0 +1,1551 @@
+﻿$(document).ready(function () {
+
+    ValidarSeUsuarioLogadoEhTecnico();
+
+    ObterModelosPropostaComercial();
+
+    setTimeout(() => {
+        ObterOrdem($('#txtIdOrdem').val());
+    }, 1500);
+
+    ConfigurarAutoAjusteObservacoesOrcamento();
+
+    $('#select12893').trigger('change');
+    $('#select10596').trigger('change');
+
+    if (PaginaAtivaEh('FilaAnalise')) {
+        $('a[href="#abaFicha_14"]').hide();
+        $('a[href="#abaFicha_15"]').hide();
+    }
+
+    if (PaginaAtivaEh('EdicaoOrdemMecanica')) {
+        $('#label7170').parent().hide();
+        $('#txt7210').parent().parent().hide();
+        $('#check7171').parent().parent().parent().hide();
+        $('#check7172').parent().parent().parent().hide();
+        $('#check7173').parent().parent().parent().hide();
+        $('#check7174').parent().parent().parent().hide();
+        $('#check7175').parent().parent().parent().hide();
+        $('#check7176').parent().parent().parent().hide();
+        $('#check7177').parent().parent().parent().hide();
+        $('#check7178').parent().parent().parent().hide();
+    }
+
+    else if (PaginaAtivaEh('/FilaAprovados/EdicaoOrdemUsinagemA')) {
+
+        $('#txt7264').parent().parent().hide();
+        $('#txt7258').parent().parent().hide();
+        $('#txt7255').parent().parent().hide();
+        $('#txt7262').parent().parent().hide();
+        $('#txt7263').parent().parent().hide();
+        $('#txt7267').parent().parent().hide();
+        $('#txt7268').parent().parent().hide();
+        $('#txt7269').parent().parent().hide();
+        $('#txt7270').parent().parent().hide();
+        $('#txt7265').parent().parent().hide();
+        $('#txt7266').parent().parent().hide();
+        $('#txt7271').parent().parent().hide();
+        $('#label7256').parent().hide();
+        $('#label7257').parent().hide();
+        $('#label7254').parent().hide();
+        $('a[href="#abaFicha_6"]').text('Análise Mecânica');
+    }
+
+    else if (PaginaAtivaEh('EdicaoOrdemEletrica')) {
+        DesabilitarCampos(ID_CHECKBOX_SERVICOS_MECANICOS);
+    }
+
+    else if (PaginaAtivaEh('FilaAprovados/EdicaoOrdemRebobinamento')) {
+        $('a[href="#abaFicha_14"]').hide();
+        $('a[href="#abaFicha_15"]').hide();
+        $('a[href="#abaFicha_16"]').hide();
+
+        $('#divServicosOrdem').hide();
+        $('#divServicosExternosOrdem').hide();
+        $('#divPecasOrdem').hide();
+
+        $('#navItemAba_13 a').click();
+    }
+
+    else if (PaginaAtivaEh('FilaAprovados/EdicaoOrdemUsinagem')) {
+
+        $('a[href="#abaFicha_1"]').hide();
+        $('a[href="#abaFicha_14"]').hide();
+        $('a[href="#abaFicha_16"]').hide();
+        $('#navItemAba_6 a').click();
+    }
+    else if (PaginaAtivaEh('FilaAprovados/EdicaoOrdemDestinacao')) {
+
+        $('a[href="#abaFicha_1"]').hide();
+        $('a[href="#abaFicha_2"]').hide();
+        $('a[href="#abaFicha_16"]').hide();
+        $('a[href="#abaFicha_14"]').hide();
+        $('a[href="#abaFicha_15"]').hide();
+        $('a[href="#abaFicha_13"]').hide();
+        $('a[href="#abaFicha_8"]').hide();
+        $('a[href="#abaFicha_6"]').hide();
+        $('a[href="#abaFicha_7"]').hide();
+        $('a[href="#abaFicha_11"]').hide();
+        $('#navItemAba_3 a').click();
+
+        $('#groupRow83').addClass('disabled');
+        $('#groupRow69').addClass('disabled');
+        $('a[href="#abaFicha_3"]').addClass('disabled');
+
+        $('#div5429').addClass('disabled');
+        $('#div5430').addClass('disabled');
+        $('#div5431').addClass('disabled');
+        $('#div5432').addClass('disabled');
+        $('#div7224').addClass('disabled');
+
+        setTimeout(() => { $('#btnAlterarOrdem').show(); }, 1000)
+    }
+    else if (PaginaAtivaEdicaoEhDaMontagem()) {
+        $('a[href="#abaFicha_7"]').hide();
+        $('a[href="#abaFicha_14"]').hide();
+        $('a[href="#abaFicha_15"]').hide();
+    }
+    else if (PaginaAtivaEdicaoEhDoBalanceamento()) {
+        $('a[href="#abaFicha_2"]').hide();
+        $('a[href="#abaFicha_3"]').hide();
+        $('a[href="#abaFicha_16"]').hide();
+        $('a[href="#abaFicha_14"]').hide();
+        $('a[href="#abaFicha_15"]').hide();
+        $('a[href="#abaFicha_13"]').hide();
+        $('a[href="#abaFicha_6"]').hide();
+        $('a[href="#abaFicha_7"]').hide();
+        $('a[href="#abaFicha_11"]').hide();
+        $('a[href="#abaFicha_8"]').show();
+
+        $('#groupRow83').addClass('disabled');
+        $('#groupRow69').addClass('disabled');
+        $('#groupRow54').addClass('disabled');
+    }
+
+    ObterCondicoesPagamentoCadastradas();
+
+    setTimeout(CalcularValorTotalVenda, 2500)
+});
+
+function ConfigurarAutoAjusteObservacoesOrcamento() {
+    $('#txtObservacoesOrcamento')
+        .on('input focus', AjustarAlturaObservacoesOrcamento);
+
+    AjustarAlturaObservacoesOrcamento();
+}
+
+function AjustarAlturaObservacoesOrcamento() {
+    var textarea = document.getElementById('txtObservacoesOrcamento');
+
+    if (!textarea) return;
+
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
+}
+
+function PaginaAtivaEdicaoEhDaMontagem() {
+    let str = window.location.href;
+
+    let regex = /FilaAprovados\/EdicaoOrdem\/.*\/35\/1/;
+
+    if (regex.test(str)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function PaginaAtivaEdicaoEhDoBalanceamento() {
+    let str = window.location.href;
+
+    let regex = /FilaAprovados\/EdicaoOrdem\/.*\/19\/1/;
+
+    if (regex.test(str)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+var _idDadosOrdem = 0;
+var _usuarioAtualEhTecnico = false;
+
+const ID_CATEGORIA_EQUIPAMENTO_MOTORES = 1;
+const ID_GRUPO_FICHA_MOTOR_AC = 8;
+const ID_GRUPO_FICHA_MOTOR_DC = 9;
+const ID_GRUPO_FICHA_ACESSORIOS_EQUIPAMENTO = 1;
+const ID_TIPO_EQUIPAMENTO_MOTOR_AC = 2;
+const ID_TIPO_EQUIPAMENTO_MOTOR_DC = 3;
+
+const ID_ELEMENTO_SELECTPICKER_MODELO_PROSPOTA_COMERCIAL_ORDEM = 'selectModeloPropostaComercialOrdem'
+const ID_ELEMENTO_SELECTPICKER_MODELO_SECOES_ADICIONAIS_PROSPOTA_COMERCIAL_ORDEM = 'selectModeloSecoesAdicionaisPropostaComercialOrdem'
+const ID_ELEMENTO_SELECTPICKER_USUARIO_RESPONSAVEL_PROPOSTA_COMERCIAL_ORDEM = 'selectUsuarioResponsavelPropostaComercialOrdem'
+const ID_ELEMENTO_SELECTPICKER_USUARIO_MODELO_PROPOSTA_COMERCIAL = 'selectModeloPropostaComercialOrdem'
+
+//REDUTOR
+var ID_GRUPO_FICHA_ANALISE_MECANICA_INICIAL_REDUTOR = 131;
+var ID_GRUPO_FICHA_CHECKLIST_MONTAGEM_FINAL_REDUTOR = 134;
+var ID_GRUPO_FICHA_CHECKLIST_MONTAGEM_FINAL_SEM_CONCERTO_REDUTOR = 135;
+var ID_GRUPO_FICHA_CHECKLIST_PINTURA_FINAL_REDUTOR = 136;
+
+//MOTOR
+var ID_GRUPO_FICHA_ANALISE_MECANICA_INICIAL_MOTOR = 115;
+var ID_GRUPO_FICHA_ANALISE_ELETRICA_INICIAL_MOTOR = 127;
+var ID_GRUPO_FICHA_ANALISE_SERVICOS_A_SEREM_EXECUTADOS_MOTOR = 83;
+var ID_GRUPO_FICHA_INSPECAO_VISUAL_MOTOR = 47;
+var ID_GRUPO_FICHA_REBOBINAMENTO_MOTOR = 62;
+var ID_GRUPO_FICHA_ANALISE_ELETRICA_FINAL_MOTOR = 128;
+
+var ID_GRUPO_FICHA_FOTOS_USINAGEM_MOTOR = 86;
+var ID_GRUPO_FICHA_FOTOS_REBOBINAMENTO_MOTOR = 85;
+var ID_GRUPO_FICHA_FOTOS_TESTE_MOTOR = 88;
+
+var ID_GRUPO_FICHA_BALANCEAMENTO_PADRAO = 37;
+var ID_GRUPO_FICHA_ANALISE_MECANICA_FINAL_PADRAO = 137;
+
+//Eletronica
+var ID_GRUPO_FICHA_ANALISE_INICIAL_INVERSOR_FREQUENCIA_ELETRONICA = 147;
+
+var ID_GRUPO_FICHA_ANALISE_INICIAL_SOFT_STARTER_ELETRONICA = 148;
+
+var ID_GRUPO_FICHA_IHM_ELETRONICA = 149;
+
+var ID_GRUPO_FICHA_CLP_ELETRONICA = 150;
+
+var ID_GRUPO_FICHA_FONTE_ELETRONICA = 151;
+
+var ID_GRUPO_FICHA_INVERSOR_SOLAR_ELETRONICA = 152;
+
+//IDs Linha Equipamento
+var ID_LINHA_EQUIPAMENTO_MOTOR = 10;
+var ID_LINHA_EQUIPAMENTO_REDUTOR = 11;
+var ID_LINHA_EQUIPAMENTO_MOTOREDUTOR = 12;
+var ID_LINHA_EQUIPAMENTO_INVERSOR_FREQUENCIA = 13;
+var ID_LINHA_EQUIPAMENTO_SOFT_STARTER = 14;
+var ID_LINHA_EQUIPAMENTO_IHM = 15;
+var ID_LINHA_EQUIPAMENTO_CLP = 16;
+var ID_LINHA_EQUIPAMENTO_FONTE = 17;
+var ID_LINHA_EQUIPAMENTO_INVERSOR_SOLAR = 18;
+
+function isLastTabSelected() {
+    var lastTab = $('#idTabsGrupoFicha .nav-item:last .nav-link');
+    return lastTab.hasClass('active');
+}
+
+function VerificarSeOrdemPrecisaPreencherBalanceamento(idOrdem) {
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/FilaAprovados/ObterOrdensPrecisaPreencherBalanceamento/" + idOrdem,
+        success: function (response) {
+            if (!response.precisa) {
+                $('#navItemAba_8').hide();
+            }
+        }
+    });
+}
+
+$('#uploadArquivoPropostaComercialOrdem').on('change', function (e) {
+
+    $("#labelUploadArquivoPropostaComercialOrdem").html("Salvando . . .");
+
+    var files = e.target.files;
+
+    if (files.length <= 0)
+        return;
+
+    if (window.FormData === undefined) {
+        swal("Ops!", "Houve um erro ao fazer o upload do arquivo", "error");
+        $("#labelUploadArquivoPropostaComercialOrdem").html("Fazer upload do arquivo da proposta");
+        return;
+    }
+
+    var data = new FormData();
+    for (var x = 0; x < files.length; x++) {
+        data.append("file" + x, files[x]);
+    }
+
+    $.ajax({
+        url: "/Arquivos/UploadArquivo/",
+        type: "POST",
+        contentType: false,
+        processData: false,
+        data: data,
+        success: function (response) {
+            if (response.erro) {
+                swal("Ops!", "Houve um erro ao fazer o upload da proposta. Detalhes: " + response.mensagem, "error");
+                $("#labelUploadArquivoPropostaComercialOrdem").html("Fazer upload do arquivo da proposta");
+            }
+            else {
+                AdicionarArquivoPropostaComercialOrdem($('#txtIdOrdem').val(), response.caminhoArquivo);
+            }
+        }
+    });
+});
+
+function ValidarSeUsuarioLogadoEhTecnico() {
+    let idUsuarioLizy = ObterIdUsuarioLizy();
+
+    let url = '/Tecnico/ValidarSeUsuarioLogadoEhTecnico'
+
+    if (!IsNullOrEmpty(idUsuarioLizy))
+        url = '/Tecnico/ValidarSeUsuarioLogadoEhTecnico/' + idUsuarioLizy
+
+    $.get(url, function (response) {
+        _usuarioAtualEhTecnico = response.eh_tecnico;
+
+        if (_usuarioAtualEhTecnico) {
+
+            if (PaginaAtivaEh('FilaAprovados')) {
+                $('a[href="#abaFicha_14"]').hide();
+                $('a[href="#abaFicha_15"]').hide();
+                $('a[href="#abaFicha_16"]').hide();
+            }
+        }
+    });
+}
+
+function AdicionarArquivoPropostaComercialOrdem(idOrdem, caminhoArquivo) {
+    swal({
+        title: "Atenção",
+        text: "Deseja gerar um novo número de revisão para a proposta?",
+        icon: "warning",
+        buttons: ["Não", "Sim"],
+    }).then((acrescentarNumeroRevisao) => {
+        if (acrescentarNumeroRevisao) {
+
+            $.ajax({
+                url: "/Ordem/GerarNovoNumeroRevisaoOrdem/" + idOrdem,
+                type: "PUT",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.erro) {
+                        swal("Ops!", "Houve um erro ao fazer o upload da proposta. Detalhes: " + response.mensagem, "error");
+                        $("#labelUploadArquivoPropostaComercialOrdem").html("Fazer upload do arquivo da proposta");
+                    }
+                    else {
+                        PreencherInputIdElementoEValor('txtNumeroRevisao', FormatarDinheiroParaDecimal(ObterValorInput('txtNumeroRevisao')) + 1);
+                        RequestAdicionarArquivoPropostaComercialOrdem(idOrdem, caminhoArquivo);
+                    }
+                }
+            });
+        }
+        else {
+            RequestAdicionarArquivoPropostaComercialOrdem(idOrdem, caminhoArquivo);
+        }
+    });
+}
+
+function RequestAdicionarArquivoPropostaComercialOrdem(idOrdem, caminhoArquivo) {
+    $.ajax({
+        url: "/Relatorio/AdicionarArquivoPropostaComercialOrdem/" + idOrdem,
+        type: "POST",
+        data: JSON.stringify({
+            caminho_arquivo: caminhoArquivo
+        }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response.erro) {
+                swal("Ops!", "Houve um erro ao fazer o upload da proposta. Detalhes: " + response.mensagem, "error");
+                $("#labelUploadArquivoPropostaComercialOrdem").html("Fazer upload do arquivo da proposta");
+            }
+            else {
+                swal("Sucesso", "Proposta comercial gravada com sucesso", "success");
+                $("#labelUploadArquivoPropostaComercialOrdem").html("Fazer upload do arquivo da proposta");
+            }
+        }
+    });
+}
+
+function ObterModelosPropostaComercial() {
+
+    let idOrdem = $('#txtIdOrdem').val();
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/Proposta/ObterModelos/" + idOrdem,
+        success: function (dados) {
+            if (dados.erro === false) {
+                let select = document.getElementById(ID_ELEMENTO_SELECTPICKER_MODELO_PROSPOTA_COMERCIAL_ORDEM);
+
+                if (select == undefined) return;
+
+                select.options.length = 0;
+
+                $('<option disabled=disabled>').val(0).text("Selecione o modelo da proposta comercial").appendTo('#' + ID_ELEMENTO_SELECTPICKER_MODELO_PROSPOTA_COMERCIAL_ORDEM);
+
+                $(dados.modelos).each(function (i) {
+                    let id = dados.modelos[i].id_modelo_proposta_comercial;
+                    let descricao = dados.modelos[i].descricao;;
+
+                    $('<option>').val(id).text(descricao).appendTo('#' + ID_ELEMENTO_SELECTPICKER_MODELO_PROSPOTA_COMERCIAL_ORDEM);
+                });
+
+                $('#' + ID_ELEMENTO_SELECTPICKER_MODELO_PROSPOTA_COMERCIAL_ORDEM).selectpicker('refresh');
+            }
+        },
+        error: function (error) {
+            EncerraLoading();
+        }
+    });
+}
+
+function ObterModelosSecoesAdicionaisPropostaComercial() {
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/Proposta/ObterModelosSecoesAdicionais",
+        success: function (dados) {
+            if (dados.erro === false) {
+                let select = document.getElementById(ID_ELEMENTO_SELECTPICKER_MODELO_SECOES_ADICIONAIS_PROSPOTA_COMERCIAL_ORDEM);
+
+                if (select == undefined) return;
+
+                select.options.length = 0;
+
+                $('<option disabled="disabled">').val(0).text("Selecione os descritivos adicionais").appendTo('#' + ID_ELEMENTO_SELECTPICKER_MODELO_SECOES_ADICIONAIS_PROSPOTA_COMERCIAL_ORDEM);
+
+                $(dados.modelos).each(function (i) {
+                    let id = dados.modelos[i].id_modelo_secao_adicionalproposta_comercial;
+                    let descricao = dados.modelos[i].descricao;
+
+                    $('<option>').val(id).text(descricao).appendTo('#' + ID_ELEMENTO_SELECTPICKER_MODELO_SECOES_ADICIONAIS_PROSPOTA_COMERCIAL_ORDEM);
+                });
+
+                $('#' + ID_ELEMENTO_SELECTPICKER_MODELO_SECOES_ADICIONAIS_PROSPOTA_COMERCIAL_ORDEM).selectpicker('refresh');
+            }
+        },
+        error: function (error) {
+            EncerraLoading();
+        }
+    });
+}
+
+function ObterUsuariosPodemSerResponsaveisPropostaComercial() {
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/Usuario/ObterUsuariosPodemSerResponsaveisPropostaComercial",
+        success: function (dados) {
+            if (dados.erro === false) {
+                var select = document.getElementById(ID_ELEMENTO_SELECTPICKER_USUARIO_RESPONSAVEL_PROPOSTA_COMERCIAL_ORDEM);
+
+                if (IsNullOrEmpty(select)) return;
+
+                select.options.length = 0;
+
+                $('<option disabled="disabled">').val(0).text("Selecione o responsável pela proposta").appendTo('#' + ID_ELEMENTO_SELECTPICKER_USUARIO_RESPONSAVEL_PROPOSTA_COMERCIAL_ORDEM);
+
+                $(dados.usuarios).each(function (i) {
+                    let id = dados.usuarios[i].id_usuario;
+                    let descricao = dados.usuarios[i].nome;;
+
+                    $('<option>').val(id).text(descricao).appendTo('#' + ID_ELEMENTO_SELECTPICKER_USUARIO_RESPONSAVEL_PROPOSTA_COMERCIAL_ORDEM);
+                });
+
+                $('#' + ID_ELEMENTO_SELECTPICKER_USUARIO_RESPONSAVEL_PROPOSTA_COMERCIAL_ORDEM).selectpicker('refresh');
+            }
+        },
+        error: function (error) {
+            EncerraLoading();
+        }
+    });
+}
+
+function ObterOrdem(idOrdem) {
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/Ordem/ObterOrdem/" + idOrdem,
+        success: function (response) {
+
+            if ($(".dados-basicos-ordem-editavel").length > 0) PreencherCamposBasicosOrdemEditaveis(response.ordemViewModel.ordem, response.ordemViewModel.data_aprovacao_ordem);
+            else PreencherCamposBasicosOrdem(response.ordemViewModel.ordem, response.ordemViewModel.dados_basicos_ordem, response.ordemViewModel.data_aprovacao_ordem);
+
+            PreencherDadosOrdem(response.ordemViewModel.dados_ordem, response.ordemViewModel.ordem.aguardando_requisicao_cliente_para_dar_andamento,);
+            PreencherValoresCamposOrdem(response.ordemViewModel.valores_campos);
+            PreencherValoresCamposFotos(response.ordemViewModel.fotos_ordem);
+
+            UpdateSelectPickerMultiplo(ID_ELEMENTO_SELECTPICKER_MODELO_SECOES_ADICIONAIS_PROSPOTA_COMERCIAL_ORDEM, response.ordemViewModel.modelos_secoes_adicionais_proposta_ordem);
+            UpdateSelectPickerMultiplo(ID_ELEMENTO_SELECTPICKER_USUARIO_MODELO_PROPOSTA_COMERCIAL, response.ordemViewModel.escopo_comercial_ordem);
+
+            ExecutarFuncoesBlurCamposInputs();
+            ExecutarFuncoesOnChangeCamposCheckbox();
+            CarregarFotosIlimitadas();
+
+            setTimeout(() => {
+                if (_usuarioAtualEhTecnico) {
+                    VerificaCamposPreenchidos();
+                }
+            }, 1000);
+        }
+    });
+}
+
+function ExecutarFuncoesBlurCamposInputs() {
+    $(".input-valor-campo").blur();
+}
+
+function ExecutarFuncoesOnChangeCamposCheckbox() {
+    $(".check-valor-campo").change();
+}
+
+function ControlarCamposMotorACouDC(idCategoriaEquipamento, idTipoEquipamento) {
+
+    if (idCategoriaEquipamento !== ID_CATEGORIA_EQUIPAMENTO_MOTORES)
+        return;
+
+    var divGrupoFichaMotorAC = $('#groupRow' + ID_GRUPO_FICHA_MOTOR_AC);
+    var tituloGrupoFichaMotorAC = $('#titulo-' + ID_GRUPO_FICHA_MOTOR_AC);
+    var divGrupoFichaMotorDC = $('#groupRow' + ID_GRUPO_FICHA_MOTOR_DC);
+    var tituloGrupoFichaMotorDC = $('#titulo-' + ID_GRUPO_FICHA_MOTOR_DC);
+
+    if (idTipoEquipamento === ID_TIPO_EQUIPAMENTO_MOTOR_AC) {
+        tituloGrupoFichaMotorDC.hide();
+        divGrupoFichaMotorDC.hide();
+    }
+
+    else if (idTipoEquipamento === ID_TIPO_EQUIPAMENTO_MOTOR_DC) {
+        tituloGrupoFichaMotorAC.hide();
+        divGrupoFichaMotorAC.hide();
+    }
+
+    else {
+        tituloGrupoFichaMotorDC.hide();
+        divGrupoFichaMotorDC.hide();
+        tituloGrupoFichaMotorAC.hide();
+        divGrupoFichaMotorAC.hide();
+    }
+}
+
+function PreencherCamposBasicosOrdem(ordem, dadosBasicosOrdem, dataAprovacao) {
+
+    PreencherInput('txtTipoOrdem', 'divTipoOrdem', dadosBasicosOrdem.tipo_ordem);
+
+    PreencherTipoServico(ordem, dadosBasicosOrdem);
+
+    if (ElementoExiste('txtTecnicoAnalise')) $('#txtTecnicoAnalise').text("Técnico Análise: " + dadosBasicosOrdem.tecnico_analise);
+
+    PreencherInput('txtNumeroOrdem', 'divNumeroOrdem', dadosBasicosOrdem.numero_ordem);
+    PreencherInput('txtCliente', 'divCliente', dadosBasicosOrdem.cliente);
+    PreencherInput('txtCategoriaEquipamento', 'divCategoriaEquipamento', dadosBasicosOrdem.categoria_equipamento);
+    PreencherInput('txtDataEntrada', 'divDataEntrada', FormataJsonData(dadosBasicosOrdem.data_entrada));
+    PreencherInput('txtNumeroNota', 'divNumeroNota', dadosBasicosOrdem.numero_nota_saida);
+    PreencherInput('txtFabricante', 'divFabricante', dadosBasicosOrdem.fabricante);
+    PreencherInput('txtTipoEquipamento', 'divTipoEquipamento', dadosBasicosOrdem.equipamento);
+    PreencherInput('txtModelo', 'divModelo', dadosBasicosOrdem.modelo);
+    PreencherInput('txtDefeito', 'divDefeito', dadosBasicosOrdem.defeito_alegado);
+    PreencherInput('txtObservacoes', 'divObservacoes', dadosBasicosOrdem.observacao);
+    PreencherInput('txtAnalisePreliminar', 'divAnalisePreliminar', dadosBasicosOrdem.analise_preliminar);
+    PreencherInput('txtNumeroSerie', 'divNumeroSerie', ordem.numero_serie_equipamento);
+    PreencherInput('txtReferenciaCliente', 'divReferenciaCliente', ordem.referencia_cliente);
+    PreencherInput('txtSolicitante', 'divSolicitante', ordem.solicitante);
+    MarcarCheckBox('checkManutencaoCorretiva', ordem.manutencao_corretiva);
+    MarcarCheckBox('checkManutencaoPreventiva', ordem.manutencao_preventiva);
+    MarcarCheckBox('checkManutencaoEmprestimo', ordem.manutencao_emprestimo);
+    MarcarCheckBox('checkManutencaoVenda', ordem.manutencao_venda);
+    PreencherInput('txtDataPrevistaEntrega', 'divDataPrevistaEntrega', FormataJsonData(ordem.data_prevista_de_entrega));
+
+    if (PaginaAtivaEh('FilaAnalise') || PaginaAtivaEh('FilaOrcamento')) $('#divDataAprovacao').hide();
+    else PreencherInput('txtDataAprovacao', 'divDataAprovacao', dataAprovacao);
+
+    PreencherInput('txtModeloMaquina', 'divModeloMaquina', ordem.modelo_maquina);
+    PreencherInput('txtNumeroSerieMaquina', 'divNumeroSerieMaquina', ordem.numero_serie_maquina);
+    PreencherInput('txtUsuarioCadastrouAOrdem', 'divUsuarioCadastrouAOrdem', ordem.usuario_cadastrou_ordem);
+}
+
+function PreencherDadosOrdem(dadosOrdem, aguardandoRequisicaoClienteParaDarAndamento) {
+    var valorOrcamento = ValidarValorOrcamento(dadosOrdem.valor_orcamento);
+    var valorDesconto = ValidarValorOrcamento(dadosOrdem.valor_desconto);
+    var valorTotalCusto = ValidarValorOrcamento(dadosOrdem.valor_total_custo);
+
+    PreencherInput('txtValorTotalCusto', 'divValorTotalCusto', FormatDinheiro(valorTotalCusto));
+    PreencherInput('txtValorOrcamento', 'divValorOrcamento', FormatDinheiro(valorOrcamento));
+    PreencherInput('txtValorDesconto', 'divValorDesconto', FormatDinheiro(valorDesconto));
+    PreencherInput('txtCondicaoPagamento', 'divCondicaoPagamento', dadosOrdem.condicao_pagamento);
+    PreencherInput('txtPrazo', 'divPrazo', dadosOrdem.prazo_entrega);
+    PreencherInput('txtFormaPagamento', 'divFormaPagamento', dadosOrdem.descricao_forma_pagamento);
+    PreencherInput('txtObservacoesOrcamento', 'divObservacoesOrcamento', dadosOrdem.observacoes_orcamento);
+    AjustarAlturaObservacoesOrcamento();
+    PreencherInput('txtPorcentagemDesconto', 'divPorcentagemDesconto', dadosOrdem.porcentagem_desconto);
+    MarcarCheckBox('checkFreteIncluso', dadosOrdem.frete_incluso);
+    MarcarCheckBox('checkMostrarPecasOrcamento', dadosOrdem.apresentacao_pecas_orcamento);
+    MarcarCheckBox('checkMostrarValor', dadosOrdem.mostrar_valores_orcamento);
+    MarcarCheckBox('checkMostrarFoto', dadosOrdem.mostrar_foto_peca);
+    MarcarCheckBox('checkRepasseRejeito', dadosOrdem.flag_repasse_rejeito);
+    MarcarCheckBox('checkRepasseRepasse', dadosOrdem.flag_repasse_repasse);
+    MarcarCheckBox('checkAguardandoRequisicaoCliente', aguardandoRequisicaoClienteParaDarAndamento);
+    MarcarCheckBox('checkEmprestimoDevolvidoSemTroca', dadosOrdem.flag_equipmaneto_emprestimo_devolvido_sem_troca);
+    PreencherInput('txtNumeroProposta', 'divNumeroProposta', dadosOrdem.numero_proposta_comercial);
+    PreencherInput('txtNumeroRevisao', 'divNumeroRevisao', dadosOrdem.numero_revisao_proposta_comercial);
+    UpdateSelectPicker('selectFormaDePagamento', dadosOrdem.id_forma_pagamento);
+    PreencherInput('txtPorcentagemComissaoVenda', 'divPorcentagemVenda', dadosOrdem.porcentagem_comissao_venda);
+    PreencherInput('txtValorComissaoVenda', 'divValorComissaoVenda', dadosOrdem.valor_comissao_venda);
+    PreencherInput('txtPrazoSugeridoEntrega', 'divPrazoSugeridoEntrega', dadosOrdem.prazo_sugerido_entrega);
+    PreencherInputIdElementoEValor('txtAssuntoPropostaComercial', dadosOrdem.assunto_proposta_comercial);
+    PreencherInput('txtNumeroPedido', 'divNumeroPedido', dadosOrdem.numero_pedido);
+    PreencherInput('txtNumeroPedidoProduto', 'divNumeroPedidoProduto', dadosOrdem.numero_pedido_compra_produto);
+    PreencherInput('txtNumeroPedidoServico', 'divNumeroPedidoServico', dadosOrdem.numero_pedido_compra_servico);
+
+    if (IsNullOrEmpty(dadosOrdem.prazo_garantia)) UpdateSelectPicker('selectGarantia', '3 Meses');
+    else UpdateSelectPicker('selectGarantia', dadosOrdem.prazo_garantia);
+
+    if (IsNullOrEmpty(dadosOrdem.valor_custo_hora_servico)) PreencherInput('txtValorCustoHora', 'divValorCustoHora', '110,00');
+    else PreencherInput('txtValorCustoHora', 'divValorCustoHora', FormatDinheiro(dadosOrdem.valor_custo_hora_servico));
+
+    if (IsNullOrEmpty(dadosOrdem.valor_venda_hora_servico)) PreencherInput('txtValorVendaHora', 'divValorVendaHora', '220,00');
+    else PreencherInput('txtValorVendaHora', 'divValorVendaHora', FormatDinheiro(dadosOrdem.valor_venda_hora_servico));
+
+    $('#txtValorVendaHora').blur();
+
+    UpdateSelectPicker(ID_ELEMENTO_SELECTPICKER_MODELO_PROSPOTA_COMERCIAL_ORDEM, dadosOrdem.id_modelo_proposta_comercial);
+    UpdateSelectPicker(ID_ELEMENTO_SELECTPICKER_USUARIO_RESPONSAVEL_PROPOSTA_COMERCIAL_ORDEM, dadosOrdem.id_usuario_responsavel_proposta_comercial);
+
+    if (IsNullOrEmpty(dadosOrdem.coeficiente_calculo_comissao))
+        PreencherInputIdElementoEValor('txtCoeficienteCalculoComissao', FormatDinheiro(0.92));
+    else
+        PreencherInputIdElementoEValor('txtCoeficienteCalculoComissao', FormatDinheiro(dadosOrdem.coeficiente_calculo_comissao));
+
+    _idDadosOrdem = dadosOrdem.id_dados_ordem;
+
+    PreencherInput('txtValorTotalServicos', 'divValorTotalServicos', FormatDinheiro(dadosOrdem.valor_servicos));
+    PreencherInput('txtValorDescontoServicos', 'divValorDescontoServicos', FormatDinheiro(dadosOrdem.valor_desconto_servicos));
+    PreencherInput('txtValorFinalComDescontoServicos', 'divValorFinalComDescontoServicos', FormatDinheiro(dadosOrdem.valor_com_desconto_servicos));
+
+    PreencherInput('txtValorTotalProdutos', 'divValorTotalProdutos', FormatDinheiro(dadosOrdem.valor_produtos));
+    PreencherInput('txtValorDescontoProdutos', 'divValorDescontoProdutos', FormatDinheiro(dadosOrdem.valor_desconto_produtos));
+    PreencherInput('txtValorFinalComDescontoProdutos', 'divValorFinalComDescontoProdutos', FormatDinheiro(dadosOrdem.valor_com_desconto_produtos));
+
+    $('#txtValorDescontoProdutos').blur();
+    $('#divValorDescontoServicos').blur();
+
+    if (IsNullOrEmpty(dadosOrdem.id_condicao_pagamento)) {
+        ObterCondicaoPagamentoParceiro(dadosOrdem.id_ordem);
+    }
+    else {
+        setTimeout(() => {
+            UpdateSelectPicker('selectCondicaoPagamento', dadosOrdem.id_condicao_pagamento);
+        }, 1000)
+    }
+}
+
+function PreencherCamposBasicosOrdemEditaveis(ordem) {
+
+    PreencherTipoServico(ordem, null);
+
+    UpdateSelectPicker('selectTipoOrdem', ordem.id_tipo_ordem);
+    PreencherInput('txtNumeroOrdem', 'divNumeroOrdem', ordem.numero_ordem);
+    UpdateSelectPicker('selectCategoriaEquipamento', ordem.id_categoria_equipamento);
+    UpdateSelectPicker('selectCliente', ordem.id_cliente_lizy);
+    PreencherInput('txtReferenciaCliente', 'divReferenciaCliente', ordem.referencia_cliente);
+    PreencherInput('txtSolicitante', 'divSolicitante', ordem.solicitante);
+    PreencherInput('txtDataEntrada', 'divDataEntrada', FormataJsonData(ordem.data_entrada));
+    PreencherInput('txtNumeroNota', 'divNumeroNota', ordem.numero_nota_saida);
+    PreencherInput('txtNumeroSerie', 'divNumeroSerie', ordem.numero_serie_equipamento);
+    UpdateSelectPicker('selectFabricante', ordem.id_fabricante);
+    UpdateSelectPicker('selectTipoEquipamento', ordem.id_tipo_equipamento);
+    AtualizarSelectModelosESelecionarOpcao(ordem.id_fabricante, ordem.id_modelo);
+    PreencherInput('txtDefeito', 'divDefeito', ordem.defeito_alegado);
+    PreencherInput('txtAnalisePreliminar', 'divAnalisePreliminar', ordem.analise_preliminar);
+    PreencherInput('txtObservacoes', 'divObservacoes', ordem.observacao);
+    MarcarCheckBox('checkManutencaoCorretiva', ordem.manutencao_corretiva);
+    MarcarCheckBox('checkManutencaoPreventiva', ordem.manutencao_preventiva);
+    MarcarCheckBox('checkManutencaoEmprestimo', ordem.manutencao_emprestimo);
+    MarcarCheckBox('checkManutencaoVenda', ordem.manutencao_venda);
+    PreencherInput('txtModeloMaquina', 'divModeloMaquina', ordem.modelo_maquina);
+    PreencherInput('txtNumeroSerieMaquina', 'divNumeroSerieMaquina', ordem.numero_serie_maquina);
+    PreencherInput('txtUsuarioCadastrouAOrdem', 'divUsuarioCadastrouAOrdem', ordem.usuario_cadastrou_ordem);
+    PreencherInput('txtDataPrevistaEntrega', 'divDataPrevistaEntrega', FormataJsonData(ordem.data_prevista_de_entrega));
+    MarcarCheckBox('checkUrgencia', ordem.urgencia);
+    PreencherInput('txtFabricante', 'divFabricante', ordem.fabricante);
+    PreencherInput('txtTipoEquipamento', 'divTipoEquipamento', ordem.tipo_equipamento);
+    PreencherInput('txtModelo', 'divModelo', ordem.modelo);
+}
+
+function PreencherTipoServico(ordem, dadosBasicosOrdem) {
+    if (ElementoExiste('txtTipoServico')) $('#txtTipoServico').text("Manutenção " + dadosBasicosOrdem.tipo_servico);
+    else if (ElementoExiste('selectTipoServico')) UpdateSelectPicker('selectTipoServico', ordem.id_tipo_servico);
+}
+
+function PreencherConjuntoEquipamentosOrdem(equipamentosOrdem) {
+    MarcarCheckBox('checkConjuntoEquipamentos', true);
+
+    $('#rowDadosEquipamentoOrdem').hide();
+    $('#rowDadosMaquinaOrdem').hide();
+    $('.fotos-ordem-ilimitadas').show();
+    $('.fotos-ordem-limitadas').hide();
+
+    $('#checkConjuntoEquipamentos').trigger('change');
+
+    for (var i = 0; i < equipamentosOrdem.length; i++) {
+        InserirEquipamentoNaTabelaConjuntoComBaseObjeto(equipamentosOrdem[i]);
+    }
+
+    $("." + CLASSE_SLICK_CARROUSEL).slick('resize');
+}
+
+function AlterarOrdem() {
+
+    var idOrdem = $('#txtIdOrdem').val();
+
+    DesabilitarBotao('btnAlterarOrdem', 'Salvando . . .');
+
+    var body = CarregarOrdemEdicaoBody();
+
+    if (!ValidarFotosForamCarregadasCorretamente(body)) {
+        HabilitarBotao('btnAlterarOrdem', 'Salvar');
+        return;
+    }
+
+    $.ajax({
+        url: "/Ordem/Editar/" + idOrdem,
+        type: "PUT",
+        data: JSON.stringify(body),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            if (response.erro) {
+                swal("Ops!", "Houve um erro ao alterar a ordem. Detalhes: " + response.mensagem, "error");
+                HabilitarBotao('btnAlterarOrdem', 'Salvar');
+            }
+            else {
+                swal("Sucesso!", "A ordem foi alterada com sucesso", "success")
+                    .then(okay => {
+
+                         history.back()
+                        HabilitarBotao('btnAlterarOrdem', 'Salvar');
+
+                        window.parent.postMessage('ordemEditada', '*');
+                    });
+            }
+        }
+    });
+}
+
+function CarregarOrdemEdicaoBody() {
+
+    var body = {
+        "ordem": CarregarObjetoJsonOrdem(),
+        "valor_campo_body": ObterValoresCampos(),
+        "pecas_ordem": CarregarObjetoJsonPecasOrdem(),
+        "valores_pre_grupos": ObterValoresPreGrupos(),
+        "menu_analise_ativo": PaginaAtivaEh('FilaAnalise'),
+        "menu_orcamento_ativo": PaginaAtivaEh('FilaOrcamento'),
+        "menu_aprovados_ativo": PaginaAtivaEh('FilaAprovados'),
+        "analise_preliminar": $('#txtAnalisePreliminar').val(),
+        "aguardando_requisicao_cliente_para_dar_andamento": ObterValorCheckBox('checkAguardandoRequisicaoCliente'),
+        "alterar_informacoes_ordem": $(".dados-basicos-ordem-editavel").length > 0,
+        "caminho_canhoto_assinado": ObterValorInput('txtCaminhoArquivoBackup1') || null,
+        "prazo_sugerido_entrega": ObterValorInput('txtPrazoSugeridoEntrega'),
+        "descricao_forma_pagamento": ObterValorInput('txtFormaPagamento'),
+        "valor_custo_hora_servico": FormatarDinheiroParaDecimal(ObterValorInput('txtValorCustoHora')),
+        "valor_venda_hora_servico": FormatarDinheiroParaDecimal(ObterValorInput('txtValorVendaHora')),
+    };
+
+    if (ElementoExiste('tabelaServicosExternosDaOrdem'))
+        body["servicos_externos_da_ordem"] = CarregarObjetoJsonServicosExternosDaOrdem();
+
+    if (ElementoExiste('divDadosOrcamentoOrdem')) {
+        body["dados_ordem"] = GerarObjetoDadosOrdem();
+        body["modelo_secoes_adicionais_proposta_ordem"] = ObterValorSelectPickerMultiplo(ID_ELEMENTO_SELECTPICKER_MODELO_SECOES_ADICIONAIS_PROSPOTA_COMERCIAL_ORDEM);
+        body["escopo_comercial_ordem"] = ObterValorSelectPickerMultiplo(ID_ELEMENTO_SELECTPICKER_USUARIO_MODELO_PROPOSTA_COMERCIAL);
+    }
+
+    return body;
+}
+
+function GerarObjetoDadosOrdem() {
+
+    let valorOrcamento = FormatarDinheiroParaDecimal($('#txtValorOrcamento').val());
+
+    let valorDesconto = $('#txtValorDesconto').val();
+
+    if (IsNullOrEmpty(valorDesconto)) valorDesconto = 0;
+
+    let valorTotalCusto = $('#txtValorTotalCusto').val();
+
+    if (IsNullOrEmpty(valorTotalCusto)) valorDesconto = 0;
+
+    let valorServicos = ObterValorDecimalCampoDadosOrdem('#txtValorTotalServicos');
+    let valorDescontoServicos = ObterValorDecimalCampoDadosOrdem('#txtValorDescontoServicos');
+    let valorComDescontoServicos = ObterValorDecimalCampoDadosOrdem('#txtValorFinalComDescontoServicos');
+    let valorProdutos = ObterValorDecimalCampoDadosOrdem('#txtValorTotalProdutos');
+    let valorDescontoProdutos = ObterValorDecimalCampoDadosOrdem('#txtValorDescontoProdutos');
+    let valorComDescontoProdutos = ObterValorDecimalCampoDadosOrdem('#txtValorFinalComDescontoProdutos');
+
+    var dadosOrdem = {
+        "id_dados_ordem": _idDadosOrdem,
+        "valor_total_custo": FormatarDinheiroParaDecimal(valorTotalCusto),
+        "valor_orcamento": FormatarDinheiroParaDecimal(valorOrcamento),
+        "valor_desconto": FormatarDinheiroParaDecimal(valorDesconto),
+        "condicao_pagamento": $('#txtCondicaoPagamento').val(),
+        "prazo_entrega": $('#txtPrazo').val(),
+        "observacoes_orcamento": $('#txtObservacoesOrcamento').val(),
+        "cortesia": EhCortesia(valorOrcamento),
+        "frete_incluso": ObterValorCheckBox('checkFreteIncluso'),
+        "apresentacao_pecas_orcamento": ObterValorCheckBox('checkMostrarPecasOrcamento'),
+        "mostrar_valores_orcamento": ObterValorCheckBox('checkMostrarValor'),
+        "mostrar_foto_peca": ObterValorCheckBox('checkMostrarFoto'),
+        "prazo_garantia": ObterValorSelectPicker('selectGarantia'),
+        "flag_repasse_rejeito": ObterValorCheckBox('checkRepasseRejeito'),
+        "flag_repasse_repasse": ObterValorCheckBox('checkRepasseRepasse'),
+        "flag_equipmaneto_emprestimo_devolvido_sem_troca": ObterValorCheckBox('checkEmprestimoDevolvidoSemTroca'),
+        "numero_proposta_comercial": parseInt($('#txtNumeroProposta').val()),
+        "numero_revisao_proposta_comercial": parseInt($('#txtNumeroRevisao').val()),
+        "descricao_forma_pagamento": ObterDescricaoSelecionadaSelectPicker('selectCondicaoPagamento'),
+        "porcentagem_comissao_venda": $('#txtPorcentagemComissaoVenda').val(),
+        "valor_comissao_venda": FormatarDinheiroParaDecimal($('#txtValorComissaoVenda').val()),
+        "status_componente_mancal_rolamento": ObterValorInput('txtStatusComponenteMancalRolamento'),
+        "status_compoente_porta_escova": ObterValorInput('txStatusComponentePortaEscova'),
+        "status_compoenente_escovas": ObterValorInput('txtStatusComponenteEscovas'),
+        "id_modelo_proposta_comercial": ObterValorSelectPickerOuDefaultNull(ID_ELEMENTO_SELECTPICKER_MODELO_PROSPOTA_COMERCIAL_ORDEM),
+        "id_usuario_responsavel_proposta_comercial": ObterValorSelectPickerOuDefaultNull(ID_ELEMENTO_SELECTPICKER_USUARIO_RESPONSAVEL_PROPOSTA_COMERCIAL_ORDEM),
+        "assunto_proposta_comercial": ObterValorInput('txtAssuntoPropostaComercial'),
+        "numero_pedido": ObterValorInput('txtNumeroPedido'),
+        "id_condicao_pagamento": ObterValorSelectPicker('selectCondicaoPagamento'),
+        "numero_pedido_compra_produto": ObterValorInput('txtNumeroPedidoProduto'),
+        "numero_pedido_compra_servico": ObterValorInput('txtNumeroPedidoServico'),
+        "valor_servicos": valorServicos,
+        "valor_desconto_servicos": valorDescontoServicos,
+        "valor_com_desconto_servicos": valorComDescontoServicos,
+        "valor_produtos": valorProdutos,
+        "valor_desconto_produtos": valorDescontoProdutos,
+        "valor_com_desconto_produtos": valorComDescontoProdutos,
+    };
+
+    return dadosOrdem;
+}
+
+function ObterValorDecimalCampoDadosOrdem(idCampo) {
+
+    let valor = $(idCampo).val();
+
+    if (IsNullOrEmpty(valor)) return 0;
+
+    return FormatarDinheiroParaDecimal(valor)
+}
+
+function EhCortesia(valorOrcamento) {
+    return valorOrcamento === 0 ? true : false;
+}
+
+function CalcularValorTotalCusto() {
+
+    let custoTotalOrdem = 0;
+    let valorOrcamento = FormatarDinheiroParaDecimal($('#txtValorOrcamento').val());
+    let valorDesconto = FormatarDinheiroParaDecimal($('#txtValorDesconto').val());
+    let porcentagemValorComissao = FormatarDinheiroParaDecimal($('#txtPorcentagemComissaoVenda').val());
+
+    let custoTotalPecas = ObterCustoTotalPecas();
+    let custoTotalServicosExternos = 0;
+
+    if (ElementoExiste('tabelaServicosExternosDaOrdem'))
+        custoTotalServicosExternos = ObterValorTotalServicosExternosOrdem();
+
+    let custoTotalHorasServico = 0;
+
+    if (ElementoExiste('tabelaServicosDaOrdem'))
+        custoTotalHorasServico = ObterValorTotalCustoHorasServico();
+
+    if (valorDesconto) {
+        var valorComissaoVenda = (valorDesconto / 100) * porcentagemValorComissao;
+    } else {
+        var valorComissaoVenda = (valorOrcamento / 100) * porcentagemValorComissao;
+    }
+
+    custoTotalOrdem += custoTotalPecas + valorComissaoVenda + custoTotalServicosExternos + custoTotalHorasServico;
+
+    PreencherInput('txtValorTotalCusto', 'divValorTotalCusto', FormatDinheiro(custoTotalOrdem));
+    PreencherInput('txtValorComissaoVenda', 'divValorComissaoVenda', FormatDinheiro(valorComissaoVenda));
+}
+
+$('#txtValorDesconto, #txtValorOrcamento').change(function () {
+    CalcularValorTotalCusto();
+})
+
+function CalculosTotalCustoOrdem() {
+
+    let custoTotalOrdem = 0;
+
+    let valorOrcamento = FormatarDinheiroParaDecimal($('#txtValorOrcamento').val());
+    let valorDesconto = FormatarDinheiroParaDecimal($('#txtValorDesconto').val());
+    let porcentagemValorComissao = FormatarDinheiroParaDecimal($('#txtPorcentagemComissaoVenda').val());
+
+    let custoTotalPecas = ObterCustoTotalPecas();
+    let custoTotalServicosExternos = ObterValorTotalServicosExternosOrdem();
+    let custoTotalHorasServico = ObterValorTotalCustoHorasServico();
+
+    if (valorDesconto) {
+        var valorComissaoVenda = (valorDesconto / 100) * porcentagemValorComissao;
+    } else {
+        var valorComissaoVenda = (valorOrcamento / 100) * porcentagemValorComissao;
+    }
+
+    custoTotalOrdem += custoTotalPecas + valorComissaoVenda + custoTotalServicosExternos + custoTotalHorasServico;
+
+    PreencherInput('txtValorCustoServicos', 'divValorCustoServicos', FormatDinheiro(custoTotalHorasServico));
+    PreencherInput('txtValorCustoServicosExternos', 'divValorCustoServicosExternos', FormatDinheiro(custoTotalServicosExternos));
+    PreencherInput('txtValorCustoPeca', 'divValorCustoPeca', FormatDinheiro(custoTotalPecas));
+    PreencherInput('txtValorTotalCustoModal', 'divValorTotalCustoModal', FormatDinheiro(custoTotalOrdem));
+    PreencherInput('txtPercentualDesconto', 'divPercentualDesconto', FormatDinheiro(valorDesconto));
+    PreencherInput('txtValorComissao', 'divValorComissao', FormatDinheiro(porcentagemValorComissao));
+    PreencherInput('txtValorComissaoVenda', 'divValorComissaoVenda', FormatDinheiro(valorComissaoVenda));
+}
+
+function CalcularValorTotalVenda(recalcularValorDesconto = true) {
+
+    let vendaTotalOrdem = 0;
+
+    let vendaTotalPecas = ObterValorVendaTotalPecas();
+    let vendaTotalServicosExternos = ObterValorTotalVendaServicosExternosOrdem();
+    let vendaTotalHorasServico = ObterValorTotalVendaHorasServico();
+
+    vendaTotalOrdem += vendaTotalPecas + vendaTotalHorasServico + vendaTotalServicosExternos;
+
+    PreencherInputIdElementoEValor('txtValorTotalProdutos', FormatDinheiro(vendaTotalPecas));
+    PreencherInputIdElementoEValor('txtValorTotalServicos', FormatDinheiro(vendaTotalHorasServico + vendaTotalServicosExternos));
+
+    let valorPecas = vendaTotalPecas;
+    let valorServicos = vendaTotalHorasServico + vendaTotalServicosExternos;
+
+    if (!IsNullOrEmpty(ObterValorCampoFormatado('txtValorFinalComDescontoServicos')))
+        valorServicos = ObterValorCampoFormatado('txtValorFinalComDescontoServicos');
+
+    if (!IsNullOrEmpty(ObterValorCampoFormatado('txtValorFinalComDescontoProdutos')))
+        valorPecas = ObterValorCampoFormatado('txtValorFinalComDescontoProdutos');
+
+    PreencherInputIdElementoEValor('txtValorOrcamento', FormatDinheiro(valorPecas + valorServicos));
+    $('#txtValorOrcamento').change();
+
+    if (recalcularValorDesconto) {
+        $('#txtValorTotalProdutos').change();
+        $('#txtValorTotalServicos').change();
+    }
+}
+
+function AbrirModalExplicacaoCalculoValoresOrcamento() {
+    if (IsNullOrEmpty($("#txtValorComissao").val()) || $("#txtValorComissao").val() == 0) {
+        $("#rowDadosComisaso").addClass("d-none");
+    }
+    CalculosValorTotalVendaOrdem();
+    CalculosTotalCustoOrdem();
+    AbrirModal('modal-explicacao-calculo-valor-ordem');
+}
+
+function ObterGrupoAbaFicha(idGrupoAbaFicha) {
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/FilaAnalise/ObterGrupoFichaNaAba/" + idOrdem,
+        success: function (response) {
+        }
+    });
+}
+
+function VerificaCamposPreenchidos() {
+    $('input[type="text"]').each(function () {
+
+        if ($(this).attr('id') !== 'txtFabricante' &&
+            $(this).attr('id') !== 'txtTipoEquipamento' &&
+            $(this).attr('id') !== 'txtModelo' &&
+            $(this).attr('id') !== 'txtAnalisePreliminar' &&
+            $(this).attr('id') !== 'txt5429' &&
+            $(this).attr('id') !== 'txt5430' &&
+            $(this).attr('id') !== 'txt5431' &&
+            $(this).attr('id') !== 'txt7253' &&
+            $(this).val() !== '') {
+            $(this).prop('disabled', true);
+        }
+    });
+
+    $('input[type="checkbox"]').each(function () {
+        var marcado = $(this).prop('checked');
+        if (marcado) {
+            $(this).prop('disabled', true);
+        }
+    });
+
+    $('.selectpicker').each(function () {
+        if ($(this).find('option:selected').length > 0) {
+            $(this).prop('disabled', true);
+        }
+    });
+
+    $('textarea').each(function () {
+        if ($(this).val().trim() !== '') {
+            $(this).prop('disabled', true);
+        }
+    });
+}
+
+//$(window).bind('beforeunload', function () {
+//    if (VerificaAlteracaoOrdem() && _gravado === false) {
+//        return 'Deseja realmente sair? As informações alteradas serão perdidas';
+//    }
+//});
+
+//function VerificaAlteracaoOrdem() {
+//    var alterado = false;
+
+//    $('input[type=text]').each(function () {
+//        if (this.value !== this.defaultValue) {
+//            alterado = true;
+//        }
+//    });
+//    $('input[type=checkbox]').each(function () {
+//        if (this.checked !== this.defaultChecked) {
+//            alterado = true;
+//        }
+//    });
+
+//    $("textarea").each(function () {
+//        if (this.value !== this.defaultValue) {
+//            alterado = true;
+//        }
+//    });
+
+//    return alterado;
+//}
+
+const ID_CHECKBOX_SERVICOS_MECANICOS = [
+    6683,
+    6686,
+    6688,
+    7218,
+    6684,
+    6687,
+    6689,
+    6696,
+    6685,
+    6695,
+    6691,
+    7215,
+    7213,
+    7106,
+    6692,
+    7216,
+    7217,
+    6690,
+    6693,
+    7211,
+    6666,
+    6667,
+    6668,
+    6669,
+    6670,
+    6673,
+    6672,
+    6674,
+    6832,
+    6675, ,
+    6833,
+    6676,
+    6677,
+    6678,
+    6679,
+    6680,
+    6681,
+    6838,
+    6839,
+]
+
+function DesabilitarCampos(listaCampos) {
+    for (let i = 0; i < listaCampos.length; i++) {
+        const id = 'check' + listaCampos[i];
+
+        if (ElementoExiste(id))
+            $("#" + id).attr('disabled', true);
+    }
+}
+
+function PreencherDataAutomaticaVerificacaoInicial(idCampoExecutante, idCampoData) {
+
+    if (ObterValorInput(idCampoExecutante)) {
+        const campoData = document.getElementById(idCampoData);
+
+        if (!campoData.value) {
+            const dataAtual = new Date();
+            const dataFormatada = `${dataAtual.getDate().toString().padStart(2, '0')}/${(dataAtual.getMonth() + 1).toString().padStart(2, '0')}/${dataAtual.getFullYear()}`;
+
+            campoData.value = dataFormatada;
+
+            $('#' + idCampoData).addClass('valor-alterado-inputjs');
+        }
+    }
+}
+
+function PreencherTagAutomatica(idCampoInstrumentoMedicao, idCampoTag) {
+
+    const mapeamentoTags = {
+        1: "MIC-002",
+        2: "MIC-001",
+        3: "MIC-006",
+        4: "MIC-007",
+        5: "MIC-005",
+        6: "MIC-003",
+        7: "MIC-007",
+        8: "ALA-001",
+        9: "MUT-001",
+        10: "CAT-001",
+        11: "REL-003",
+        12: "SUB-002",
+        13: "SUB-003",
+        14: "SUB-001",
+        15: "SUB-004",
+        16: "MLO-001",
+        17: "MEG-003",
+        18: "MEG-004",
+        19: "TAC-001",
+        20: "MDV-001",
+        21: "REL-004 / BSM-001"
+    };
+
+    // Obter o valor selecionado (ID) do selectpicker
+    const selectPicker = document.getElementById(idCampoInstrumentoMedicao);
+    const idSelecionado = parseInt(selectPicker.value); // O valor que representa o ID selecionado
+
+    // Verifique se existe uma tag associada ao ID
+    const tagAssociada = mapeamentoTags[idSelecionado];
+
+    // Se houver uma tag associada, preenche o campo de tag
+    if (tagAssociada) {
+        const campoTag = document.getElementById(idCampoTag);
+        if (campoTag) {
+            campoTag.value = tagAssociada;
+            $('#' + idCampoTag).addClass('valor-alterado-inputjs'); // Adiciona a classe para indicar alteração
+        }
+    }
+}
+
+function ObterCondicoesPagamentoCadastradas() {
+
+    if (!ElementoExiste('selectCondicaoPagamento'))
+        return;
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/FilaOrcamento/ObterCondicoesPagamento",
+        success: function (dados) {
+            if (dados.erro === false) {
+                var select = document.getElementById("selectCondicaoPagamento");
+
+                if (IsNullOrEmpty(select)) return;
+
+                select.options.length = 0;
+
+                $(dados.condicoes).each(function (i) {
+                    let id = dados.condicoes[i].id;
+                    let descricao = dados.condicoes[i].descricao;
+
+                    $('<option>').val(id).text(descricao).appendTo('#selectCondicaoPagamento');
+                });
+
+                $('#selectCondicaoPagamento').selectpicker('refresh');
+            }
+        },
+        error: function (error) {
+            EncerraLoading();
+        }
+    });
+}
+
+function ObterCondicaoPagamentoParceiro(idOrdem) {
+
+    if (!ElementoExiste('selectCondicaoPagamento'))
+        return;
+
+    $.ajax({
+        dataType: "json",
+        type: "GET",
+        url: "/FilaOrcamento/ObterCondicaoPagamentoParceiro/" + idOrdem,
+        success: function (dados) {
+            if (dados.erro === false && !IsNullOrEmpty(dados.id_condicao_pagamento)) {
+                UpdateSelectPicker('selectCondicaoPagamento', dados.id_condicao_pagamento)
+            }
+        },
+        error: function (error) {
+            EncerraLoading();
+        }
+    });
+}
+
+function CalcularValorDescontoPorPorcentagem(idCampoValorTotal, idCampoPorcentagem, idCampoValorDesconto, idCampoValorFinalComDesconto,
+    recalcularValoresVenda = true) {
+
+    const porcentagem = FormatarPorcentagem($('#' + idCampoPorcentagem).val());
+
+    const valorTotal = ObterValorCampoFormatado(idCampoValorTotal);
+
+    if (IsNullOrEmpty(porcentagem) || !VerificarSePrecisaCalcularOrcamentoComDesconto(valorTotal, porcentagem)) {
+
+        PreencherInputIdElementoEValor(idCampoValorDesconto, '');
+        PreencherInputIdElementoEValor(idCampoValorFinalComDesconto, '');
+        return;
+    }
+
+    let valorDesconto = valorTotal * porcentagem / 100;
+
+    const valorTotalComDesconto = valorTotal - valorDesconto;
+
+    valorDesconto = FormatDinheiro(valorDesconto);
+
+    PreencherInputIdElementoEValor(idCampoValorDesconto, valorDesconto);
+
+    PreencherInputIdElementoEValor(idCampoValorFinalComDesconto, FormatDinheiro(valorTotalComDesconto));
+
+    CalcularValorTotalVenda(recalcularValoresVenda);
+}
+
+function CalcularValorDescontoPorValor(idCampoValorTotal,
+    idCampoPorcentagem,
+    idCampoValorDesconto,
+    idCampoValorFinalComDesconto,
+    recalcularValoresVenda = false) {
+    // 1) Obter o valor inserido no campo "desconto" (neste caso, é um valor monetário e não porcentagem).
+    let valorDesconto = ObterValorCampoFormatado(idCampoValorDesconto);
+
+    let valorTotal = ObterValorCampoFormatado(idCampoValorTotal);
+
+    if (IsNullOrEmpty(valorDesconto) || !VerificarSePrecisaCalcularOrcamentoComDesconto(valorTotal, valorDesconto)) {
+
+        PreencherInputIdElementoEValor(idCampoPorcentagem, '');
+        PreencherInputIdElementoEValor(idCampoValorFinalComDesconto, '');
+        return;
+    }
+
+    // 3) Calcular o valor final subtraindo o desconto
+    let valorFinalComDesconto = valorTotal - valorDesconto;
+
+    let valorTotalComDesconto = valorTotal - valorFinalComDesconto;
+
+    let valorFinalComDescontoFormatado = FormatDinheiro(valorFinalComDesconto);
+
+    PreencherInputIdElementoEValor(idCampoValorFinalComDesconto, valorFinalComDescontoFormatado);
+
+    // 7) Por fim, calcula a porcentagem de desconto aplicada:
+    let porcentagemDesconto = 0;
+    if (valorTotal > 0) {
+        porcentagemDesconto = (valorTotalComDesconto / valorTotal) * 100;
+    }
+
+    // Formatar a porcentagem. Podemos colocar o símbolo % no final, se desejado.
+    let porcentagemDescontoFormatada = porcentagemDesconto
+        .toFixed(2)
+        .replace('.', ',') + '%';
+
+    // 8) Preencher o campo de porcentagem
+    PreencherInputIdElementoEValor(idCampoPorcentagem, porcentagemDescontoFormatada);
+
+    CalcularValorTotalVenda(recalcularValoresVenda);
+}
+
+function CalcularDescontoBaseadoNoValorTotalDesconto(idCampoValorTotal,
+    idCampoPorcentagem,
+    idCampoValorDesconto,
+    idCampoValorFinalComDesconto) {
+
+    let valorFinalComDesconto = ObterValorCampoFormatado(idCampoValorFinalComDesconto);
+
+    let valorTotal = ObterValorCampoFormatado(idCampoValorTotal);
+
+    if (valorFinalComDesconto > valorTotal)
+        return;
+
+    let valorDesconto = valorTotal - valorFinalComDesconto;
+
+    PreencherInputIdElementoEValor(idCampoValorDesconto, FormatDinheiro(valorDesconto));
+
+    CalcularValorDescontoPorValor(idCampoValorTotal, idCampoPorcentagem, idCampoValorDesconto, idCampoValorFinalComDesconto);
+}
+
+function AlterarVisibilidadeDasAbasLinhaEquipamento(idSelectPicker) {
+
+    var optionSelect = ObterValorSelectPickerOuDefaultNull(idSelectPicker);
+
+    if (optionSelect == ID_LINHA_EQUIPAMENTO_REDUTOR) {
+        AlterarVisibilidadeRedutor();
+    }
+    else if (optionSelect == ID_LINHA_EQUIPAMENTO_MOTOR) {
+        AlterarVisibilidadeMotor();
+    }
+    else if (optionSelect == ID_LINHA_EQUIPAMENTO_MOTOREDUTOR) {
+        AlterarVisibilidadeMotoRedutor();
+    }
+    else if (optionSelect == ID_LINHA_EQUIPAMENTO_INVERSOR_FREQUENCIA) {
+        AlterarVisibilidadeInversoresDeFrequencia();
+    }
+    else if (optionSelect == ID_LINHA_EQUIPAMENTO_SOFT_STARTER) {
+        AlterarVisibilidadeSoftStarter();
+    }
+    else if (optionSelect == ID_LINHA_EQUIPAMENTO_IHM) {
+        AlterarVisibilidadeIHM();
+    }
+    else if (optionSelect == ID_LINHA_EQUIPAMENTO_CLP) {
+        AlterarVisibilidadeCLP();
+    }
+    else if (optionSelect == ID_LINHA_EQUIPAMENTO_FONTE) {
+        AlterarVisibilidadeFonte();
+    }
+    else if (optionSelect == ID_LINHA_EQUIPAMENTO_INVERSOR_SOLAR) {
+        AlterarVisibilidadeInversorSolar();
+    }
+    else {
+        VisibilidadeNaoSelecionadaMotoRedutor();
+        VisibilidadeNaoSelecionadaEletronica();
+    }
+}
+
+function AlterarVisibilidadeMotor() {
+
+    $('a[href="#abaFicha_18"]').hide();
+    $('a[href="#abaFicha_22"]').show();
+    $('a[href="#abaFicha_21"]').show();
+    $('a[href="#abaFicha_3"]').show();
+    $('a[href="#abaFicha_1"]').show();
+    $('a[href="#abaFicha_13"]').show();
+    $('a[href="#abaFicha_20"]').show();
+    $('a[href="#abaFicha_24"]').hide();
+    $('a[href="#abaFicha_10"]').hide();
+
+    MostrarCamposPorId(ID_GRUPO_FICHA_ANALISE_MECANICA_INICIAL_MOTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_ANALISE_ELETRICA_INICIAL_MOTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_ANALISE_SERVICOS_A_SEREM_EXECUTADOS_MOTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_INSPECAO_VISUAL_MOTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_REBOBINAMENTO_MOTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_ANALISE_ELETRICA_FINAL_MOTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_FOTOS_USINAGEM_MOTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_FOTOS_REBOBINAMENTO_MOTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_FOTOS_TESTE_MOTOR);
+
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_MECANICA_INICIAL_REDUTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_CHECKLIST_MONTAGEM_FINAL_REDUTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_CHECKLIST_PINTURA_FINAL_REDUTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_CHECKLIST_MONTAGEM_FINAL_SEM_CONCERTO_REDUTOR);
+}
+
+function AlterarVisibilidadeRedutor() {
+
+    $('a[href="#abaFicha_18"]').show();
+    $('a[href="#abaFicha_22"]').hide();
+    $('a[href="#abaFicha_21"]').hide();
+    $('a[href="#abaFicha_3"]').hide();
+    $('a[href="#abaFicha_1"]').hide();
+    $('a[href="#abaFicha_13"]').hide();
+    $('a[href="#abaFicha_20"]').hide();
+    $('a[href="#abaFicha_24"]').show();
+    $('a[href="#abaFicha_10"]').show();
+
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_MECANICA_INICIAL_MOTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_ELETRICA_INICIAL_MOTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_SERVICOS_A_SEREM_EXECUTADOS_MOTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_INSPECAO_VISUAL_MOTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_REBOBINAMENTO_MOTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_ELETRICA_FINAL_MOTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_FOTOS_USINAGEM_MOTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_FOTOS_REBOBINAMENTO_MOTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_FOTOS_TESTE_MOTOR);
+
+    MostrarCamposPorId(ID_GRUPO_FICHA_ANALISE_MECANICA_INICIAL_REDUTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_CHECKLIST_MONTAGEM_FINAL_REDUTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_CHECKLIST_PINTURA_FINAL_REDUTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_CHECKLIST_MONTAGEM_FINAL_SEM_CONCERTO_REDUTOR);
+}
+
+function AlterarVisibilidadeMotoRedutor() {
+
+    $('a[href="#abaFicha_18"]').show();
+    $('a[href="#abaFicha_22"]').show();
+    $('a[href="#abaFicha_21"]').show();
+    $('a[href="#abaFicha_3"]').show();
+    $('a[href="#abaFicha_1"]').show();
+    $('a[href="#abaFicha_13"]').show();
+    $('a[href="#abaFicha_20"]').show();
+    $('a[href="#abaFicha_24"]').show();
+    $('a[href="#abaFicha_10"]').show();
+
+    MostrarCamposPorId(ID_GRUPO_FICHA_ANALISE_MECANICA_INICIAL_REDUTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_ANALISE_MECANICA_INICIAL_MOTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_ANALISE_ELETRICA_INICIAL_MOTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_ANALISE_SERVICOS_A_SEREM_EXECUTADOS_MOTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_INSPECAO_VISUAL_MOTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_REBOBINAMENTO_MOTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_ANALISE_ELETRICA_FINAL_MOTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_FOTOS_USINAGEM_MOTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_FOTOS_REBOBINAMENTO_MOTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_FOTOS_TESTE_MOTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_CHECKLIST_MONTAGEM_FINAL_SEM_CONCERTO_REDUTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_CHECKLIST_PINTURA_FINAL_REDUTOR);
+    MostrarCamposPorId(ID_GRUPO_FICHA_CHECKLIST_MONTAGEM_FINAL_REDUTOR);
+}
+
+function VisibilidadeNaoSelecionadaMotoRedutor() {
+
+    $('a[href="#abaFicha_18"]').hide();
+    $('a[href="#abaFicha_22"]').hide();
+    $('a[href="#abaFicha_21"]').hide();
+    $('a[href="#abaFicha_3"]').hide();
+    $('a[href="#abaFicha_1"]').hide();
+    $('a[href="#abaFicha_13"]').hide();
+    $('a[href="#abaFicha_20"]').hide();
+    $('a[href="#abaFicha_24"]').hide();
+    $('a[href="#abaFicha_10"]').hide();
+
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_MECANICA_INICIAL_MOTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_ELETRICA_INICIAL_MOTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_SERVICOS_A_SEREM_EXECUTADOS_MOTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_INSPECAO_VISUAL_MOTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_REBOBINAMENTO_MOTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_ELETRICA_FINAL_MOTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_FOTOS_USINAGEM_MOTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_FOTOS_REBOBINAMENTO_MOTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_FOTOS_TESTE_MOTOR);
+
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_MECANICA_INICIAL_REDUTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_CHECKLIST_MONTAGEM_FINAL_REDUTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_CHECKLIST_PINTURA_FINAL_REDUTOR);
+    OcultarCamposPorId(ID_GRUPO_FICHA_CHECKLIST_MONTAGEM_FINAL_SEM_CONCERTO_REDUTOR);
+}
+
+function VisibilidadeNaoSelecionadaEletronica() {
+
+    $('a[href="#abaFicha_26"]').hide();
+    $('a[href="#abaFicha_27"]').hide();
+    $('a[href="#abaFicha_28"]').hide();
+    $('a[href="#abaFicha_29"]').hide();
+    $('a[href="#abaFicha_30"]').hide();
+    $('a[href="#abaFicha_31"]').hide();
+
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_INICIAL_INVERSOR_FREQUENCIA_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_INICIAL_SOFT_STARTER_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_IHM_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_CLP_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_FONTE_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_INVERSOR_SOLAR_ELETRONICA)
+}
+
+function OcultarCamposPorId(codigoGrupo) {
+
+    $("#groupRow" + codigoGrupo).hide();
+    $("#titulo-" + codigoGrupo).hide();
+    $("#div" + codigoGrupo).hide();
+    $("#btnImprimirGrupoFicha_" + codigoGrupo).hide();
+}
+
+function MostrarCamposPorId(codigoGrupo) {
+
+    $("#groupRow" + codigoGrupo).show();
+    $("#titulo-" + codigoGrupo).show();
+    $("#div" + codigoGrupo).show();
+    $("#btnImprimirGrupoFicha_" + codigoGrupo).show();
+}
+
+function AlterarVisibilidadeInversoresDeFrequencia() {
+
+    $('a[href="#abaFicha_26"]').show();
+    $('a[href="#abaFicha_27"]').hide();
+    $('a[href="#abaFicha_28"]').hide();
+    $('a[href="#abaFicha_29"]').hide();
+    $('a[href="#abaFicha_30"]').hide();
+    $('a[href="#abaFicha_31"]').hide();
+
+    MostrarCamposPorId(ID_GRUPO_FICHA_ANALISE_INICIAL_INVERSOR_FREQUENCIA_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_INICIAL_SOFT_STARTER_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_IHM_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_CLP_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_FONTE_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_INVERSOR_SOLAR_ELETRONICA)
+}
+
+function AlterarVisibilidadeSoftStarter() {
+
+    $('a[href="#abaFicha_26"]').hide();
+    $('a[href="#abaFicha_27"]').show();
+    $('a[href="#abaFicha_28"]').hide();
+    $('a[href="#abaFicha_29"]').hide();
+    $('a[href="#abaFicha_30"]').hide();
+    $('a[href="#abaFicha_31"]').hide();
+
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_INICIAL_INVERSOR_FREQUENCIA_ELETRONICA)
+    MostrarCamposPorId(ID_GRUPO_FICHA_ANALISE_INICIAL_SOFT_STARTER_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_IHM_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_CLP_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_FONTE_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_INVERSOR_SOLAR_ELETRONICA)
+}
+
+function AlterarVisibilidadeIHM() {
+
+    $('a[href="#abaFicha_26"]').hide();
+    $('a[href="#abaFicha_27"]').hide();
+    $('a[href="#abaFicha_28"]').show();
+    $('a[href="#abaFicha_29"]').hide();
+    $('a[href="#abaFicha_30"]').hide();
+    $('a[href="#abaFicha_31"]').hide();
+
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_INICIAL_INVERSOR_FREQUENCIA_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_INICIAL_SOFT_STARTER_ELETRONICA)
+    MostrarCamposPorId(ID_GRUPO_FICHA_IHM_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_CLP_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_FONTE_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_INVERSOR_SOLAR_ELETRONICA)
+}
+
+function AlterarVisibilidadeCLP() {
+
+    $('a[href="#abaFicha_26"]').hide();
+    $('a[href="#abaFicha_27"]').hide();
+    $('a[href="#abaFicha_28"]').hide();
+    $('a[href="#abaFicha_29"]').show();
+    $('a[href="#abaFicha_30"]').hide();
+    $('a[href="#abaFicha_31"]').hide();
+
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_INICIAL_INVERSOR_FREQUENCIA_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_INICIAL_SOFT_STARTER_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_IHM_ELETRONICA)
+    MostrarCamposPorId(ID_GRUPO_FICHA_CLP_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_FONTE_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_INVERSOR_SOLAR_ELETRONICA)
+}
+
+function AlterarVisibilidadeFonte() {
+
+    $('a[href="#abaFicha_26"]').hide();
+    $('a[href="#abaFicha_27"]').hide();
+    $('a[href="#abaFicha_28"]').hide();
+    $('a[href="#abaFicha_29"]').hide();
+    $('a[href="#abaFicha_30"]').show();
+    $('a[href="#abaFicha_31"]').hide();
+
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_INICIAL_INVERSOR_FREQUENCIA_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_INICIAL_SOFT_STARTER_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_IHM_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_CLP_ELETRONICA)
+    MostrarCamposPorId(ID_GRUPO_FICHA_FONTE_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_INVERSOR_SOLAR_ELETRONICA)
+}
+
+function AlterarVisibilidadeInversorSolar() {
+
+    $('a[href="#abaFicha_26"]').hide();
+    $('a[href="#abaFicha_27"]').hide();
+    $('a[href="#abaFicha_28"]').hide();
+    $('a[href="#abaFicha_29"]').hide();
+    $('a[href="#abaFicha_30"]').hide();
+    $('a[href="#abaFicha_31"]').show();
+
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_INICIAL_INVERSOR_FREQUENCIA_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_ANALISE_INICIAL_SOFT_STARTER_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_IHM_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_CLP_ELETRONICA)
+    OcultarCamposPorId(ID_GRUPO_FICHA_FONTE_ELETRONICA)
+    MostrarCamposPorId(ID_GRUPO_FICHA_INVERSOR_SOLAR_ELETRONICA)
+}
